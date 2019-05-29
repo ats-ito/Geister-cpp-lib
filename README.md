@@ -34,7 +34,11 @@
 
 ## プレイヤの開発について
 competitionやclientから呼び出せるようにするために，プレイヤは動的ライブラリにしています．  
-基本的にはPlayerクラスを継承して，decideHandとdecideRedをオーバライドすればOKです． 
+基本的にはPlayerクラスを継承して，decideHandとdecideRedをオーバライドすればOKです．  
+現在，サンプルプレイヤとして，以下の1つが用意してあります．
+名前 | 特徴
+--- | ---
+randomPlayer | 可能な手からランダムに手を決定します．
   
 
 

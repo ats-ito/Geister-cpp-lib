@@ -65,3 +65,18 @@ else()
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
     endif()
 endif()
+
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
+add_library(randomPlayer SHARED ./random/randomPlayer.cpp Geister.cpp unit.cpp)
+add_library(Player SHARED Player.cpp Geister.cpp unit.cpp Geister.cpp)
+
+if($ENV{OS} MATCHES "Windows_NT")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY )
+    set_target_properties( randomPlayer
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player
+    )
+endif()
