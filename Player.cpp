@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "random/randomPlayer.hpp"
+#include "chototsu/chototsuPlayer.hpp"
 #include "Geister.hpp"
 #include "hand.hpp"
 
