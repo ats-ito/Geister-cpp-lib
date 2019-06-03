@@ -9,7 +9,7 @@ extern "C"{
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-Hand getHand(std::string res){
+std::string decideHand(std::string res){
     Geister brd(res);
     cpprefjp::random_device rd;
 	std::mt19937 mt(rd());
@@ -17,6 +17,6 @@ Hand getHand(std::string res){
     auto legalMoves = brd.getLegalMove1st();
     std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
     auto action = legalMoves[serector1(mt) % legalMoves.size()];
-    return action;
+    return action.toString();
 }
 }

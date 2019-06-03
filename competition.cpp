@@ -43,18 +43,18 @@ int run(HMODULE dll1, HMODULE dll2){
 int run(void* dll1, void* dll2){
 #endif
 #ifdef _WIN32
-    T getHand1=(T)GetProcAddress(dll1, "getHand");
-	T getHand2=(T)GetProcAddress(dll2, "getHand");
+    T decideHand1=(T)GetProcAddress(dll1, "decideHand");
+	T decideHand2=(T)GetProcAddress(dll2, "decideHand");
     T2 decideRed1=(T2)GetProcAddress(dll1, "decideRed");
 	T2 decideRed2=(T2)GetProcAddress(dll2, "decideRed");
 #else
-    T getHand1=(T)dlsym(dll1, "getHand");
-    T getHand2=(T)dlsym(dll2, "getHand");
+    T decideHand1=(T)dlsym(dll1, "decideHand");
+    T decideHand2=(T)dlsym(dll2, "decideHand");
     T2 decideRed1=(T2)dlsym(dll1, "decideRed");
     T2 decideRed2=(T2)dlsym(dll2, "decideRed");
 #endif
-    if(!getHand1 || !getHand2){
-        std::cerr << "cant call getHand" << std::endl;
+    if(!decideHand1 || !decideHand2){
+        std::cerr << "cant call decideHand" << std::endl;
         exit(1);
     }
 
@@ -124,7 +124,7 @@ int run(void* dll1, void* dll2){
 
     while(result == 0){
         if(game.turn >= 200) break;
-        auto hand = Hand(getHand1(game.mask().toString()));
+        auto hand = Hand(decideHand1(game.mask().toString()));
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }
@@ -138,7 +138,7 @@ int run(void* dll1, void* dll2){
         if(result)
             break;
         game.changeSide();
-        hand = Hand(getHand2(game.mask().toString()));
+        hand = Hand(decideHand2(game.mask().toString()));
         if(outputLevel > 1){
             std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }

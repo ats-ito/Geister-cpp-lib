@@ -11,7 +11,7 @@ extern "C"{
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-Hand getHand(const std::string& res){
+std::string decideHand(const std::string& res){
     Geister brd(res);
     cpprefjp::random_device rd;
 	std::mt19937 mt(rd());
@@ -51,7 +51,7 @@ Hand getHand(const std::string& res){
             }
         }
     }
-    return Hand({units[mostFrontIndex], Direction::North});
+    return Hand({units[mostFrontIndex], Direction::North}).toString();
 }
 #ifdef _WIN32
 __declspec(dllexport)

@@ -40,14 +40,14 @@ int run(int port, std::string dll){
         exit(1);
     }
 #ifdef _WIN32
-    T getHand=(T)GetProcAddress(handle, "getHand");
+    T decideHand=(T)GetProcAddress(handle, "decideHand");
     T2 decideRed=(T2)GetProcAddress(handle, "decideRed");
 #else
-    T getHand=(T)dlsym(handle, "getHand");
+    T decideHand=(T)dlsym(handle, "decideHand");
     T2 decideRed=(T2)dlsym(handle, "decideRed");
 #endif
-    if(!getHand){
-        std::cerr << "cant call getHand" << std::endl;
+    if(!decideHand){
+        std::cerr << "cant call decideHand" << std::endl;
         exit(1);
     }
 
@@ -94,7 +94,7 @@ int run(int port, std::string dll){
     auto brd = Geister(res);
 
     while(res.substr(0, 3) != "WON" && res.substr(0, 3) != "LST" && res.substr(0, 3) != "DRW"){
-        auto hand = getHand(brd.toString());
+        auto hand = decideHand(brd.toString());
         std::cout << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         cl.move(string{hand.unit.name}, string{hand.direct.toChar()});
         res = cl.recv();

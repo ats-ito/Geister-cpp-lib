@@ -10,7 +10,7 @@ extern "C"{
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-std::string getHand(std::string res){
+std::string decideHand(std::string res){
     return player.decideHand(res);
 }
 

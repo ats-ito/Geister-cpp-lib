@@ -65,12 +65,12 @@ int main(int argc, char** argv){
     }
 
 #ifdef _WIN32
-    T getHand1=(T)GetProcAddress(handle1, "getHand");
+    T decideHand1=(T)GetProcAddress(handle1, "decideHand");
 #else
-    T getHand1=(T)dlsym(handle1, "getHand");
+    T decideHand1=(T)dlsym(handle1, "decideHand");
 #endif
-    if(!getHand1){
-        std::cerr << "cant call getHand" << std::endl;
+    if(!decideHand1){
+        std::cerr << "cant call decideHand" << std::endl;
         exit(1);
     }
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv){
     brd.setState(ptn);
     brd.printBoard();
 
-    auto hand = getHand1(brd.toString());
+    auto hand = decideHand1(brd.toString());
     std::cout << "1stPlayer: " << hand.unit << " " << hand.direct << std::endl;
 
 #ifdef _WIN32
