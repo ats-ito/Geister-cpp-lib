@@ -34,6 +34,15 @@ project(geister CXX)
 include_directories(./)
 include_directories(./lib/)
 
+if($ENV{OS} MATCHES "Windows_NT")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player)
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/linux)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/linux/player)
+endif()
+
 # 実行ファイルを追加
 add_executable(competition competition.cpp unit.cpp Geister.cpp)
 add_executable(client client.cpp Geister.cpp unit.cpp tcpClient.cpp)
@@ -46,13 +55,9 @@ if($ENV{OS} MATCHES "Windows_NT")
     elseif(CMAKE_CXX_COMPILER MATCHES ".*g\\+\\+.*")
         SET(CMAKE_CXX_FLAGS "-w -std=c++17 -Ofast -march=native -mtune=native")
     endif()
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player)
     target_link_libraries(competition ws2_32 wsock32 winmm)
     target_link_libraries(client ws2_32 wsock32 winmm)
 else()
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/linux)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/linux/player)
     if(CMAKE_CXX_COMPILER MATCHES ".*clang.*")
         target_link_libraries(competition dl c++experimental c++abi c++fs)
         target_link_libraries(client dl c++experimental c++abi c++fs)
@@ -74,7 +79,7 @@ add_library(Player SHARED Player.cpp Geister.cpp unit.cpp Geister.cpp)
 if($ENV{OS} MATCHES "Windows_NT")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY )
-    set_target_properties( randomPlayer chototsuPlayer
+    set_target_properties( randomPlayer chototsuPlayer Player
         PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/windows/player
