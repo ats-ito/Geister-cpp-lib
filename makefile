@@ -20,8 +20,10 @@ ifeq ($(OS),Windows_NT)
   EXE_EXT = exe
 endif
 
+VPATH = lib:lib/clx:random:chototsu:Simulator
+
 .PHONY: all
-all: montecarloPlayer MCTSPlayer randomPlayer chototsuPlayer client competition PlayerTest
+all: randomPlayer chototsuPlayer client competition PlayerTest
 
 .PHONY: allclean
 allclean:
@@ -30,51 +32,37 @@ allclean:
 .PHONY: clean
 clean:
 	rm -rf *.$(OBJ_EXT)
-
-montecarloPlayer: montecarloPlayer.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT)
-	$(CC) $(CFLAGS) -shared board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT) montecarloPlayer.$(OBJ_EXT) -o montecarloPlayer.$(LIB_EXT)
 	
-MCTSPlayer: MCTSPlayer.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT) MCTSNode.$(OBJ_EXT)
-	$(CC) $(CFLAGS) -shared board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT) MCTSNode.$(OBJ_EXT) MCTSPlayer.$(OBJ_EXT) -o MCTSPlayer.$(LIB_EXT)
-	
-PlayerTest: PlayerTest.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT)
-	$(CC) $(CFLAGS) board.$(OBJ_EXT) unit.$(OBJ_EXT) simulateBoard.$(OBJ_EXT) PlayerTest.$(OBJ_EXT) $(LIBS) -o PlayerTest.$(EXE_EXT)
+PlayerTest: PlayerTest.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
+	$(CC) $(CFLAGS) $^ $(LIBS) -o $@.$(EXE_EXT)
 
-randomPlayer: randomPlayer.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT)
-	$(CC) $(CFLAGS) -shared board.$(OBJ_EXT) unit.$(OBJ_EXT) randomPlayer.$(OBJ_EXT) -o randomPlayer.$(LIB_EXT)
+randomPlayer: randomPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -shared $^ -o $@.$(LIB_EXT)
 
-chototsuPlayer: chototsuPlayer.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT)
-	$(CC) $(CFLAGS) -shared board.$(OBJ_EXT) unit.$(OBJ_EXT) chototsuPlayer.$(OBJ_EXT) -o chototsuPlayer.$(LIB_EXT)
+chototsuPlayer: chototsuPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -shared $^ -o $@.$(LIB_EXT)
 
-client: client.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT)
-	$(CC) $(CFLAGS) client.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT) $(LIBS) -o Client.$(EXE_EXT)
+client: client.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT)
+	$(CC) $(CFLAGS) $^ $(LIBS) -o Client.$(EXE_EXT)
 
-competition: competition.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) gameBoard.$(OBJ_EXT)
-	$(CC) $(CFLAGS) competition.$(OBJ_EXT) board.$(OBJ_EXT) unit.$(OBJ_EXT) gameBoard.$(OBJ_EXT) $(LIBS) -o Competition.$(EXE_EXT)
+competition: competition.$(OBJ_EXT) unit.$(OBJ_EXT) geister.$(OBJ_EXT)
+	$(CC) $(CFLAGS) $^ $(LIBS) -o Competition.$(EXE_EXT)
 
 client.$(OBJ_EXT): client.cpp
-	$(CC) $(CFLAGS) -c client.cpp -o client.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
 competition.$(OBJ_EXT): competition.cpp
-	$(CC) $(CFLAGS) -c competition.cpp -o competition.$(OBJ_EXT)
-montecarloPlayer.$(OBJ_EXT): montecarloPlayer.cpp montecarloPlayer.hpp
-	$(CC) $(CFLAGS) -c montecarloPlayer.cpp -o montecarloPlayer.$(OBJ_EXT)
-MCTSPlayer.$(OBJ_EXT): MCTSPlayer.cpp MCTSPlayer.hpp
-	$(CC) $(CFLAGS) -c MCTSPlayer.cpp -o MCTSPlayer.$(OBJ_EXT)
-MCTSNode.$(OBJ_EXT): MCTSNode.cpp MCTSNode.hpp
-	$(CC) $(CFLAGS) -c MCTSNode.cpp -o MCTSNode.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
 PlayerTest.$(OBJ_EXT): PlayerTest.cpp
-	$(CC) $(CFLAGS) -c PlayerTest.cpp -o PlayerTest.$(OBJ_EXT)
-randomPlayer.$(OBJ_EXT): randomPlayer.cpp randomPlayer.hpp
-	$(CC) $(CFLAGS) -c randomPlayer.cpp -o randomPlayer.$(OBJ_EXT)
-chototsuPlayer.$(OBJ_EXT): chototsuPlayer.cpp
-	$(CC) $(CFLAGS) -c chototsuPlayer.cpp -o chototsuPlayer.$(OBJ_EXT)
-board.$(OBJ_EXT): board.cpp board.hpp
-	$(CC) $(CFLAGS) -c board.cpp -o board.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
 unit.$(OBJ_EXT): unit.cpp unit.hpp
-	$(CC) $(CFLAGS) -c unit.cpp -o unit.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
 tcpClient.$(OBJ_EXT): tcpClient.cpp tcpClient.hpp
-	$(CC) $(CFLAGS) -c tcpClient.cpp -o tcpClient.$(OBJ_EXT)
-simulateBoard.$(OBJ_EXT): simulateBoard.cpp simulateBoard.hpp
-	$(CC) $(CFLAGS) -c simulateBoard.cpp -o simulateBoard.$(OBJ_EXT)
-gameBoard.$(OBJ_EXT): gameBoard.cpp gameBoard.hpp
-	$(CC) $(CFLAGS) -c gameBoard.cpp -o gameBoard.$(OBJ_EXT)
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
+geister.$(OBJ_EXT): geister.cpp geister.hpp
+	$(CC) $(CFLAGS) -I./lib/ -c $< -o $@
+Simulator.$(OBJ_EXT): Simulator.cpp Simulator.hpp
+	$(CC) $(CFLAGS) -I./ -I./lib/ -c $< -o $@
+randomPlayer.$(OBJ_EXT): randomPlayer.cpp randomPlayer.hpp
+	$(CC) $(CFLAGS) -I./ -I./random/ -I./lib/ -c $< -o $@
+chototsuPlayer.$(OBJ_EXT): chototsuPlayer.cpp
+	$(CC) $(CFLAGS) -I./ -I./chototsu -I./lib/ -c $< -o $@
