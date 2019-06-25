@@ -80,7 +80,7 @@ int main(int argc, char** argv){
     brd.printBoard();
 
     auto hand = decideHand1(brd.toString());
-    std::cout << "1stPlayer: " << hand.unit << " " << hand.direct << std::endl;
+    std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
 
 #ifdef _WIN32
     FreeLibrary(handle1);

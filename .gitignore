@@ -32,3 +32,9 @@ cmake/
 bin/
 
 \.vscode/ipch/
+
+__pycache__/
+
+*.pyc
+
+\.vscode/
