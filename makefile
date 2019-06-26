@@ -23,7 +23,7 @@ endif
 VPATH = lib:lib/clx:random:chototsu:Simulator
 
 .PHONY: all
-all: randomPlayer chototsuPlayer client competition PlayerTest
+all: randomPlayer chototsuPlayer client competition PlayerTest Player
 
 .PHONY: allclean
 allclean:
