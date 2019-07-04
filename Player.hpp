@@ -7,6 +7,10 @@
 
 class Player{
 public:
+    virtual std::string name(){
+        return "No_Name";
+    }
+
     virtual std::string decideHand(std::string res) = 0;
     virtual std::string decideRed() = 0;
 };

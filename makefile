@@ -23,7 +23,7 @@ endif
 VPATH = lib:lib/clx:random:chototsu:Simulator
 
 .PHONY: all
-all: randomPlayer chototsuPlayer client competition PlayerTest
+all: randomPlayer chototsuPlayer client competition PlayerTest Player
 
 .PHONY: allclean
 allclean:
@@ -41,6 +41,9 @@ randomPlayer: randomPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
 
 chototsuPlayer: chototsuPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
 	$(CC) $(CFLAGS) -shared $^ -o $@.$(LIB_EXT)
+
+Player: Player.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT)
+	$(CC) $(CFLAGS) $^ $(LIBS) -o $@.$(EXE_EXT)
 
 client: client.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT)
 	$(CC) $(CFLAGS) $^ $(LIBS) -o Client.$(EXE_EXT)
@@ -66,3 +69,5 @@ randomPlayer.$(OBJ_EXT): randomPlayer.cpp randomPlayer.hpp
 	$(CC) $(CFLAGS) -I./ -I./random/ -I./lib/ -c $< -o $@
 chototsuPlayer.$(OBJ_EXT): chototsuPlayer.cpp
 	$(CC) $(CFLAGS) -I./ -I./chototsu -I./lib/ -c $< -o $@
+Player.$(OBJ_EXT): Player.cpp Player.hpp
+	$(CC) $(CFLAGS) -I./ -I./lib/ -c $< -o $@
