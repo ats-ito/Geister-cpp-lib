@@ -14,20 +14,9 @@ class Geister:
             unit.OpUnit(4, 1, Geister.colorIndex[self.state[26]], "a"), unit.OpUnit(3, 1, Geister.colorIndex[self.state[29]], "b"), unit.OpUnit(2, 1, Geister.colorIndex[self.state[32]], "c"), unit.OpUnit(1, 1, Geister.colorIndex[self.state[35]], "d"),
             unit.OpUnit(4, 0, Geister.colorIndex[self.state[38]], "e"), unit.OpUnit(3, 0, Geister.colorIndex[self.state[41]], "f"), unit.OpUnit(2, 0, Geister.colorIndex[self.state[44]], "g"), unit.OpUnit(1, 0, Geister.colorIndex[self.state[47]], "h")
         ]
-        self.field = [
-            [None, self.units[15], self.units[14], self.units[13], self.units[12], None],
-            [None, self.units[11], self.units[10], self.units[9], self.units[8], None],
-            [None, None, None, None, None, None],
-            [None, None, None, None, None, None],
-            [None, self.units[0], self.units[1], self.units[2], self.units[3], None],
-            [None, self.units[4], self.units[5], self.units[6], self.units[7], None]
-        ]
     
     def setState(self, state):
         self.state = state.decode()
-        for i in range(6):
-            for j in range(6):
-                self.field[i][j] = None
         for i in range(16):
             self.units[i].x = int(self.state[4 + i * 3])
             self.units[i].y = int(self.state[4 + i * 3 + 1])
@@ -35,7 +24,6 @@ class Geister:
                 self.units[i].taken = True
                 self.units[i].color = Geister.colorIndex[self.state[4 + i * 3 + 2]]
                 continue
-            self.field[self.units[i].y][self.units[i].x] = self.units[i]
         
     def setRed(self, red):
         for i in range(8):
@@ -50,7 +38,12 @@ class Geister:
         for i in range(6):
             print(i, end=" ")
             for j in range(6):
-                print(color[self.field[i][j].color] if self.field[i][j] else " ", end=" ")
+                for k in range(16):
+                    if self.units[k].x == j and self.units[k].y == i:
+                        print(color[self.units[k].color], end=" ")
+                        break
+                else:
+                    print(" ", end=" ")
             print("")
         for i in range(16):
             print(self.units[i].name, "(", color[self.units[i].color], "): ", self.units[i].x, ", ", self.units[i].y, sep="")
@@ -83,12 +76,8 @@ class Geister:
         return legalMoves
 
     def changeSide(self):
-        for i in range(6):
-            for j in range(6):
-                self.field[i][j] = None
-
         for i in range(8):
-            tmp = unit.Unit(self.units[i].x, self.units[i].y, self.units[i].color, self.units[i].name)
+            tmpX, tmpY, tmpC, tmpN = self.units[i].x, self.units[i].y, self.units[i].color, self.units[i].name
 
             if self.units[i+8].x > 5:
                 self.units[i].x = self.units[i+8].x
@@ -99,18 +88,14 @@ class Geister:
             self.units[i].name = self.units[i+8].name.upper()
             self.units[i].color = self.units[i+8].color - 1
 
-            if tmp.x > 5:
-                self.units[i+8].x = tmp.x
-                self.units[i+8].y = tmp.y
+            if tmpX > 5:
+                self.units[i+8].x = tmpX
+                self.units[i+8].y = tmpY
             else:
-                self.units[i+8].x = 5 - tmp.x
-                self.units[i+8].y = 5 - tmp.y
-            self.units[i+8].name = tmp.name.lower()
-            self.units[i+8].color = tmp.color + 1
-            if self.units[i].y < 6:
-                self.field[self.units[i].y][self.units[i].x] = self.units[i]
-            if self.units[i+8].y < 6:
-                self.field[self.units[i+8].y][self.units[i+8].x] = self.units[i+8]
+                self.units[i+8].x = 5 - tmpX
+                self.units[i+8].y = 5 - tmpY
+            self.units[i+8].name = tmpN.lower()
+            self.units[i+8].color = tmpC + 1
 
     def move(self, unit, direct):
         targetIndex = 0
@@ -118,7 +103,6 @@ class Geister:
             if unit == self.units[i].name:
                 targetIndex = i
                 break
-        self.field[self.units[targetIndex].y][self.units[targetIndex].x] = None
         x, y = self.units[targetIndex].x, self.units[targetIndex].y
         if(direct == 'N'):
             y -= 1
@@ -128,15 +112,36 @@ class Geister:
             x -= 1
         elif(direct == 'S'):
             y += 1
+        for i in range(16):
+            if self.units[i].x == x and self.units[i].y == y:
+                self.units[i].x, self.units[i].y = 9, 9
         self.units[targetIndex].x, self.units[targetIndex].y = x, y
         if x == -1 or x == 6:
             self.units[targetIndex].x, self.units[targetIndex].y = 8, 8
             return
-        if self.field[y][x]:
-            self.field[y][x].x, self.field[y][x].y = 9, 9
-        self.field[y][x] = self.units[targetIndex]
-
+        
     def toString(self):
+        # import functools
+        # ret = ["{}{}{}".format(self.units[i].x, self.units[i].y, self.num2color[self.units[i].color]) for i in range(16)]
+        # return functools.reduce(lambda x,y:x+y, lst)
+        return "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}".format(
+            self.units[0].x, self.units[0].y, self.num2color[self.units[0].color],
+            self.units[1].x, self.units[1].y, self.num2color[self.units[1].color],
+            self.units[2].x, self.units[2].y, self.num2color[self.units[2].color],
+            self.units[3].x, self.units[3].y, self.num2color[self.units[3].color],
+            self.units[4].x, self.units[4].y, self.num2color[self.units[4].color],
+            self.units[5].x, self.units[5].y, self.num2color[self.units[5].color],
+            self.units[6].x, self.units[6].y, self.num2color[self.units[6].color],
+            self.units[7].x, self.units[7].y, self.num2color[self.units[7].color],
+            self.units[8].x, self.units[8].y, self.num2color[self.units[8].color],
+            self.units[9].x, self.units[9].y, self.num2color[self.units[9].color],
+            self.units[10].x, self.units[10].y, self.num2color[self.units[10].color],
+            self.units[11].x, self.units[11].y, self.num2color[self.units[11].color],
+            self.units[12].x, self.units[12].y, self.num2color[self.units[12].color],
+            self.units[13].x, self.units[13].y, self.num2color[self.units[13].color],
+            self.units[14].x, self.units[14].y, self.num2color[self.units[14].color],
+            self.units[15].x, self.units[15].y, self.num2color[self.units[15].color]
+            )
         ret = ""
         for i in range(16):
             ret += "{}{}{}".format(self.units[i].x, self.units[i].y, self.num2color[self.units[i].color])
