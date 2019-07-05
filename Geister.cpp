@@ -11,14 +11,14 @@ Geister::Geister(){
     this->takeRed2nd = 0;
     this->turn = 0;
     units = {
-        Unit(1, 4, 'R', 'A'),
-        Unit(2, 4, 'R', 'B'),
-        Unit(3, 4, 'R', 'C'),
-        Unit(4, 4, 'R', 'D'),
-        Unit(1, 5, 'B', 'E'),
-        Unit(2, 5, 'B', 'F'),
-        Unit(3, 5, 'B', 'G'),
-        Unit(4, 5, 'B', 'H'),
+        Unit(1, 4, 'U', 'A'),
+        Unit(2, 4, 'U', 'B'),
+        Unit(3, 4, 'U', 'C'),
+        Unit(4, 4, 'U', 'D'),
+        Unit(1, 5, 'U', 'E'),
+        Unit(2, 5, 'U', 'F'),
+        Unit(3, 5, 'U', 'G'),
+        Unit(4, 5, 'U', 'H'),
         OpUnit(4, 1, 'u', 'a'),
         OpUnit(3, 1, 'u', 'b'),
         OpUnit(2, 1, 'u', 'c'),
