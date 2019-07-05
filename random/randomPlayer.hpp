@@ -30,11 +30,11 @@ public:
     }
 
     virtual std::string decideHand(std::string res){
-        Geister geister(res);
+        game.setState(res);
         cpprefjp::random_device rd;
         std::mt19937 mt(rd());
 
-        auto legalMoves = geister.getLegalMove1st();
+        auto legalMoves = game.getLegalMove1st();
         std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
         auto action = legalMoves[serector1(mt) % legalMoves.size()];
         return Hand(action).toString();

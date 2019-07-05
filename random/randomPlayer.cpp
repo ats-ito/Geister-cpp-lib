@@ -5,18 +5,19 @@
 #include <string>
 #include <iostream>
 
+RandomPlayer player;
+
 extern "C"{
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-std::string decideHand(std::string res){
-    Geister brd(res);
-    cpprefjp::random_device rd;
-	std::mt19937 mt(rd());
-
-    auto legalMoves = brd.getLegalMove1st();
-    std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
-    auto action = legalMoves[serector1(mt) % legalMoves.size()];
-    return action.toString();
+std::string decideHand(const std::string& res){
+    return player.decideHand(res);
+}
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+std::string decideRed(){
+    return player.decideRed();
 }
 }

@@ -6,6 +6,8 @@
 #define PLAYER
 
 class Player{
+protected:
+    Geister game;
 public:
     virtual std::string name(){
         return "No_Name";
