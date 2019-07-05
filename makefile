@@ -70,6 +70,10 @@ $(warning OBJS = $(OBJS))
 $(warning DEPS = $(DEPS))
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
+ifdef PLAYER_NAME
+	$(CC) $(CFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
+else
 	$(CC) $(CFLAGS) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
+endif
 
 -include $(DEPS)
