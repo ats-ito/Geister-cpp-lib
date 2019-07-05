@@ -61,7 +61,7 @@ int run(void* dll1, void* dll2){
     std::ofstream logFile;
     if(logEnable){
         //時刻取得用
-        char fn[] = "";
+        char fn[256];
 
         //現在時刻取得
         time_t now = time(NULL);
@@ -233,7 +233,7 @@ int main(int argc, char** argv){
         fs::create_directory("./log");
 
         //時刻取得用
-        char dn[] = "";
+        char dn[256];
 
         //現在時刻取得
         time_t now = time(NULL);
