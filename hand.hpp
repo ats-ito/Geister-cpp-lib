@@ -86,12 +86,16 @@ struct Hand{
     Unit unit;
     Direction direct;
 
-    Hand(Unit u, Direction d){
-        unit = u;
-        direct = d;
+    Hand(): unit(Unit()), direct(Direction::DontMove)
+    {
     }
 
-    Hand(std::string src){
+    Hand(Unit u, Direction d): unit(u), direct(d)
+    {
+    }
+
+    Hand(std::string src)
+    {
         unit = Unit();
         unit.name = src[0];
         unit.color = src[1];
