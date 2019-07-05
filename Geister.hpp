@@ -17,6 +17,7 @@ public:
     int takeRed1st;
     int takeRed2nd;
     int turn;
+    std::vector<std::pair<Hand, std::string>> history;
 
     static std::vector<char> unitList;
 

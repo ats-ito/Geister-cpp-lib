@@ -98,6 +98,31 @@ Geister::Geister(std::string red1, std::string red2){
 }
 
 void Geister::setState(std::string state){
+    if(auto beforeState = toString(); state != beforeState){
+        int moveIndex = 0;
+        Hand u;
+        for(moveIndex = 0; moveIndex < 16; ++moveIndex){
+            if(state[moveIndex*3] != beforeState[moveIndex*3] || state[moveIndex*3+1] != beforeState[moveIndex*3+1]){
+                if(state[moveIndex*3] - beforeState[moveIndex*3] == 1){
+                    u = Hand(units[moveIndex], Direction::East);
+                }
+                else if(state[moveIndex*3] - beforeState[moveIndex*3] == -1){
+                    u = Hand(units[moveIndex], Direction::West);
+                }
+                else if(state[moveIndex*3+1] != beforeState[moveIndex*3+1] == 1){
+                    u = Hand(units[moveIndex], Direction::South);
+                }
+                else if(state[moveIndex*3+1] != beforeState[moveIndex*3+1] == -1){
+                    u = Hand(units[moveIndex], Direction::North);
+                }
+                else{
+                    continue;
+                }
+                history.push_back({u, toString()});
+                break;
+            }
+        }
+    }
     for(int i = 0; i < 16; ++i){
         units[i].x = state[i * 3] - '0';
         units[i].y = state[i * 3 + 1] - '0';
@@ -269,6 +294,7 @@ void Geister::move(char u, char direct){
     }
     int x = unit->x;
     int y = unit->y;
+    history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
     if(direct == 'N'){
         Unit* target = getUnitByPos(x, y - 1);
         if(target && (unit->color.is1st() ^ target->color.is1st())){
