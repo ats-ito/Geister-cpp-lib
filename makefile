@@ -68,8 +68,6 @@ $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 
 OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition PlayerTest unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
 DEPS   = $(OBJS:.$(OBJ_EXT)=.d)
-$(warning OBJS = $(OBJS))
-$(warning DEPS = $(DEPS))
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
 	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
