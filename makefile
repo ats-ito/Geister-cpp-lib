@@ -21,6 +21,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 PLAYER_NAME = Player
+PLAYER_CLASS = RandomPlayer
 
 BIN_DIR = bin
 OBJ_DIR = obj
@@ -70,6 +71,6 @@ OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition Player
 DEPS   = $(OBJS:.$(OBJ_EXT)=.d)
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
+	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
 
 -include $(DEPS)

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+
 // https://marycore.jp/prog/cpp/std-string-split/
 template<class T> std::vector<std::string> split(const std::string& s, const T& separator, bool ignore_empty = 0, bool split_empty = 0) {
   struct {
@@ -43,7 +44,11 @@ template<class T> std::vector<std::string> split(const std::string& s, const T& 
   return v;
 }
 
-using PlayerClass = ChototsuPlayer;
+#ifndef PLAYER_CLASS
+#define PLAYER_CLASS RandomPlayer
+#endif
+
+using PlayerClass = PLAYER_CLASS;
 PlayerClass player;
 
 extern "C"{
