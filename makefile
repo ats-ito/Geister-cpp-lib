@@ -21,6 +21,9 @@ ifeq ($(OS),Windows_NT)
 endif
 
 PLAYER_NAME = Player
+ifdef PLAYER_CLASS
+$(shell touch Player.cpp)
+endif
 PLAYER_CLASS = RandomPlayer
 
 BIN_DIR = bin
