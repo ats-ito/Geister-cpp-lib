@@ -31,7 +31,7 @@ OBJ_DIR = obj
 $(shell mkdir $(BIN_DIR))
 $(shell mkdir $(OBJ_DIR))
 
-VPATH = random:chototsu:Simulator
+VPATH = Player:Simulator
 
 TARGETS = $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT) randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
@@ -73,6 +73,6 @@ OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition Player
 DEPS   = $(OBJS:.$(OBJ_EXT)=.d)
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -I./ -I./random/ -I./chototsu -I./lib/ -c $< -o $@
+	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -I./ -I./lib/ -c $< -o $@
 
 -include $(DEPS)
