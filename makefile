@@ -33,18 +33,14 @@ $(shell mkdir $(OBJ_DIR))
 
 VPATH = random:chototsu:Simulator
 
-TARGETS = $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT) randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT))
+TARGETS = $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT) randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
 .PHONY: all
 all: $(TARGETS)
 
-.PHONY: allclean
-allclean:
-	rm -rf *.o *.obj
-
 .PHONY: clean
 clean:
-	rm -rf *.$(OBJ_EXT) *.exp *.lib bin/*.* obj/*.*
+	rm -rf obj/*.*
 	
 PlayerTest_OBJ = $(addprefix $(OBJ_DIR)/,PlayerTest.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT)): $(PlayerTest_OBJ)
@@ -61,6 +57,9 @@ $(addprefix $(BIN_DIR)/,chototsuPlayer.$(LIB_EXT)): $(chototsuPlayer_OBJ)
 Player_OBJ = $(addprefix $(OBJ_DIR)/,Player.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(EXE_EXT)): $(Player_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
+
+$(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(LIB_EXT)): $(Player_OBJ)
+	$(CXX) $(CXXFLAGS) -shared $^ $(LIBS) -o $@
 
 client_OBJ = $(addprefix $(OBJ_DIR)/,client.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,client.$(EXE_EXT)): $(client_OBJ)
