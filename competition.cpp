@@ -66,12 +66,16 @@ int run(void* dll1, void* dll2){
         //現在時刻取得
         time_t now = time(NULL);
         struct tm *pnow = localtime(&now);
-        sprintf(fn, "%04d-%02d-%02d_%02d-%02d-%02d.txt", pnow->tm_year + 1900, pnow->tm_mon + 1, pnow->tm_mday,
+        sprintf(fn, "%04d-%02d-%02d_%02d-%02d-%02d", pnow->tm_year + 1900, pnow->tm_mon + 1, pnow->tm_mday,
             pnow->tm_hour, pnow->tm_min, pnow->tm_sec);
         std::string filename(fn);
 
-        auto fp = logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename;
+        constexpr auto ext = ".txt";
+        auto fp = logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename + ".0" + ext;
         fs::path filepath(fp);
+        for(int i=1; fs::exists(filepath); ++i){
+            filepath = fs::path(logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename + "." + std::to_string(i) + ext);
+        }
         
         logFile.open(filepath, std::ios::out);
     }
