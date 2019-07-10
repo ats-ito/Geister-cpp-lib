@@ -22,14 +22,20 @@ endif
 
 PLAYER_NAME = Player
 ifdef PLAYER_CLASS
-$(shell touch Player.cpp)
+$(shell ls Player/*.hpp -1 | grep -v "all.hpp" | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
 endif
 PLAYER_CLASS = RandomPlayer
 
 BIN_DIR = bin
 OBJ_DIR = obj
+EXIST_BIN_DIR = $(shell find ./ -type d -name $(BIN_DIR) -printf '%f\n')
+ifneq ($(EXIST_BIN_DIR),$(BIN_DIR))
 $(shell mkdir $(BIN_DIR))
+endif
+EXIST_OBJ_DIR = $(shell find ./ -type d -name $(OBJ_DIR) -printf '%f\n')
+ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
 $(shell mkdir $(OBJ_DIR))
+endif
 
 VPATH = Player:Simulator
 
@@ -40,7 +46,7 @@ all: $(TARGETS)
 
 .PHONY: clean
 clean:
-	rm -rf obj/*.*
+	rm -rf $(OBJ_DIR)/*.*
 	
 PlayerTest_OBJ = $(addprefix $(OBJ_DIR)/,PlayerTest.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT)): $(PlayerTest_OBJ)
