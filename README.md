@@ -3,9 +3,21 @@
 
 ## 使用手順
 ### ビルドについて
-プログラムのビルドには，CMake＆ninjaを使用しています．  
-また，コンパイラはclangを想定しています．gccでも動作するかもしれませんが，保証はできません．  
-ビルドに関しては，rootにおいてある`build.sh or build.bat`を使用することを推奨します．
+~~プログラムのビルドには，CMake＆ninjaを使用しています．~~  
+~~また，コンパイラはclangを想定しています．gccでも動作するかもしれませんが，保証はできません．~~  
+~~ビルドに関しては，rootにおいてある`build.sh or build.bat`を使用することを推奨します．~~  
+makefileを用意してあるので，こちらを使用してください．  
+ビルド時に次の変数が指定可能です．
+- PLAYER_NAME：   プレイヤのファイル名指定
+- PLAYER_CLASS：  Player.cppで参照するクラス名
+
+なお，ビルドは結構重いので-jオプションをつけることを推奨します．
+#### 動作確認済み環境
+- msys2 & clang++(8.0.0)
+- WSL & clang++(7.1.0)
+- WSL & g++(7.4.0)
+- MSVC & clang++(8.0.0)
+- CentOS & g++(8.2.0)
 ### 各ツールについて
 - competition  
   自動対戦用ツールです．  
@@ -50,5 +62,5 @@ competitionやclientから呼び出せるようにするために，プレイヤ
 ライブラリ名 | 用途 | リンク
 --- | --- | ---
 clxライブラリ | TCP通信 | http://clx.cielquis.net/
-nonsugarライブラリ | コマンドパーサ | https://github.com/iorate/nonsugar
+nonsugarライブラリ | コマンドラインパーサ | https://github.com/iorate/nonsugar
 
