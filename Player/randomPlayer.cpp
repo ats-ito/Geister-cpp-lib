@@ -1,7 +1,7 @@
 #include "randomPlayer.hpp"
-#include "Geister.hpp"
-#include "hand.hpp"
-#include "random.hpp"
+#include "../Geister.hpp"
+#include "../hand.hpp"
+#include "../random.hpp"
 #include <string>
 #include <iostream>
 

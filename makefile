@@ -22,17 +22,17 @@ endif
 
 PLAYER_NAME = Player
 ifdef PLAYER_CLASS
-$(shell ls Player/*.hpp -1 | grep -v "all.hpp" | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
+$(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
 endif
 PLAYER_CLASS = RandomPlayer
 
 BIN_DIR = bin
 OBJ_DIR = obj
-EXIST_BIN_DIR = $(shell find ./ -type d -name $(BIN_DIR) -printf '%f\n')
+EXIST_BIN_DIR = $(shell find ./ -type d -name $(BIN_DIR) | awk -F"/" '{ print $$NF }')
 ifneq ($(EXIST_BIN_DIR),$(BIN_DIR))
 $(shell mkdir $(BIN_DIR))
 endif
-EXIST_OBJ_DIR = $(shell find ./ -type d -name $(OBJ_DIR) -printf '%f\n')
+EXIST_OBJ_DIR = $(shell find ./ -type d -name $(OBJ_DIR) | awk -F"/" '{ print $$NF }')
 ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
 $(shell mkdir $(OBJ_DIR))
 endif

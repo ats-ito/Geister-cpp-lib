@@ -1,2 +1,2 @@
-#include "Player/chototsuPlayer.hpp"
-#include "Player/randomPlayer.hpp"
+#include "chototsuPlayer.hpp"
+#include "randomPlayer.hpp"

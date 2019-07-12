@@ -1,9 +1,9 @@
-#include "Geister.hpp"
+#include "../Geister.hpp"
 #include <string>
 #include <vector>
 #include <map>
-#include "random.hpp"
-#include "hand.hpp"
+#include "../random.hpp"
+#include "../hand.hpp"
 #include <memory>
 #include "chototsuPlayer.hpp"
 

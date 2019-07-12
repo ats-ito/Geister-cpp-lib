@@ -1,10 +1,10 @@
 #ifndef RANDOMPLAYER
 #define RANDOMPLAYER
-#include "hand.hpp"
-#include "Geister.hpp"
+#include "../hand.hpp"
+#include "../Geister.hpp"
 #include <string>
-#include "random.hpp"
-#include "Player.hpp"
+#include "../random.hpp"
+#include "../Player.hpp"
 
 const static std::vector<std::string> pattern = {
     "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
