@@ -15,6 +15,7 @@ class Player{
 protected:
     Geister game;
 public:
+    static std::array<std::string, 70> pattern;
 
     virtual std::string name(){
         return STRING(PLAYER_NAME);
@@ -23,5 +24,18 @@ public:
     virtual std::string decideHand(std::string res) = 0;
     virtual std::string decideRed() = 0;
 };
+
+std::array<std::string, 70> Player::pattern = {
+        "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
+        "ABDG", "ABDH", "ABEF", "ABEG", "ABEH", "ABFG", "ABFH",
+        "ABGH", "ACDE", "ACDF", "ACDG", "ACDH", "ACEF", "ACEG",
+        "ACEH", "ACFG", "ACFH", "ACGH", "ADEF", "ADEG", "ADEH",
+        "ADFG", "ADFH", "ADGH", "AEFG", "AEFH", "AEGH", "AFGH",
+        "BCDE", "BCDF", "BCDG", "BCDH", "BCEF", "BCEG", "BCEH",
+        "BCFG", "BCFH", "BCGH", "BDEF", "BDEG", "BDEH", "BDFG",
+        "BDFH", "BDGH", "BEFG", "BEFH", "BEGH", "BFGH", "CDEF",
+        "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
+        "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
+    };
 
 #endif
