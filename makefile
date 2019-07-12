@@ -4,7 +4,7 @@ ifeq ($(CXX),clang++)
   CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native -fPIC -stdlib=libc++
 endif
 ifeq ($(CXX),g++)
-  LIBS = -ldl -lstdc++fs
+  LIBS = -ldl
   CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native -fPIC
 endif
 OBJ_EXT = o
@@ -14,10 +14,13 @@ EXE_EXT = out
 ifeq ($(OS),Windows_NT)
   LIBS =  -lws2_32 -lwsock32 -lwinmm
   CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
-  CXX = clang++
   OBJ_EXT = obj
   LIB_EXT = dll
   EXE_EXT = exe
+endif
+
+ifeq ($(CXX),g++)
+  LIBS += -lstdc++fs
 endif
 
 PLAYER_NAME = Player
