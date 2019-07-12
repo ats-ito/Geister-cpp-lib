@@ -1,5 +1,5 @@
-#ifndef __SIMBRD__
-#define __SIMBRD__
+#ifndef __SIMULATOR__
+#define __SIMULATOR__
 
 #include "Geister.hpp"
 #include <random>

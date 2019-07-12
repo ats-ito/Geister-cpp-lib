@@ -1,7 +1,5 @@
 #include "Geister.hpp"
-#include "Geister.cpp"
 #include "unit.hpp"
-#include "unit.cpp"
 #include "Simulator.hpp"
 #include <array>
 #include <algorithm>

@@ -40,7 +40,7 @@ ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
 $(shell mkdir $(OBJ_DIR))
 endif
 
-VPATH = Player:Simulator
+VPATH = Player
 
 TARGETS = $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT) randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
@@ -63,7 +63,7 @@ chototsuPlayer_OBJ = $(addprefix $(OBJ_DIR)/,chototsuPlayer.$(OBJ_EXT) Geister.$
 $(addprefix $(BIN_DIR)/,chototsuPlayer.$(LIB_EXT)): $(chototsuPlayer_OBJ)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
-Player_OBJ = $(addprefix $(OBJ_DIR)/,Player.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
+Player_OBJ = $(addprefix $(OBJ_DIR)/,Player.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT) Simulator.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(EXE_EXT)): $(Player_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
