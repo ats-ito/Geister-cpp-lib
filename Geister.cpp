@@ -175,11 +175,6 @@ std::array<Unit, 16>& Geister::allUnit(){
 
 bool Geister::canMove1st(Unit unit, char direct) const
 {
-    if(direct == 0 && unit.y == 0) return false;
-    if(direct == 3 && unit.y == 5) return false; 
-    if(direct == 1 && unit.x == 5 && (unit.y != 0 || unit.color != UnitColor::Blue)) return false;
-    if(direct == 2 && unit.x == 0 && (unit.y != 0 || unit.color != UnitColor::Blue)) return false;
-
     if(direct == 0)
         unit.y -= 1;
     else if(direct == 1){
@@ -207,20 +202,21 @@ std::vector<Hand> Geister::getLegalMove1st() const
     for(int i = 0; i < 8; ++i)
         if(units[i].onBoard())
             for(int d = 0; d < 4; ++d){
-                auto& u = units[i];
-                if(canMove1st(u, d)){
-                    legalMoves.push_back(Hand({u, Direction(d)}));
+                auto& unit = units[i];
+                auto direct = Direction(d);
+                if(direct == 0 && unit.y == 0) continue;
+                if(direct == 3 && unit.y == 5)continue;
+                if(direct == 1 && unit.x == 5 && (unit.y != 0 || unit.color != UnitColor::Blue))continue;
+                if(direct == 2 && unit.x == 0 && (unit.y != 0 || unit.color != UnitColor::Blue))continue;
+
+                if(canMove1st(unit, d)){
+                    legalMoves.push_back(Hand({unit, direct}));
                 }
             }
     return legalMoves;
 }
 
 bool Geister::canMove2nd(Unit unit, char direct) const{
-    if(direct == 0 && unit.y == 0) return false;
-    if(direct == 3 && unit.y == 5) return false; 
-    if(direct == 1 && unit.x == 5 && (unit.y != 5 || unit.color != UnitColor::blue)) return false;
-    if(direct == 2 && unit.x == 0 && (unit.y != 5 || unit.color != UnitColor::blue)) return false;
-
     if(direct == 0)
         unit.y -= 1;
     else if(direct == 1){
@@ -247,9 +243,14 @@ std::vector<Hand> Geister::getLegalMove2nd() const{
     for(int i = 8; i < 16; ++i)
         if(units[i].onBoard())
             for(int d = 0; d < 4; ++d){
-                auto& u = units[i];
-                if(canMove2nd(u, d))
-                    legalMoves.push_back(Hand({u, d}));
+                auto& unit = units[i];
+                auto direct = Direction(d);
+                if(direct == 0 && unit.y == 0)continue;
+                if(direct == 3 && unit.y == 5) continue;
+                if(direct == 1 && unit.x == 5 && (unit.y != 5 || unit.color != UnitColor::blue))continue;
+                if(direct == 2 && unit.x == 0 && (unit.y != 5 || unit.color != UnitColor::blue))continue;
+                if(canMove2nd(unit, d))
+                    legalMoves.push_back(Hand({unit, direct}));
             }
     return legalMoves;
 }
