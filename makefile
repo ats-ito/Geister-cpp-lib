@@ -1,11 +1,13 @@
 CXX = g++
+CXXFLAGS = -MMD -MP -w -g -pg -std=c++17 -Ofast -march=native -mtune=native
+LIBS = -ldl
+
 ifeq ($(CXX),clang++)
-  LIBS = -ldl -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
-  CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native -fPIC -stdlib=libc++
+  LIBS += -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
+  CXXFLAGS += -fPIC -stdlib=libc++
 endif
 ifeq ($(CXX),g++)
-  LIBS = -ldl
-  CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native -fPIC
+  CXXFLAGS += -fPIC
 endif
 OBJ_EXT = o
 LIB_EXT = so
@@ -13,7 +15,6 @@ EXE_EXT = out
 
 ifeq ($(OS),Windows_NT)
   LIBS =  -lws2_32 -lwsock32 -lwinmm
-  CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
   OBJ_EXT = obj
   LIB_EXT = dll
   EXE_EXT = exe
