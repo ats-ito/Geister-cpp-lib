@@ -200,16 +200,44 @@ std::vector<Hand> Geister::getLegalMove1st() const
 {
     std::vector<Hand> legalMoves;
     for(int i = 0; i < 8; ++i)
-        if(units[i].onBoard())
+        if(units[i].x < 6)
             for(int d = 0; d < 4; ++d){
-                auto& unit = units[i];
+                auto unit = units[i];
                 auto direct = Direction(d);
-                if(direct == 0 && unit.y == 0) continue;
-                if(direct == 3 && unit.y == 5)continue;
-                if(direct == 1 && unit.x == 5 && (unit.y != 0 || unit.color != UnitColor::Blue))continue;
-                if(direct == 2 && unit.x == 0 && (unit.y != 0 || unit.color != UnitColor::Blue))continue;
+                if((direct == 0 && unit.y == 0)
+                || (direct == 3 && unit.y == 5)
+                || (direct == 1 && unit.x == 5 && (unit.y != 0 || unit.color != UnitColor::Blue))
+                || (direct == 2 && unit.x == 0 && (unit.y != 0 || unit.color != UnitColor::Blue))) continue;
+                
+                if(direct == 0)
+                    unit.y -= 1;
+                else if(direct == 1){
+                    if(unit.x == 5){
+                        if(unit.y == 0 && unit.color == UnitColor::Blue)
+                            legalMoves.push_back(Hand({unit, direct}));
+                        continue;
+                    }
+                    unit.x += 1;
+                }
+                else if(direct == 2){
+                    if(unit.x == 0){
+                        if(unit.y == 0 && unit.color == UnitColor::Blue)
+                            legalMoves.push_back(Hand({unit, direct}));
+                        continue;
+                    }
+                    unit.x -= 1;
+                }
+                else if(direct == 3)
+                    unit.y += 1;
 
-                if(canMove1st(unit, d)){
+                bool movable1st = true;
+                for(auto&& u: units){
+                    if(u.x == unit.x && u.y == unit.y && u.color.is1st()){
+                        movable1st = false;
+                        break;
+                    }
+                }
+                if(movable1st){
                     legalMoves.push_back(Hand({unit, direct}));
                 }
             }
@@ -241,15 +269,44 @@ bool Geister::canMove2nd(Unit unit, char direct) const{
 std::vector<Hand> Geister::getLegalMove2nd() const{
     std::vector<Hand> legalMoves;
     for(int i = 8; i < 16; ++i)
-        if(units[i].onBoard())
+        if(units[i].x < 6)
             for(int d = 0; d < 4; ++d){
-                auto& unit = units[i];
+                auto unit = units[i];
                 auto direct = Direction(d);
-                if(direct == 0 && unit.y == 0)continue;
-                if(direct == 3 && unit.y == 5) continue;
-                if(direct == 1 && unit.x == 5 && (unit.y != 5 || unit.color != UnitColor::blue))continue;
-                if(direct == 2 && unit.x == 0 && (unit.y != 5 || unit.color != UnitColor::blue))continue;
-                if(canMove2nd(unit, d))
+                if((direct == 0 && unit.y == 0)
+                || (direct == 3 && unit.y == 5)
+                || (direct == 1 && unit.x == 5 && (unit.y != 5 || unit.color != UnitColor::blue))
+                || (direct == 2 && unit.x == 0 && (unit.y != 5 || unit.color != UnitColor::blue))) continue;
+
+                if(direct == 0)
+                    unit.y -= 1;
+                else if(direct == 1){
+                    if(unit.x == 5){
+                        if(unit.y == 5 && unit.color == UnitColor::blue)
+                            legalMoves.push_back(Hand({unit, direct}));
+                        continue;
+                    }
+                    unit.x += 1;
+                }
+                else if(direct == 2){
+                    if(unit.x == 0){
+                        if(unit.y == 5 && unit.color == UnitColor::blue)
+                            legalMoves.push_back(Hand({unit, direct}));
+                        continue;
+                    }
+                    unit.x -= 1;
+                }
+                else if(direct == 3)
+                    unit.y += 1;
+                
+                bool movable2nd = true;
+                for(auto&& u: units){
+                    if(u.x == unit.x && u.y == unit.y && u.color.is2nd()){
+                        movable2nd = false;
+                        break;
+                    }
+                }
+                if(movable2nd)
                     legalMoves.push_back(Hand({unit, direct}));
             }
     return legalMoves;
