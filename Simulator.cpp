@@ -87,7 +87,7 @@ double Simulator::playout(){
         m = lm[selector2(mt)];
         geister.move(m.unit.name, m.direct.toChar());
     }
-    return geister.checkResult();
+    return evaluate();
 }
 
 void Simulator::initBoard(){

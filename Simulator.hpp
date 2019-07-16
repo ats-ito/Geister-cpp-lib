@@ -25,6 +25,11 @@ public:
     virtual double playout();
 
     virtual void initBoard();
+
+    virtual double evaluate() const
+    {
+        return geister.checkResult() > 0 ? 1.0 : -1.0;
+    }
 };
 
 #endif
