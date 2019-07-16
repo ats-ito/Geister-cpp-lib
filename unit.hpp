@@ -150,9 +150,18 @@ public:
 
     std::string toString() const;
 
-    bool onBoard() const;
-    bool isTaken() const;
-    bool isEscape() const;
+    bool onBoard() const
+    {
+        return !isTaken() && !isEscape();
+    }
+    bool isTaken() const
+    {
+        return x == 9 && y == 9;
+    }
+    bool isEscape() const
+    {
+        return x == 8 && y == 8;
+    }
 };
 
 class OpUnit : public Unit{

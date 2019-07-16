@@ -112,19 +112,6 @@ Unit::Unit(int x, int y, UnitColor color, char name){
 std::string Unit::toString() const{
     return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
 }
-    
-bool Unit::onBoard() const
-{
-    return !isTaken() && !isEscape();
-}
-bool Unit::isTaken() const
-{
-    return x == 9 && y == 9;
-}
-bool Unit::isEscape() const
-{
-    return x == 8 && y == 8;
-}
 
 OpUnit::OpUnit(){
     x = -1;
