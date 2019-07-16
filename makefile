@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -MMD -MP -w -g -pg -std=c++17 -Ofast -march=native -mtune=native
+CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
 LIBS = -ldl
 
 ifeq ($(CXX),clang++)
