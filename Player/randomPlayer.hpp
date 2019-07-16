@@ -8,7 +8,12 @@
 
 
 class RandomPlayer: public Player{
+    cpprefjp::random_device rd;
+    std::mt19937 mt;
 public:
+    RandomPlayer(): mt(rd()){
+    }
+
     virtual std::string decideRed(){
         cpprefjp::random_device rd;
         std::mt19937 mt(rd());
@@ -19,8 +24,6 @@ public:
 
     virtual std::string decideHand(std::string res){
         game.setState(res);
-        cpprefjp::random_device rd;
-        std::mt19937 mt(rd());
 
         auto legalMoves = game.getLegalMove1st();
         std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
