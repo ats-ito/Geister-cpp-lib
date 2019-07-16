@@ -5,22 +5,50 @@
 #include <algorithm>
 #include <map>
 
-cpprefjp::random_device rd;
-std::mt19937 mt(rd());
 
-Simulator::Simulator(): geister(){
+Simulator::Simulator(): geister(), mt(rd()){
     depth = 0;
     assume();
     initBoard();
 }
 
-Simulator::Simulator(const Geister& g): geister(g){
+Simulator::Simulator(const Geister& g): geister(g), mt(rd()){
     depth = 0;
     assume();
     initBoard();
 }
 
-Simulator::Simulator(Geister g, std::string ptn): geister(g){
+Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
+    depth = 0;
+    constexpr int l2s = 'a' - 'A';
+    if(ptn.size() == 4){
+        for(int u = 8; u < 16; ++u){
+            for(int c = 0; c < ptn.size(); ++c){
+                if((ptn[c] + l2s) == geister.allUnit()[u].name){
+                    geister.allUnit()[u].color = UnitColor(3);
+                    break;
+                }
+            }
+            if(geister.allUnit()[u].color.toInt() != 3)
+                geister.allUnit()[u].color = UnitColor(1);
+        }
+    }
+    else
+        assume();
+    initBoard();
+}
+
+void Simulator::init(const Geister& g){
+    geister = g;
+    mt = std::mt19937(rd());
+    depth = 0;
+    assume();
+    initBoard();
+}
+
+void Simulator::init(const Geister& g, std::string ptn){
+    geister = g;
+    mt = std::mt19937(rd());
     depth = 0;
     constexpr int l2s = 'a' - 'A';
     if(ptn.size() == 4){
