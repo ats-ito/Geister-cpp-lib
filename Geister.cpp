@@ -322,9 +322,9 @@ std::vector<Hand> Geister::getLegalMove2nd() const{
     return legalMoves;
 }
 
-std::string Geister::toString() const
+std::string& Geister::toString() const
 {
-	std::string res = "14R24R34R44R15B25B35B45B41u31u21u11u40u30u20u10u";
+	static std::string res = "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u";
 	for(int i = 0; i < 16; ++i){
 		res[i*3] = '0' + units[i].x;
 		res[i*3 + 1] = '0' + units[i].y;

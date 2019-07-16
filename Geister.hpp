@@ -42,7 +42,7 @@ public:
 
     virtual std::vector<Hand> getLegalMove2nd() const;
 
-    virtual std::string toString() const;
+    virtual std::string& toString() const;
 
     virtual void take(Unit unit);
 
