@@ -30,7 +30,9 @@ public:
 
     void initialize();
 
+    void printAll() const;
     void printBoard() const;
+    void printInfo() const;
 
     virtual std::array<Unit, 16>& allUnit();
 

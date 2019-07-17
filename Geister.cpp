@@ -145,6 +145,12 @@ void Geister::initialize(){
     setState("14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u");
 }
 
+void Geister::printAll() const
+{
+    printBoard();
+    printInfo();
+}
+
 void Geister::printBoard() const
 {
     std::cout << "  0 1 2 3 4 5" << std::endl;
@@ -155,7 +161,12 @@ void Geister::printBoard() const
             bool exist = false;
             for(auto&& u: units){
                 if(u.x == j && u.y == i){
-                    std::cout << u.color.toChar();
+                    if(u.color.isBlue())
+                        std::cout << "\e[34m";
+                    else if(u.color.isRed())
+                        std::cout << "\e[31m";
+                    std::cout << u.name;
+                    std::cout << "\e[0m";
                     exist = true;
                     break;
                 }
@@ -164,6 +175,10 @@ void Geister::printBoard() const
         }
         std::cout << std::endl;
     }
+}
+
+void Geister::printInfo() const
+{
     for(int i = 0; i < 16; ++i){
         std::cout << units[i].name << "(" << units[i].color.toChar() << "): " << units[i].x << ", " << units[i].y << std::endl;
     }
