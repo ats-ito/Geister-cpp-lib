@@ -1,4 +1,8 @@
-CXX = g++
+ifeq  ($(shell uname),Darwin)
+  CXX = clang++
+else
+  CXX = g++
+endif
 CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
 LIBS = -ldl
 
@@ -14,7 +18,7 @@ LIB_EXT = so
 EXE_EXT = out
 
 ifeq ($(OS),Windows_NT)
-  LIBS =  -lws2_32 -lwsock32 -lwinmm
+  LIBS = -lws2_32 -lwsock32 -lwinmm
   OBJ_EXT = obj
   LIB_EXT = dll
   EXE_EXT = exe
