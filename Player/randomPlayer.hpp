@@ -25,7 +25,7 @@ public:
     virtual std::string decideHand(std::string res){
         game.setState(res);
 
-        auto legalMoves = game.getLegalMove1st();
+        auto legalMoves = candidateHand();
         std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
         auto action = legalMoves[serector1(mt) % legalMoves.size()];
         return Hand(action).toString();

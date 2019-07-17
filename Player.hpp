@@ -1,6 +1,7 @@
 #include "hand.hpp"
 #include "Geister.hpp"
 #include <string>
+#include <vector>
 
 #ifndef PLAYER
 #define PLAYER
@@ -34,6 +35,9 @@ public:
 
     virtual std::string decideHand(std::string res) = 0;
     virtual std::string decideRed() = 0;
+    virtual std::vector<Hand> candidateHand(){
+        return game.getLegalMove1st();
+    }
 };
 
 #endif

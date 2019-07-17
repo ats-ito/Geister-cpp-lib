@@ -19,8 +19,6 @@ public:
         std::mt19937 mt(rd());
         std::uniform_int_distribution<int> serector1(0, 1);
 
-        auto legalMoves = game.getLegalMove1st();
-        auto action = legalMoves[0];
         const auto& units = game.allUnit();
         for(const auto& u: units){
             if(u.color.toInt() == 0){
