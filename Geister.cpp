@@ -390,70 +390,123 @@ void Geister::take(Unit unit){
 
 void Geister::move(char u, char direct){
     Unit* unit;
-    for(int i = 0; i < 16; ++i){
-        if(units[i].name == u){
-            unit = &units[i];
-            break;
+    if(u >= 'A' && u <= 'H'){
+        unit = &units[u - 'A'];
+        int x = unit->x;
+        int y = unit->y;
+        history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
+        if(direct == 'N'){
+            Unit* target = getUnitByPos(x, y - 1);
+            if(target && target->color.is2nd()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x;
+            unit->y = y - 1;
         }
-    }
-    int x = unit->x;
-    int y = unit->y;
-    history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
-    if(direct == 'N'){
-        Unit* target = getUnitByPos(x, y - 1);
-        if(target && (unit->color.is1st() ^ target->color.is1st())){
-            take(*target);
-            target->x = 9;
-            target->y = 9;
+        else if(direct == 'E'){
+            if((unit->color == UnitColor::Blue && x == 5 && y == 0)){
+                unit->x = 8;
+                unit->y = 8;
+                return;
+            }
+            Unit* target = getUnitByPos(x + 1, y);
+            if(target && target->color.is2nd()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x + 1;
+            unit->y = y;
         }
-        unit->x = x;
-        unit->y = y - 1;
+        else if(direct == 'W'){
+            if((unit->color == UnitColor::Blue && x == 0 && y == 0)){
+                unit->x = 8;
+                unit->y = 8;
+                return;
+            }
+            Unit* target = getUnitByPos(x - 1, y);
+            if(target && target->color.is2nd()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x - 1;
+            unit->y = y;
+        }
+        else if(direct == 'S'){
+            Unit* target = getUnitByPos(x, y + 1);
+            if(target && target->color.is2nd()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x;
+            unit->y = y + 1;
+        }
+        else return;
     }
-    else if(direct == 'E'){
-        if((unit->color == UnitColor::Blue && x == 5 && y == 0)
-        || (unit->color == UnitColor::blue && x == 5 && y == 5)){
-            unit->x = 8;
-            unit->y = 8;
+    else if(u >= 'a' && u <= 'h'){
+        unit = &units[u - 'a' + 8];
+        int x = unit->x;
+        int y = unit->y;
+        history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
+        if(direct == 'N'){
+            Unit* target = getUnitByPos(x, y - 1);
+            if(target && target->color.is1st()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x;
+            unit->y = y - 1;
+        }
+        else if(direct == 'E'){
+            if((unit->color == UnitColor::blue && x == 5 && y == 5)){
+                unit->x = 8;
+                unit->y = 8;
+                return;
+            }
+            Unit* target = getUnitByPos(x + 1, y);
+            if(target && target->color.is1st()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x + 1;
+            unit->y = y;
+        }
+        else if(direct == 'W'){
+            if((unit->color == UnitColor::blue && x == 0 && y == 5)){
+                unit->x = 8;
+                unit->y = 8;
+                return;
+            }
+            Unit* target = getUnitByPos(x - 1, y);
+            if(target && target->color.is1st()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x - 1;
+            unit->y = y;
+        }
+        else if(direct == 'S'){
+            Unit* target = getUnitByPos(x, y + 1);
+            if(target && target->color.is1st()){
+                take(*target);
+                target->x = 9;
+                target->y = 9;
+            }
+            unit->x = x;
+            unit->y = y + 1;
+        }
+        else{
             return;
         }
-        Unit* target = getUnitByPos(x + 1, y);
-        if(target && (unit->color.is1st() ^ target->color.is1st())){
-            take(*target);
-            target->x = 9;
-            target->y = 9;
-        }
-        unit->x = x + 1;
-        unit->y = y;
     }
-    else if(direct == 'W'){
-        if((unit->color == UnitColor::Blue && x == 0 && y == 0)
-        || (unit->color == UnitColor::blue && x == 0 && y == 5)){
-            unit->x = 8;
-            unit->y = 8;
-            return;
-        }
-        Unit* target = getUnitByPos(x - 1, y);
-        if(target && (unit->color.is1st() ^ target->color.is1st())){
-            take(*target);
-            target->x = 9;
-            target->y = 9;
-        }
-        unit->x = x - 1;
-        unit->y = y;
-    }
-    else if(direct == 'S'){
-        Unit* target = getUnitByPos(x, y + 1);
-        if(target && (unit->color.is1st() ^ target->color.is1st())){
-            take(*target);
-            target->x = 9;
-            target->y = 9;
-        }
-        unit->x = x;
-        unit->y = y + 1;
-    }
-    else{
-        return;
-    }
+    else return;
     turn++;
 }
 
