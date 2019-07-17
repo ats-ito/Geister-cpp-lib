@@ -152,7 +152,7 @@ public:
 
     bool onBoard() const
     {
-        return !isTaken() && !isEscape();
+        return 0 <= x && x <= 5 && 0 <= y && y <= 5;
     }
     bool isTaken() const
     {
