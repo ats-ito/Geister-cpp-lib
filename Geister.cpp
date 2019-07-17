@@ -153,6 +153,19 @@ void Geister::printAll() const
 
 void Geister::printBoard() const
 {
+    std::cout << "2ndPlayer Take: ";
+    for(int i = 0; i < 8; ++i){
+        auto& u = units[i];
+        if(u.isTaken()){
+            if(u.color.isBlue())
+                std::cout << "\e[34m";
+            else if(u.color.isRed())
+                std::cout << "\e[31m";
+            std::cout << u.name;
+            std::cout << "\e[0m" << ",";
+        }
+    }
+    std::cout << std::endl;
     std::cout << "  0 1 2 3 4 5" << std::endl;
     for(int i = 0; i < 6; ++i){
         std::cout << i;
@@ -175,6 +188,26 @@ void Geister::printBoard() const
         }
         std::cout << std::endl;
     }
+    std::cout << "1stPlayer Take: ";
+    for(int i = 8; i < 16; ++i){
+        auto& u = units[i];
+        if(u.isTaken()){
+            if(u.color.isBlue())
+                std::cout << "\e[34m";
+            else if(u.color.isRed())
+                std::cout << "\e[31m";
+            std::cout << u.name;
+            std::cout << "\e[0m" << ",";
+        }
+    }
+    std::cout << std::endl;
+    for(int i = 0; i < 16; ++i){
+        auto& u = units[i];
+        if(u.isEscape()){
+            std::cout << "Escape: " << "\e[34m" << u.name << "\e[0m" << std::endl;
+        }
+    }
+    std::cout << std::endl;
 }
 
 void Geister::printInfo() const
