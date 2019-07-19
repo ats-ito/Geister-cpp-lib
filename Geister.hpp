@@ -36,6 +36,8 @@ public:
 
     virtual std::array<Unit, 16>& allUnit();
 
+    virtual bool canMove1st(Unit unit, Direction direct) const;
+
     virtual bool canMove1st(Unit unit, char direct) const;
 
     virtual std::vector<Hand> getLegalMove1st() const;

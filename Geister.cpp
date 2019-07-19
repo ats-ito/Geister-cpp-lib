@@ -221,6 +221,29 @@ std::array<Unit, 16>& Geister::allUnit(){
     return units;
 }
 
+bool Geister::canMove1st(Unit unit, Direction direct) const
+{
+    if(direct == Direction::North)
+        unit.y -= 1;
+    else if(direct == Direction::East){
+        if(unit.x == 5)
+            return unit.y == 0 && unit.color == UnitColor::Blue;
+        unit.x += 1;
+    }
+    else if(direct == Direction::West){
+        if(unit.x == 0)
+            return unit.y == 0 && unit.color == UnitColor::Blue;
+        unit.x -= 1;
+    }
+    else if(direct == Direction::South)
+        unit.y += 1;
+    for(auto&& u: units){
+        if(u.x == unit.x && u.y == unit.y && u.color.is1st())
+            return false;
+    }
+    return true;
+}
+
 bool Geister::canMove1st(Unit unit, char direct) const
 {
     if(direct == 0)
