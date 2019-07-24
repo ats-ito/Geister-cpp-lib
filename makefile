@@ -27,6 +27,12 @@ else
 endif
 
 PLAYER_NAME = Player
+ifdef PN
+  PLAYER_NAME = $(PN)
+endif
+ifdef PC
+  PLAYER_CLASS = $(PC)
+endif
 ifdef PLAYER_CLASS
 $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
 endif
