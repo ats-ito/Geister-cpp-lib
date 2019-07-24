@@ -101,12 +101,14 @@ struct Hand{
         unit.color = src[1];
         unit.x = src[2];
         unit.y = src[3];
-        direct = Direction(src[4]);
+        direct = Direction(src[5]);
     }
 
-    std::string toString(){
-        return unit.toString() + direct.toChar();
+    std::string toString() const{
+        return unit.toString() + "," + direct.toChar();
     }
+    
+    operator std::string() const { return toString(); }
 };
 
 #endif

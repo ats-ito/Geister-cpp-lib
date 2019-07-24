@@ -172,4 +172,6 @@ public:
     OpUnit(int x, int y, char color, char name);
 };
 
+std::ostream& operator<<(std::ostream& stream, const Unit& value);
+
 #endif
