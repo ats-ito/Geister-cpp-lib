@@ -1,4 +1,3 @@
-#include "clx/tcp.h"
 #include "nonsugar.hpp"
 #include "Geister.hpp"
 #include <string>
@@ -8,10 +7,12 @@
 #include <map>
 #include "random.hpp"
 #include "hand.hpp"
+#ifdef USE_FS
 #ifdef _WIN32
 #include <filesystem>
 #else
 #include <experimental/filesystem>
+#endif
 #endif
 #ifdef _WIN32
 #include <windows.h>
@@ -19,19 +20,34 @@
 #include <dlfcn.h>
 #endif
 
+#ifdef USE_FS
 #ifdef _WIN32
 namespace fs = std::filesystem;
 #else
 namespace fs = std::experimental::filesystem;
 #endif
+#endif
 
 using namespace nonsugar;
+
+static std::string getFileName(std::string path){
+    int last = 0;
+    for(int i = 0; i < path.size(); ++i){
+        if(path[i] == '/' || path[i] == '\\'){
+            last = i+1;
+        }
+    }
+    return std::string(&path[last]);
+}
+
 
 bool logEnable = false;
 std::string dllPath1, dllPath2;
 std::string dllName1, dllName2;
+#ifdef USE_FS
 std::string logDir;
 std::ofstream digestFile;
+#endif
 int outputLevel = 2;
 
 using T = std::string (*)(std::string);
@@ -58,6 +74,7 @@ int run(void* dll1, void* dll2){
         exit(1);
     }
 
+#ifdef USE_FS
     std::ofstream logFile;
     if(logEnable){
         //時刻取得用
@@ -79,7 +96,7 @@ int run(void* dll1, void* dll2){
         
         logFile.open(filepath, std::ios::out);
     }
-    
+#endif    
     cpprefjp::random_device rd;
 	std::mt19937 mt(rd());
 
@@ -116,10 +133,12 @@ int run(void* dll1, void* dll2){
         std::cout << "1stPlayerSet: " << red_ptn1 << std::endl;
         std::cout << "2ndPlayerSet: " << red_ptn2 << std::endl;
     }
+#ifdef USE_FS
     if(logEnable){
         logFile << "Set," << "1," << red_ptn1 << "," << "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u" << std::endl;
         logFile << "Set," << "2," << red_ptn2 << "," << game.mask() << std::endl;
     }
+#endif
     if(outputLevel > 2){
         game.printBoard();
     }
@@ -132,8 +151,10 @@ int run(void* dll1, void* dll2){
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }
+#ifdef USE_FS
         if(logEnable)
             logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+#endif
         game.move(hand.unit.name, hand.direct.toChar());
         if(outputLevel > 2){
             game.printBoard();
@@ -146,11 +167,13 @@ int run(void* dll1, void* dll2){
         if(outputLevel > 1){
             std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }
+#ifdef USE_FS
         if(logEnable){
             game.changeSide();
-            logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game.toString() << std::endl;
+            logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
             game.changeSide();
         }
+#endif
         game.move(hand.unit.name, hand.direct.toChar());
         game.changeSide();
         if(outputLevel > 2){
@@ -162,11 +185,13 @@ int run(void* dll1, void* dll2){
     if(outputLevel > 0){
         std::cout << result << ": " << game.turn << std::endl;
     }
+#ifdef USE_FS
     if(logEnable){
         logFile << "Result," << result << "," << game << std::endl;
         logFile << "Turn," << game.turn << std::endl;
         digestFile << result << "," << game.turn << std::endl;
     }
+#endif
     return result;
 }
 
@@ -202,10 +227,13 @@ int main(int argc, char** argv){
         if(opts.get<'d'>().size() > 0){
             dllPath1 = opts.get<'d'>()[0];
             dllPath2 = opts.get<'d'>()[1];
+#ifdef USE_FS
             dllName1 = fs::path(dllPath1).filename().generic_string();
             dllName2 = fs::path(dllPath2).filename().generic_string();
-            // dllName1 = dllPath1.substr(2, dllPath1.size());
-            // dllName2 = dllPath2.substr(2, dllPath2.size());
+#else
+            dllName1 = getFileName(dllPath1);
+            dllName2 = getFileName(dllPath2);
+#endif
         }
         else{
             std::cerr << usage(cmd);
@@ -233,6 +261,7 @@ int main(int argc, char** argv){
         exit(1);
     }
 
+#ifdef USE_FS
     if(logEnable){
         fs::create_directory("./log");
 
@@ -251,7 +280,7 @@ int main(int argc, char** argv){
 
         digestFile.open(logDir + "/" + dllName1 + "-" + dllName2 + "_digest.txt", std::ios::out);
     }
-
+#endif
     std::array<int, 6> winreason({0,0,0,0,0,0});
 
     int win1st = 0;
@@ -288,6 +317,7 @@ int main(int argc, char** argv){
             std::cout << x << ",";
         std::cout << std::endl;
     }
+#ifdef USE_FS
     if(logEnable){
         std::ofstream summary(logDir + "/" + dllName1 + "-" + dllName2 + "_summary.txt", std::ios::out);
         summary << "1stPlayer: " << dllName1 << std::endl;
@@ -303,6 +333,7 @@ int main(int argc, char** argv){
         summary << "                   TakenRed: " << winreason[5] << std::endl;
         summary << "        Draw: " << draw << std::endl;
     }
+#endif
 #ifdef _WIN32
     FreeLibrary(handle1);
     FreeLibrary(handle2);
@@ -310,4 +341,5 @@ int main(int argc, char** argv){
     dlclose(handle1);
     dlclose(handle2);
 #endif
+    return 0;
 }

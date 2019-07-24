@@ -1,3 +1,5 @@
+USE_FS = ""
+
 ifeq  ($(shell uname),Darwin)
   CXX = clang++
 else
@@ -15,11 +17,17 @@ else
   LIBS = -ldl
   ifeq ($(CXX),clang++)
     CXXFLAGS += -fPIC -stdlib=libc++
-    LIBS += -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
+    LIBS += -stdlib=libc++ -lc++experimental -lc++abi
+    ifdef USE_FS
+      LIBS += -lc++fs
+    endif
   endif
   ifeq ($(CXX),g++)
     CXXFLAGS += -fPIC
-    LIBS += -lstdc++ -lstdc++fs
+    LIBS += -lstdc++
+    ifdef USE_FS
+      LIBS += -lstdc++fs
+    endif
   endif
   OBJ_EXT = o
   LIB_EXT = so
@@ -90,7 +98,12 @@ $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition PlayerTest unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
 DEPS   = $(OBJS:.$(OBJ_EXT)=.d)
 
+ifdef USE_FS
+$(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
+	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -DUSE_FS -I./ -I./lib/ -c $< -o $@
+else
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
 	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -I./ -I./lib/ -c $< -o $@
+endif
 
 -include $(DEPS)
