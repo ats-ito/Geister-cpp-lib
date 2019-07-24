@@ -34,7 +34,7 @@ public:
             std::cout << "It's Illegal Move! " << Hand(unit, direct).toString() << std::endl;
         }
 
-        return unit.toString() + direct;
+        return Hand(unit, direct);
     }
 };
 

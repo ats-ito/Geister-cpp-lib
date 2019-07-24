@@ -8,16 +8,21 @@
 
 
 class ChototsuPlayer: public Player{
+    cpprefjp::random_device rd;
+    std::mt19937 mt;
+    std::uniform_int_distribution<int> serector1;
 public:
+    ChototsuPlayer():
+    mt(rd()),
+    serector1(0, 1)
+    {}
+
     virtual std::string decideRed(){
         return std::string("BCFG");
     }
 
     virtual std::string decideHand(std::string res){
         game.setState(res);
-        cpprefjp::random_device rd;
-        std::mt19937 mt(rd());
-        std::uniform_int_distribution<int> serector1(0, 1);
 
         const auto& units = game.allUnit();
         for(const auto& u: units){
