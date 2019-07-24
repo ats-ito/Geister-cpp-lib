@@ -613,7 +613,7 @@ Geister Geister::mask(){
 	Geister res(*this);
 	for(int i = 8; i < units.size(); ++i){
 		auto& u = res.units[i];
-		if(!u.onBoard())
+		if(u.onBoard())
 			u.color = UnitColor::unknown;
 	}
 	return res;
