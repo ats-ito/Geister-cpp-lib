@@ -3,29 +3,27 @@ ifeq  ($(shell uname),Darwin)
 else
   CXX = g++
 endif
-CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
-LIBS = -ldl
 
-ifeq ($(CXX),clang++)
-  LIBS += -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
-  CXXFLAGS += -fPIC -stdlib=libc++
-endif
-ifeq ($(CXX),g++)
-  CXXFLAGS += -fPIC
-endif
-OBJ_EXT = o
-LIB_EXT = so
-EXE_EXT = out
+CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
 
 ifeq ($(OS),Windows_NT)
   LIBS = -lws2_32 -lwsock32 -lwinmm
   OBJ_EXT = obj
   LIB_EXT = dll
   EXE_EXT = exe
-endif
-
-ifeq ($(CXX),g++)
-  LIBS += -lstdc++fs
+else
+  LIBS = -ldl
+  ifeq ($(CXX),clang++)
+    CXXFLAGS += -fPIC -stdlib=libc++
+    LIBS += -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
+  endif
+  ifeq ($(CXX),g++)
+    CXXFLAGS += -fPIC
+    LIBS += -lstdc++ -lstdc++fs
+  endif
+  OBJ_EXT = o
+  LIB_EXT = so
+  EXE_EXT = out
 endif
 
 PLAYER_NAME = Player
