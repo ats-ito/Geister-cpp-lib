@@ -30,6 +30,10 @@ public:
         auto action = legalMoves[serector1(mt) % legalMoves.size()];
         return Hand(action);
     }
+
+    virtual std::vector<Hand> candidateHand(){
+        return game.getLegalMove1st();
+    }
 };
 
 #endif
