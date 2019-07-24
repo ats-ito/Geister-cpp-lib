@@ -118,7 +118,7 @@ int run(void* dll1, void* dll2){
     }
     if(logEnable){
         logFile << "Set," << "1," << red_ptn1 << "," << "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u" << std::endl;
-        logFile << "Set," << "2," << red_ptn2 << "," << game.mask().toString() << std::endl;
+        logFile << "Set," << "2," << red_ptn2 << "," << game.mask() << std::endl;
     }
     if(outputLevel > 2){
         game.printBoard();
@@ -128,12 +128,12 @@ int run(void* dll1, void* dll2){
 
     while(result == 0){
         if(game.turn >= 200) break;
-        auto hand = Hand(decideHand1(game.mask().toString()));
+        auto hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }
         if(logEnable)
-            logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game.toString() << std::endl;
+            logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
         game.move(hand.unit.name, hand.direct.toChar());
         if(outputLevel > 2){
             game.printBoard();
@@ -142,7 +142,7 @@ int run(void* dll1, void* dll2){
         if(result)
             break;
         game.changeSide();
-        hand = Hand(decideHand2(game.mask().toString()));
+        hand = Hand(decideHand2(game.mask()));
         if(outputLevel > 1){
             std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         }
@@ -163,7 +163,7 @@ int run(void* dll1, void* dll2){
         std::cout << result << ": " << game.turn << std::endl;
     }
     if(logEnable){
-        logFile << "Result," << result << "," << game.toString() << std::endl;
+        logFile << "Result," << result << "," << game << std::endl;
         logFile << "Turn," << game.turn << std::endl;
         digestFile << result << "," << game.turn << std::endl;
     }

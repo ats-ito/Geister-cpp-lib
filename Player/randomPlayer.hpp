@@ -28,7 +28,7 @@ public:
         auto legalMoves = candidateHand();
         std::uniform_int_distribution<int> serector1(0, legalMoves.size() - 1);
         auto action = legalMoves[serector1(mt) % legalMoves.size()];
-        return Hand(action).toString();
+        return Hand(action);
     }
 };
 

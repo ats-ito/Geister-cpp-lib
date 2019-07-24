@@ -59,6 +59,10 @@ public:
     virtual Geister mask();
 
     virtual void changeSide();
+
+    virtual operator std::string() const { return toString(); }
 };
+
+std::ostream& operator<<(std::ostream& stream, const Geister& value);
 
 #endif

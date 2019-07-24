@@ -23,20 +23,20 @@ public:
         for(const auto& u: units){
             if(u.color.toInt() == 0){
                 if(u.x == 0 && u.y == 0){
-                    return Hand({u, Direction::West}).toString();
+                    return Hand({u, Direction::West});
                 }
                 if(u.x == 5 && u.y == 0){
-                    return Hand({u, Direction::East}).toString();
+                    return Hand({u, Direction::East});
                 }
             }
         }
         for(const auto& u: units){
             if(u.color.toInt() == 0 && u.y == 0){
                 if(u.x < 3 && u.x > 0){
-                    return Hand({u, Direction::West}).toString();
+                    return Hand({u, Direction::West});
                 }
                 else if(u.x < 5){
-                    return Hand({u, Direction::East}).toString();
+                    return Hand({u, Direction::East});
                 }
             }
         }
@@ -51,7 +51,7 @@ public:
                 }
             }
         }
-        return Hand({units[mostFrontIndex], Direction::North}).toString();
+        return Hand({units[mostFrontIndex], Direction::North});
     }
 };
 

@@ -94,7 +94,7 @@ int run(int port, std::string dll){
     auto brd = Geister(res);
 
     while(res.substr(0, 3) != "WON" && res.substr(0, 3) != "LST" && res.substr(0, 3) != "DRW"){
-        auto hand = decideHand(brd.toString());
+        auto hand = decideHand(brd);
         std::cout << hand.unit.name << " " << hand.direct.toChar() << std::endl;
         cl.move(string{hand.unit.name}, string{hand.direct.toChar()});
         res = cl.recv();
