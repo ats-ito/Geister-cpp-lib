@@ -79,7 +79,7 @@ int main(int argc, char** argv){
     brd.setState(ptn);
     brd.printBoard();
 
-    auto hand = decideHand1(brd.toString());
+    auto hand = decideHand1(brd);
     std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
 
 #ifdef _WIN32
