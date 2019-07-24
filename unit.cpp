@@ -136,8 +136,3 @@ OpUnit::OpUnit(int x, int y, char color, char name){
     this->name = name;
     blue = 0;
 }
-
-std::ostream& operator<<(std::ostream& stream, const Unit& value){
-    stream << value.toString();
-    return stream;
-}

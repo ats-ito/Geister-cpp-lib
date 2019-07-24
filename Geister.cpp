@@ -653,8 +653,3 @@ void Geister::changeSide(){
 		units[i+8].color = tmp.color.reverseSide();
 	}
 }
-
-std::ostream& operator<<(std::ostream& stream, const Geister& value){
-    stream << value.toString();
-    return stream;
-}

@@ -63,6 +63,8 @@ public:
     virtual operator std::string() const { return toString(); }
 };
 
-std::ostream& operator<<(std::ostream& stream, const Geister& value);
+inline std::ostream& operator<<(std::ostream& stream, const Geister& value){
+    return stream << value.toString();
+}
 
 #endif

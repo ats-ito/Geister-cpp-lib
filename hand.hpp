@@ -111,4 +111,8 @@ struct Hand{
     operator std::string() const { return toString(); }
 };
 
+inline std::ostream& operator<<(std::ostream& stream, const Hand& value){
+    return stream << value.toString();
+}
+
 #endif

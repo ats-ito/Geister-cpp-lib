@@ -172,6 +172,8 @@ public:
     OpUnit(int x, int y, char color, char name);
 };
 
-std::ostream& operator<<(std::ostream& stream, const Unit& value);
+inline std::ostream& operator<<(std::ostream& stream, const Unit& value){
+    return stream << value.toString();
+}
 
 #endif
