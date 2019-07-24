@@ -49,6 +49,7 @@ std::string logDir;
 std::ofstream digestFile;
 #endif
 int outputLevel = 2;
+int mask = 0;
 
 using T = std::string (*)(std::string);
 using T2 = std::string (*)();
@@ -130,8 +131,10 @@ int run(void* dll1, void* dll2){
     
     Geister game(red_ptn1, red_ptn2);
     if(outputLevel > 1){
-        std::cout << "1stPlayerSet: " << red_ptn1 << std::endl;
-        std::cout << "2ndPlayerSet: " << red_ptn2 << std::endl;
+        if(!(mask & 0b01))
+            std::cout << "1stPlayerSet: " << red_ptn1 << std::endl;
+        if(!(mask & 0b10))
+            std::cout << "2ndPlayerSet: " << red_ptn2 << std::endl;
     }
 #ifdef USE_FS
     if(logEnable){
@@ -140,7 +143,25 @@ int run(void* dll1, void* dll2){
     }
 #endif
     if(outputLevel > 2){
-        game.printBoard();
+        if(mask == 0)
+            game.printBoard();
+        else if(mask == 1){
+            game.changeSide();
+            auto g = game.mask();
+            g.changeSide();
+            g.printBoard();
+            game.changeSide();
+        }
+        else if(mask == 2){
+            game.mask().printBoard();
+        }
+        else if(mask == 3){
+            game.changeSide();
+            auto g = game.mask();
+            g.changeSide();
+            g.mask().printBoard();
+            game.changeSide();
+        }
     }
 
     int result = 0;
@@ -157,7 +178,25 @@ int run(void* dll1, void* dll2){
 #endif
         game.move(hand.unit.name, hand.direct.toChar());
         if(outputLevel > 2){
-            game.printBoard();
+            if(mask == 0)
+                game.printBoard();
+            else if(mask == 1){
+                game.changeSide();
+                auto g = game.mask();
+                g.changeSide();
+                g.printBoard();
+                game.changeSide();
+            }
+            else if(mask == 2){
+                game.mask().printBoard();
+            }
+            else if(mask == 3){
+                game.changeSide();
+                auto g = game.mask();
+                g.changeSide();
+                g.mask().printBoard();
+                game.changeSide();
+            }
         }
         result = game.checkResult();
         if(result)
@@ -177,7 +216,25 @@ int run(void* dll1, void* dll2){
         game.move(hand.unit.name, hand.direct.toChar());
         game.changeSide();
         if(outputLevel > 2){
-            game.printBoard();
+            if(mask == 0)
+                game.printBoard();
+            else if(mask == 1){
+                game.changeSide();
+                auto g = game.mask();
+                g.changeSide();
+                g.printBoard();
+                game.changeSide();
+            }
+            else if(mask == 2){
+                game.mask().printBoard();
+            }
+            else if(mask == 3){
+                game.changeSide();
+                auto g = game.mask();
+                g.changeSide();
+                g.mask().printBoard();
+                game.changeSide();
+            }
         }
         result = game.checkResult();
     }
@@ -204,6 +261,7 @@ int main(int argc, char** argv){
             .flag<'l'>({'l'}, {"log"}, "enable log record")
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
             .flag<'c', int>({'c'}, {"match"}, "N", "match count")
+            .flag<'m', int>({'m'}, {"mask"}, "N", "mask player number")
             .argument<'d', std::vector<std::string>>("Player-Path")
             ;
         auto const opts = parse(argc, argv, cmd);
@@ -223,6 +281,9 @@ int main(int argc, char** argv){
         }
         if (opts.has<'c'>()) {
             match = opts.get<'c'>();
+        }
+        if (opts.has<'m'>()) {
+            mask = opts.get<'m'>();
         }
         if(opts.get<'d'>().size() > 0){
             dllPath1 = opts.get<'d'>()[0];
