@@ -17,13 +17,14 @@
 using namespace nonsugar;
 
 bool visibleInfo = true;
+int output = 2;
 
 std::string host = "localhost";
 int port = 10001;
 
 int playoutCount = 1000;
 
-using T = Hand (*)(std::string);
+using T = std::string (*)(std::string);
 using T2 = std::string (*)(void);
 
 int run(int port, std::string dll){
@@ -78,7 +79,7 @@ int run(int port, std::string dll){
     
     int turn = 0;
     
-    if(visibleInfo)
+    if(visibleInfo && output)
         std::cout << red_ptn << std::endl;
 
     auto cl = TCPClient(host, port);
@@ -88,15 +89,20 @@ int run(int port, std::string dll){
     std::string res = "";
     while(res.substr(0, 3) != "MOV"){
         res = cl.recv();
-        if(visibleInfo)
+        if(visibleInfo && output)
             std::cout << res << std::endl;
     }
-    auto brd = Geister(res);
+    auto game = Geister(res.substr(4));
 
     while(res.substr(0, 3) != "WON" && res.substr(0, 3) != "LST" && res.substr(0, 3) != "DRW"){
-        auto hand = decideHand(brd);
-        std::cout << hand.unit.name << " " << hand.direct.toChar() << std::endl;
-        cl.move(string{hand.unit.name}, string{hand.direct.toChar()});
+        if(output > 2)
+            game.printBoard();
+        auto hand = Hand(decideHand(game));
+        auto name = string{hand.unit.name};
+        auto direct = string{hand.direct.toChar()};
+        if(output > 1)
+            std::cout << name << " " << direct << std::endl;
+        cl.move(name, direct);
         res = cl.recv();
         while(res.substr(0, 3) != "MOV"){
             res = cl.recv();
@@ -104,22 +110,24 @@ int run(int port, std::string dll){
                 break;
         }
         if(res.substr(0, 3) == "MOV"){
-            brd.setState(res);
+            game.setState(res.substr(4));
             turn += 1;
         }
     }
-    brd.setState(res);
+    auto result = res.substr(0, 3);
+    game.setState(res.substr(4));
     std::map<std::string, double> score = {{"WON", 1}, {"LST", 0}, {"DRW", 0.1}};
-    std::cout << turn << std::endl;
-    if(port == 10001)
-        brd.printBoard();
+    if(output > 1)
+        game.printBoard();
+    if(output)
+        std::cout << result << ": " << turn << std::endl;
     cl.close();
 #ifdef _WIN32
     FreeLibrary(handle);
 #else
     dlclose(handle);
 #endif
-    return score[res.substr(0, 3)];
+    return score[result];
 }
 
 int main(int argc, char** argv){
@@ -132,6 +140,7 @@ int main(int argc, char** argv){
             .flag<'H', std::string>({'H'}, {"host"}, "host string", "connect host")
             .flag<'c', int>({}, {"playout"}, "N", "playout count")
             .flag<'i'>({'i'}, {"hide"}, "hide information")
+            .flag<'o', int>({'o'}, {"output"}, "N", "output level")
             .argument<'d', std::vector<std::string>>("DLL-Path")
             ;
         auto const opts = parse(argc, argv, cmd);
@@ -151,6 +160,9 @@ int main(int argc, char** argv){
         }
         if (opts.has<'c'>()) {
             playoutCount = opts.get<'c'>();
+        }
+        if (opts.has<'o'>()) {
+            output = opts.get<'o'>();
         }
         if(opts.get<'d'>().size() > 0){
             dll = opts.get<'d'>()[0];
