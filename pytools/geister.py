@@ -14,6 +14,7 @@ class Geister:
             unit.OpUnit(4, 1, Geister.colorIndex[self.state[26]], "a"), unit.OpUnit(3, 1, Geister.colorIndex[self.state[29]], "b"), unit.OpUnit(2, 1, Geister.colorIndex[self.state[32]], "c"), unit.OpUnit(1, 1, Geister.colorIndex[self.state[35]], "d"),
             unit.OpUnit(4, 0, Geister.colorIndex[self.state[38]], "e"), unit.OpUnit(3, 0, Geister.colorIndex[self.state[41]], "f"), unit.OpUnit(2, 0, Geister.colorIndex[self.state[44]], "g"), unit.OpUnit(1, 0, Geister.colorIndex[self.state[47]], "h")
         ]
+        self.history = []
     
     def setState(self, state):
         self.state = state.decode()
@@ -98,6 +99,7 @@ class Geister:
             self.units[i+8].color = tmpC + 1
 
     def move(self, unit, direct):
+        self.history.append("{}{},{}".format(unit, direct, self.toString()))
         targetIndex = 0
         for i in range(16):
             if unit == self.units[i].name:

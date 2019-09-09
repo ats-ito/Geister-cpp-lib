@@ -51,16 +51,15 @@ def match(first, second, logEnable, outputLevel, matchCount):
     return results
 
 
+parser = argparse.ArgumentParser(description='このプログラムの説明（なくてもよい）')
+
+parser.add_argument('player1')
+parser.add_argument('player2')
+parser.add_argument('-c', '--count', type=int, default=1)
+parser.add_argument('-o', '--output', type=int, default=2, choices=[0,1,2,3])
+parser.add_argument('-v', '--version')
+parser.add_argument('-l', '--log', action='store_true')
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='このプログラムの説明（なくてもよい）')
-
-    parser.add_argument('player1')
-    parser.add_argument('player2')
-    parser.add_argument('-c', '--count', type=int, default=1)
-    parser.add_argument('-o', '--output', type=int, default=2, choices=[0,1,2,3])
-    parser.add_argument('-v', '--version')
-    parser.add_argument('-l', '--log', action='store_true')
-
     args = parser.parse_args()
     first = execute.Execute([args.player1])
     second = execute.Execute([args.player2])

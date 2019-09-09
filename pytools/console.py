@@ -28,13 +28,18 @@ class GeisterTools(Cmd):
         print("echo hoge")
 
     def do_match(self, arg):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('Player1')
-        parser.add_argument('Player2')
+        parser = competition.parser
         args = parser.parse_args(arg.rsplit())
-        first = execute.Execute([args.Player1])
-        second = execute.Execute([args.Player2])
-        competition.match(first, second)
+        first = execute.Execute([args.player1])
+        second = execute.Execute([args.player2])
+        print("1st {}".format(first.recieve()))
+        print("2nd {}".format(second.recieve()))
+        results = competition.match(first, second, logEnable=args.log, outputLevel=args.output, matchCount=args.count)
+        # print(results)
+        resultList = {1:0,2:0,3:0,-1:0,-2:0,-3:0,0:0}
+        for r in results:
+            resultList[r] += 1
+        print(resultList)
         first.send("exit")
         second.send("exit")
 
@@ -47,7 +52,7 @@ class GeisterTools(Cmd):
         client.run(first, int(arg[1]))
         first.send("exit")
     
-    def help_connect(self, arg):
+    def help_connect(self):
         print("connect to server")
 
     def complete_match(self, text, line, begidx, endidx):
@@ -75,7 +80,7 @@ class GeisterTools(Cmd):
         if filename == '':
             return ls
         else:
-            return [f for f in ls if f.startswith(filename)]
+            return [path + '/' + f for f in ls if f.startswith(filename)]
 
     def do_gui(self, args):
         gui.run()
