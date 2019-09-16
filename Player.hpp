@@ -15,7 +15,7 @@
 class Player{
 protected:
     Geister game;
-    constexpr static std::array<char*, 70> pattern = {
+    constexpr inline static std::array<char*, 70> pattern = {
         "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
         "ABDG", "ABDH", "ABEF", "ABEG", "ABEH", "ABFG", "ABFH",
         "ABGH", "ACDE", "ACDF", "ACDG", "ACDH", "ACEF", "ACEG",
