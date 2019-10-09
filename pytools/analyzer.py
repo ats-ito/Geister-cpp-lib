@@ -49,10 +49,10 @@ def analyzer(kifu):
     # 駒の色と初期ベクトルをセット
     if side == 1:
         for i in range(8):
-            result.append(['R' if chr(i + ord('A')) in kifu[0][2] else 'B', [0] * 19])
+            result.append(['R' if chr(i + ord('A')) in kifu[0][2] else 'B', [0] * 20])
     elif side == 2:
         for i in range(8):
-            result.append(['R' if chr(i + ord('A')) in kifu[1][2] else 'B', [0] * 19])
+            result.append(['R' if chr(i + ord('A')) in kifu[1][2] else 'B', [0] * 20])
 
     # 初期配置に関する特徴
     for i in range(8):
@@ -224,6 +224,18 @@ def analyzer(kifu):
                 if not existNeighbor(cx, cy, 1, currentK[-1]) and existNeighbor(nx, ny, 1, nextK[-1]):
                     result[ord(currentK[2]) - ord('A')][1][18] += 1
 
+    # 各コマを動かした回数
+    if side == 1:
+        for i in range(len(kifu) - 2):
+            currentK = kifu[i]
+            if currentK[0] == 'Move' and currentK[1] == '1':
+                result[ord(currentK[2]) - ord('A')][1][19] += 1
+    if side == 2:
+        for i in range(len(kifu) - 2):
+            currentK = kifu[i]
+            if currentK[0] == 'Move' and currentK[1] == '2':
+                result[ord(currentK[2]) - ord('A')][1][19] += 1
+
     return result
 
 
@@ -238,8 +250,9 @@ if __name__ == "__main__":
     # print(data)
     result = analyzer(data)
     for r in result:
-        print(r[0], end="")
+        print(r[0], end=",")
         for a in r[1]:
-            print(",", end="")
-            print(a, end="")
-        print("")
+            print(a, end=",")
+        print(data[-1][1], end=",")
+        print(side, end=",")
+        print(int(data[-2][1]) * -1 if side == 2 else 1)
