@@ -1,51 +1,51 @@
 USE_FS = ""
 
 ifeq  ($(shell uname),Darwin)
-  CXX = clang++
+	CXX = clang++
 else
-  CXX = g++
+	CXX = g++
 endif
 
 CXXFLAGS = -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
 
 ifeq ($(OS),Windows_NT)
-  LIBS = -lws2_32 -lwsock32 -lwinmm
-  OBJ_EXT = obj
-  LIB_EXT = dll
-  EXE_EXT = exe
+	LIBS = -lws2_32 -lwsock32 -lwinmm
+	OBJ_EXT = obj
+	LIB_EXT = dll
+	EXE_EXT = exe
 else
-  LIBS = -ldl
-  ifeq ($(CXX),clang++)
-    CXXFLAGS += -fPIC -stdlib=libc++
-    LIBS += -stdlib=libc++ -lc++experimental -lc++abi
-    ifdef USE_FS
-      LIBS += -lc++fs
-    endif
-  endif
-  ifeq ($(CXX),g++)
-    CXXFLAGS += -fPIC
-    LIBS += -lstdc++
-    ifdef USE_FS
-      LIBS += -lstdc++fs
-    endif
-  endif
-  OBJ_EXT = o
-  LIB_EXT = so
-  EXE_EXT = out
+	LIBS = -ldl
+	ifeq ($(CXX),clang++)
+		CXXFLAGS += -fPIC -stdlib=libc++
+		LIBS += -stdlib=libc++ -lc++experimental -lc++abi
+		ifdef USE_FS
+			LIBS += -lc++fs
+		endif
+	endif
+	ifeq ($(CXX),g++)
+		CXXFLAGS += -fPIC
+		LIBS += -lstdc++
+		ifdef USE_FS
+			LIBS += -lstdc++fs
+		endif
+	endif
+	OBJ_EXT = o
+	LIB_EXT = so
+	EXE_EXT = out
 endif
 
 PLAYER_NAME = Player
 ifdef PN
-  PLAYER_NAME = $(PN)
+	PLAYER_NAME = $(PN)
 endif
 ifneq ($(PC),pc)
-  PLAYER_CLASS = $(PC)
+	PLAYER_CLASS = $(PC)
 endif
 ifdef PLAYER_CLASS
 $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
 endif
 ifeq ($(PC),pc)
-  PLAYER_CLASS = RandomPlayer
+	PLAYER_CLASS = RandomPlayer
 endif
 
 BIN_DIR = bin
