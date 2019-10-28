@@ -68,13 +68,15 @@ std::string decideRed(){
 
 int main(int argc, char *argv[]){
     std::string recv;
-    std::cout << "ENTRY " << player.name() << std::endl;
     while(true){
         std::getline(std::cin, recv);
         // std::cin >> recv;
         auto cmdList = split(recv, " ");
         if(cmdList[0] == "exit"){
             break;
+        }
+        else if(cmdList[0] == "name"){
+          std::cout << "ENTRY " << player.name() << std::endl;
         }
         else if(cmdList[0] == "hand"){
             auto hand = player.decideHand(cmdList[1]);
