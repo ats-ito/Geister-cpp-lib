@@ -28,7 +28,7 @@ def run(th, port):
         # MOV?99r99r50R54R99b01B99b99b99r55u99r04u99b99b99b00u
         hand = th.send("hand " + res[4:].decode())
         print(hand)
-        cl.move(hand[0], hand[4])
+        cl.move(hand[0], hand[5])
         res = cl.recv()
         while res[0:3] != b"MOV":
             res = cl.recv()
@@ -47,6 +47,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()    # 4. 引数を解析
 
-    e = execute.Execute(["../bin/windows/PlayerTest.exe"])
+    e = execute.Execute([args.player])
     run(e, args.port)
     e.send("exit")
