@@ -1,7 +1,5 @@
 #ifndef RANDOMPLAYER
 #define RANDOMPLAYER
-#include "../hand.hpp"
-#include "../Geister.hpp"
 #include <string>
 #include "../random.hpp"
 #include "../Player.hpp"

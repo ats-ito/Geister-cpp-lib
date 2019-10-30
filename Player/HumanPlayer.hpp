@@ -1,11 +1,9 @@
 #ifndef HUMANPLAYER
 #define HUMANPLAYER
-#include "../hand.hpp"
-#include "../Geister.hpp"
 #include <string>
-#include "../random.hpp"
-#include "../Player.hpp"
 #include <iostream>
+#include "../Player.hpp"
+#include "../random.hpp"
 
 
 class HumanPlayer: public Player{
