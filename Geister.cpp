@@ -581,6 +581,10 @@ void Geister::move(char u, char direct){
     turn++;
 }
 
+void Geister::move(Hand h){
+    move(h.unit.name, h.direct.toChar());
+}
+
 double Geister::checkResult() const{
     // 駒取りによる勝敗
     if(takeBlue1st == 4)

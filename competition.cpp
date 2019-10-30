@@ -176,7 +176,7 @@ int run(void* dll1, void* dll2){
         if(logEnable)
             logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
 #endif
-        game.move(hand.unit.name, hand.direct.toChar());
+        game.move(hand);
         if(outputLevel > 2){
             if(mask == 0)
                 game.printBoard();
@@ -213,7 +213,7 @@ int run(void* dll1, void* dll2){
             game.changeSide();
         }
 #endif
-        game.move(hand.unit.name, hand.direct.toChar());
+        game.move(hand);
         game.changeSide();
         if(outputLevel > 2){
             if(mask == 0)

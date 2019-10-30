@@ -52,6 +52,8 @@ public:
 
     virtual void move(char u, char direct);
 
+    virtual void move(Hand h);
+
     virtual double checkResult() const;
 
     virtual Unit* getUnitByPos(int x, int y);

@@ -106,14 +106,14 @@ double Simulator::playout(){
         auto lm = geister.getLegalMove2nd();
         std::uniform_int_distribution<int> selector1(0, lm.size() - 1);
         auto m = lm[selector1(mt)];
-        geister.move(m.unit.name, m.direct.toChar());
+        geister.move(m);
         if(geister.checkResult() != 0)
             break;
         // 自分の手番
         lm = geister.getLegalMove1st();
         std::uniform_int_distribution<int> selector2(0, lm.size() - 1);
         m = lm[selector2(mt)];
-        geister.move(m.unit.name, m.direct.toChar());
+        geister.move(m);
     }
     return evaluate();
 }
