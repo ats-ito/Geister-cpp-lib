@@ -31,19 +31,15 @@ Geister::Geister(){
 }
 
 Geister::Geister(const Geister& geister){
-    this->takeBlue1st = 0;
-    this->takeBlue2nd = 0;
-    this->takeRed1st = 0;
-    this->takeRed2nd = 0;
-    this->turn = 0;
+    this->takeBlue1st = geister.takeBlue1st;
+    this->takeBlue2nd = geister.takeBlue2nd;
+    this->takeRed1st = geister.takeRed1st;
+    this->takeRed2nd = geister.takeRed2nd;
+    this->turn = geister.turn;
     units = geister.units;
 }
 
 Geister::Geister(std::string info){
-    this->takeBlue1st = 0;
-    this->takeBlue2nd = 0;
-    this->takeRed1st = 0;
-    this->takeRed2nd = 0;
     this->turn = 0;
     units = {
         Unit(info[0] - '0', info[1] - '0', info[2], 'A'),
@@ -63,13 +59,10 @@ Geister::Geister(std::string info){
         OpUnit(info[42] - '0', info[43] - '0', info[44], 'g'),
         OpUnit(info[45] - '0', info[46] - '0', info[47], 'h')
     };
+    countTaken();
 }
 
 Geister::Geister(std::string red1, std::string red2){
-    this->takeBlue1st = 0;
-    this->takeBlue2nd = 0;
-    this->takeRed1st = 0;
-    this->takeRed2nd = 0;
     this->turn = 0;
     units = {
         Unit(1, 4, 'B', 'A'),
@@ -95,6 +88,7 @@ Geister::Geister(std::string red1, std::string red2){
     for(int i = 0; i < red2.size(); ++i){
         units[red2[i] - 'A' + 8].color = UnitColor::red;
     }
+    countTaken();
 }
 
 void Geister::setState(std::string state){
@@ -127,7 +121,7 @@ void Geister::setState(std::string state){
         units[i].x = state[i * 3] - '0';
         units[i].y = state[i * 3 + 1] - '0';
         units[i].color = UnitColor(state[i * 3 + 2]);
-        if(state[i * 3 + 1] - '0' > 5){
+        if(units[i].isTaken()){
             if(units[i].color == UnitColor::Blue)
                 takeBlue1st++;
             else if(units[i].color == UnitColor::Red)
@@ -461,7 +455,7 @@ void Geister::take(Unit unit){
 
 void Geister::move(char u, char direct){
     Unit* unit;
-    if(u >= 'A' && u <= 'H'){
+    if('A' <= u && u <= 'H'){
         unit = &units[u - 'A'];
         int x = unit->x;
         int y = unit->y;
@@ -598,7 +592,7 @@ double Geister::checkResult() const{
 
     // 駒の脱出による勝敗
     for(auto&& u: units)
-        if(u.x == 8)
+        if(u.isEscape())
             return (u.color == UnitColor::Blue) ? 1 : -1;
 
     return 0;
@@ -624,12 +618,8 @@ Geister Geister::mask(){
 }
 
 void Geister::changeSide(){
-    int tmp = takeBlue1st;
-    takeBlue1st = takeBlue2nd;
-    takeBlue2nd = tmp;
-    tmp = takeRed1st;
-    takeRed1st = takeRed2nd;
-    takeRed2nd = tmp;
+    std::swap(takeBlue1st, takeBlue2nd);
+    std::swap(takeRed1st, takeRed2nd);
 
 	for(int i = 0; i < 8; ++i){
 		auto tmp = units[i];
@@ -656,4 +646,20 @@ void Geister::changeSide(){
 		units[i+8].name = tmp.name - 'A' + 'a';
 		units[i+8].color = tmp.color.reverseSide();
 	}
+}
+
+void Geister::countTaken() {
+    takeBlue1st = 0;
+    takeRed1st = 0;
+    takeBlue2nd = 0;
+    takeRed2nd = 0;
+
+    for(auto&& u: allUnit()){
+        if(u.isTaken()){
+            if(u.color == UnitColor::Blue) takeBlue1st += 1;
+            else if(u.color == UnitColor::blue) takeBlue2nd += 1;
+            else if(u.color == UnitColor::Red) takeRed1st += 1;
+            else if(u.color == UnitColor::red) takeRed2nd += 1;
+        }
+    }
 }

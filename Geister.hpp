@@ -10,12 +10,11 @@
 class Geister
 {
     std::array<Unit, 16> units;
-
-public:
     int takeBlue1st;
     int takeBlue2nd;
     int takeRed1st;
     int takeRed2nd;
+public:
     int turn;
     std::vector<std::pair<Hand, std::string>> history;
 
@@ -61,6 +60,8 @@ public:
     virtual Geister mask();
 
     virtual void changeSide();
+
+    virtual void countTaken();
 
     virtual operator std::string() const { return toString(); }
 };
