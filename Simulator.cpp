@@ -50,21 +50,16 @@ void Simulator::init(const Geister& g, std::string ptn){
     geister = g;
     mt = std::mt19937(rd());
     depth = 0;
-    constexpr int l2s = 'a' - 'A';
-    if(ptn.size() == 4){
-        for(int u = 8; u < 16; ++u){
-            for(int c = 0; c < ptn.size(); ++c){
-                if((ptn[c] + l2s) == geister.allUnit()[u].name){
-                    geister.allUnit()[u].color = UnitColor(3);
-                    break;
-                }
-            }
-            if(geister.allUnit()[u].color.toInt() != 3)
-                geister.allUnit()[u].color = UnitColor(1);
-        }
+    for(int u = 0; u < 8; ++u){
+        if(ptn.find(std::toupper(geister.allUnit()[u+8].name)) != std::string::npos)
+            geister.allUnit()[u+8].color = UnitColor::red;
+        else
+            geister.allUnit()[u+8].color = UnitColor::blue;
     }
-    else
+    if(ptn.size() < 4){
         assume();
+    }
+
     initBoard();
 }
     
@@ -82,17 +77,23 @@ void Simulator::assume(){
     }
     for(int i = 8; i < 16; ++i){
         if(geister.allUnit()[i].color == UnitColor::unknown){
-            if(assumeTakeBlue > 0 && BorR(mt)){
+            if(assumeTakeRed == 0){
                 geister.allUnit()[i].color = UnitColor::blue;
                 assumeTakeBlue -= 1;
             }
-            else if(assumeTakeRed > 0){
+            else if(assumeTakeBlue == 0){
                 geister.allUnit()[i].color = UnitColor::red;
                 assumeTakeRed -= 1;
             }
             else{
-                geister.allUnit()[i].color = UnitColor::blue;
-                assumeTakeBlue -= 1;
+                if(BorR(mt)){
+                    geister.allUnit()[i].color = UnitColor::blue;
+                    assumeTakeBlue -= 1;
+                }
+                else{
+                    geister.allUnit()[i].color = UnitColor::red;
+                    assumeTakeRed -= 1;
+                }
             }
         }
     }
@@ -118,22 +119,35 @@ double Simulator::playout(){
     return evaluate();
 }
 
+double Simulator::run(){
+    Geister root = geister;
+    double result = playout();
+    geister = root;
+    return result;
+}
+
+double Simulator::run(int count){
+    Geister root = geister;
+    double result = 0.0;
+    for(int i = 0; i < count; ++i){
+        result += playout();
+        geister = root;
+    }
+    return result;
+}
+
 void Simulator::initBoard(){
-    geister.takeBlue1st = 4;
-    geister.takeRed1st = 4;
-    geister.takeBlue2nd = 4;
-    geister.takeRed2nd = 4;
+    geister.takeBlue1st = 0;
+    geister.takeRed1st = 0;
+    geister.takeBlue2nd = 0;
+    geister.takeRed2nd = 0;
 
     for(auto u: geister.allUnit()){
-        if(u.x < 6){
-            if(u.color.toInt() == 0)
-                geister.takeBlue1st -= 1;
-            else if(u.color.toInt() == 1)
-                geister.takeBlue2nd -= 1;
-            else if(u.color.toInt() == 2)
-                geister.takeRed1st -= 1;
-            else if(u.color.toInt() == 3)
-                geister.takeRed2nd -= 1;
+        if(u.isTaken()){
+            if(u.color == UnitColor::Blue) geister.takeBlue1st += 1;
+            else if(u.color == UnitColor::blue) geister.takeBlue2nd += 1;
+            else if(u.color == UnitColor::Red) geister.takeRed1st += 1;
+            else if(u.color == UnitColor::red) geister.takeRed2nd += 1;
         }
     }
 }

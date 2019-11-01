@@ -26,6 +26,10 @@ public:
     
     virtual double playout();
 
+    virtual double run();
+
+    virtual double run(int count);
+
     virtual void initBoard();
 
     virtual double evaluate() const
