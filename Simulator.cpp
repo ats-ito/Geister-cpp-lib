@@ -35,29 +35,6 @@ Simulator::Simulator(const Geister& g, std::string ptn): geister(g), depth(0)
     }
     geister.countTaken();
 }
-
-void Simulator::init(const Geister& g){
-    geister = g;
-    depth = 0;
-    setColorRandom();
-    geister.countTaken();
-}
-
-void Simulator::init(const Geister& g, std::string ptn){
-    geister = g;
-    depth = 0;
-    for(int u = 0; u < 8; ++u){
-        if(ptn.find(std::toupper(geister.allUnit()[u+8].name)) != std::string::npos)
-            geister.allUnit()[u+8].color = UnitColor::red;
-        else
-            geister.allUnit()[u+8].color = UnitColor::blue;
-    }
-    if(ptn.size() < 4){
-        setColorRandom();
-    }
-
-    geister.countTaken();
-}
     
 // 未判明の相手駒色を適当に仮定
 void Simulator::setColorRandom(){

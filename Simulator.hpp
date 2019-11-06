@@ -17,9 +17,6 @@ public:
     Simulator();
     Simulator(const Geister& geister);
     Simulator(const Geister& geister, std::string ptn);
-
-    virtual void init(const Geister& geister);
-    virtual void init(const Geister& geister, std::string ptn);
     
     // 未判明の相手駒色を適当に仮定
     virtual void setColorRandom();
