@@ -7,8 +7,8 @@
 
 
 class Simulator{
-    cpprefjp::random_device rd;
-    std::mt19937 mt;
+    static cpprefjp::random_device rd;
+    static std::mt19937 mt;
 public:
     Geister geister;
     

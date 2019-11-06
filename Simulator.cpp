@@ -5,20 +5,25 @@
 #include <algorithm>
 #include <map>
 
+cpprefjp::random_device Simulator::rd;
+std::mt19937 Simulator::mt(rd());
 
-Simulator::Simulator(): geister(), mt(rd()){
+Simulator::Simulator(): geister()
+{
     depth = 0;
     setColorRandom();
     geister.countTaken();
 }
 
-Simulator::Simulator(const Geister& g): geister(g), mt(rd()){
+Simulator::Simulator(const Geister& g): geister(g)
+{
     depth = 0;
     setColorRandom();
     geister.countTaken();
 }
 
-Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
+Simulator::Simulator(const Geister& g, std::string ptn): geister(g)
+{
     depth = 0;
     constexpr int l2s = 'a' - 'A';
     if(ptn.size() == 4){
@@ -41,7 +46,6 @@ Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
 
 void Simulator::init(const Geister& g){
     geister = g;
-    mt = std::mt19937(rd());
     depth = 0;
     setColorRandom();
     geister.countTaken();
@@ -49,7 +53,6 @@ void Simulator::init(const Geister& g){
 
 void Simulator::init(const Geister& g, std::string ptn){
     geister = g;
-    mt = std::mt19937(rd());
     depth = 0;
     for(int u = 0; u < 8; ++u){
         if(ptn.find(std::toupper(geister.allUnit()[u+8].name)) != std::string::npos)
