@@ -30,8 +30,6 @@ public:
 
     virtual double run(int count);
 
-    virtual void initBoard();
-
     virtual double evaluate() const
     {
         return geister.checkResult() > 0 ? 1.0 : -1.0;

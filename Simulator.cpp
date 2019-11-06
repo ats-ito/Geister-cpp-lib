@@ -9,13 +9,13 @@
 Simulator::Simulator(): geister(), mt(rd()){
     depth = 0;
     setColorRandom();
-    initBoard();
+    geister.countTaken();
 }
 
 Simulator::Simulator(const Geister& g): geister(g), mt(rd()){
     depth = 0;
-    initBoard();
     setColorRandom();
+    geister.countTaken();
 }
 
 Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
@@ -36,7 +36,7 @@ Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
     else{
         setColorRandom();
     }
-    initBoard();
+    geister.countTaken();
 }
 
 void Simulator::init(const Geister& g){
@@ -44,7 +44,7 @@ void Simulator::init(const Geister& g){
     mt = std::mt19937(rd());
     depth = 0;
     setColorRandom();
-    initBoard();
+    geister.countTaken();
 }
 
 void Simulator::init(const Geister& g, std::string ptn){
@@ -61,7 +61,7 @@ void Simulator::init(const Geister& g, std::string ptn){
         setColorRandom();
     }
 
-    initBoard();
+    geister.countTaken();
 }
     
 // 未判明の相手駒色を適当に仮定
@@ -135,20 +135,4 @@ double Simulator::run(int count){
         geister = root;
     }
     return result;
-}
-
-void Simulator::initBoard(){
-    geister.takeBlue1st = 0;
-    geister.takeRed1st = 0;
-    geister.takeBlue2nd = 0;
-    geister.takeRed2nd = 0;
-
-    for(auto u: geister.allUnit()){
-        if(u.isTaken()){
-            if(u.color == UnitColor::Blue) geister.takeBlue1st += 1;
-            else if(u.color == UnitColor::blue) geister.takeBlue2nd += 1;
-            else if(u.color == UnitColor::Red) geister.takeRed1st += 1;
-            else if(u.color == UnitColor::red) geister.takeRed2nd += 1;
-        }
-    }
 }
