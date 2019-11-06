@@ -8,14 +8,14 @@
 
 Simulator::Simulator(): geister(), mt(rd()){
     depth = 0;
-    assume();
+    setColorRandom();
     initBoard();
 }
 
 Simulator::Simulator(const Geister& g): geister(g), mt(rd()){
     depth = 0;
-    assume();
     initBoard();
+    setColorRandom();
 }
 
 Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
@@ -33,8 +33,9 @@ Simulator::Simulator(const Geister& g, std::string ptn): geister(g), mt(rd()){
                 geister.allUnit()[u].color = UnitColor(1);
         }
     }
-    else
-        assume();
+    else{
+        setColorRandom();
+    }
     initBoard();
 }
 
@@ -42,7 +43,7 @@ void Simulator::init(const Geister& g){
     geister = g;
     mt = std::mt19937(rd());
     depth = 0;
-    assume();
+    setColorRandom();
     initBoard();
 }
 
@@ -57,14 +58,14 @@ void Simulator::init(const Geister& g, std::string ptn){
             geister.allUnit()[u+8].color = UnitColor::blue;
     }
     if(ptn.size() < 4){
-        assume();
+        setColorRandom();
     }
 
     initBoard();
 }
     
-    // 未判明の相手駒色を適当に仮定
-void Simulator::assume(){
+// 未判明の相手駒色を適当に仮定
+void Simulator::setColorRandom(){
     std::uniform_int_distribution<int> BorR(0,1);
     int assumeTakeBlue = 4;
     int assumeTakeRed = 4;

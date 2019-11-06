@@ -22,7 +22,7 @@ public:
     virtual void init(const Geister& geister, std::string ptn);
     
     // 未判明の相手駒色を適当に仮定
-    virtual void assume();
+    virtual void setColorRandom();
     
     virtual double playout();
 
