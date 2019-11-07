@@ -7,6 +7,7 @@
 
 
 class Simulator{
+protected:
     static cpprefjp::random_device rd;
     static std::mt19937 mt;
 public:

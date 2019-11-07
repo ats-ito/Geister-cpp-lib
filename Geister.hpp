@@ -9,6 +9,7 @@
 
 class Geister
 {
+protected:
     std::array<Unit, 16> units;
     int takeBlue1st;
     int takeBlue2nd;
