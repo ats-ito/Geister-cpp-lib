@@ -65,6 +65,11 @@ public:
     virtual void countTaken();
 
     virtual operator std::string() const { return toString(); }
+
+    int getTakeBlue1st(){return takeBlue1st;}
+    int getTakeBlue2nd(){return takeBlue2nd;}
+    int getTakeRed1st(){return takeRed1st;}
+    int getTakeRed2nd(){return takeRed2nd;}
 };
 
 inline std::ostream& operator<<(std::ostream& stream, const Geister& value){
