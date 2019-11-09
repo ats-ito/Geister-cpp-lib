@@ -90,7 +90,7 @@ int main(int argc, char *argv[]){
         }
         else{
             std::cout << "recieve: " << recv << std::endl;
-            std::cerr << "recieve: " << recv << std::endl;
+            // std::cerr << "recieve: " << recv << std::endl;
         }
     }
     return 0;
