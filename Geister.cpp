@@ -117,18 +117,26 @@ void Geister::setState(std::string state){
             }
         }
     }
-    for(int i = 0; i < 16; ++i){
+    for(int i = 0; i < 8; ++i){
         units[i].x = state[i * 3] - '0';
         units[i].y = state[i * 3 + 1] - '0';
         units[i].color = UnitColor(state[i * 3 + 2]);
         if(units[i].isTaken()){
-            if(units[i].color == UnitColor::Blue)
+            if(units[i].color.isBlue())
                 takeBlue1st++;
-            else if(units[i].color == UnitColor::Red)
+            else if(units[i].color.isRed())
                 takeRed1st++;
-            else if(units[i].color == UnitColor::blue)
+            continue;
+        }
+    }
+    for(int i = 8; i < 16; ++i){
+        units[i].x = state[i * 3] - '0';
+        units[i].y = state[i * 3 + 1] - '0';
+        units[i].color = UnitColor(state[i * 3 + 2]);
+        if(units[i].isTaken()){
+            if(units[i].color.isBlue())
                 takeBlue2nd++;
-            else if(units[i].color == UnitColor::red)
+            else if(units[i].color.isRed())
                 takeRed2nd++;
             continue;
         }
@@ -654,12 +662,22 @@ void Geister::countTaken() {
     takeBlue2nd = 0;
     takeRed2nd = 0;
 
-    for(auto&& u: allUnit()){
-        if(u.isTaken()){
-            if(u.color == UnitColor::Blue) takeBlue1st += 1;
-            else if(u.color == UnitColor::blue) takeBlue2nd += 1;
-            else if(u.color == UnitColor::Red) takeRed1st += 1;
-            else if(u.color == UnitColor::red) takeRed2nd += 1;
+    for(int i = 0; i < 8; ++i){
+        if(units[i].isTaken()){
+            if(units[i].color.isBlue())
+                takeBlue1st++;
+            else if(units[i].color.isRed())
+                takeRed1st++;
+            continue;
+        }
+    }
+    for(int i = 8; i < 16; ++i){
+        if(units[i].isTaken()){
+            if(units[i].color.isBlue())
+                takeBlue2nd++;
+            else if(units[i].color.isRed())
+                takeRed2nd++;
+            continue;
         }
     }
 }
