@@ -66,10 +66,17 @@ public:
 
     virtual operator std::string() const { return toString(); }
 
-    int getTakeBlue1st(){return takeBlue1st;}
-    int getTakeBlue2nd(){return takeBlue2nd;}
-    int getTakeRed1st(){return takeRed1st;}
-    int getTakeRed2nd(){return takeRed2nd;}
+    int takeCount(UnitColor c) const{
+        if(c == UnitColor::Blue)
+            return takeBlue1st;
+        if(c == UnitColor::Red)
+            return takeRed1st;
+        if(c == UnitColor::blue)
+            return takeBlue2nd;
+        if(c == UnitColor::red)
+            return takeRed2nd;
+        return -1;
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& stream, const Geister& value){
