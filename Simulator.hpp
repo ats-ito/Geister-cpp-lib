@@ -11,11 +11,12 @@ protected:
     static cpprefjp::random_device rd;
     static std::mt19937 mt;
 public:
-    Geister geister;
+    Geister root;
+    Geister current;
     
     int depth;
 
-    Simulator();
+    Simulator(const Simulator&);
     Simulator(const Geister& geister);
     Simulator(const Geister& geister, std::string ptn);
     
@@ -30,7 +31,7 @@ public:
 
     virtual double evaluate() const
     {
-        return geister.checkResult() > 0 ? 1.0 : -1.0;
+        return current.checkResult() > 0 ? 1.0 : -1.0;
     }
 };
 
