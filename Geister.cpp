@@ -117,6 +117,12 @@ void Geister::setState(std::string state){
             }
         }
     }
+    
+    for(int i = 0; i < 16; ++i){
+        units[i].x = state[i * 3] - '0';
+        units[i].y = state[i * 3 + 1] - '0';
+        units[i].color = UnitColor(state[i * 3 + 2]);
+    }
     countTaken();
 }
 
