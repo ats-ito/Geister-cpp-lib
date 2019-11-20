@@ -68,8 +68,9 @@ std::string decideRed(){
 
 int main(int argc, char *argv[]){
     std::string recv;
-    while(true){
+    while(std::cin.good()){
         std::getline(std::cin, recv);
+        if(recv.size() == 0) continue;
         // std::cin >> recv;
         auto cmdList = split(recv, " ");
         if(cmdList[0] == "exit"){
@@ -87,6 +88,15 @@ int main(int argc, char *argv[]){
             auto red = player.decideRed();
             std::cout << red << std::endl;
             // std::cerr << red << std::endl;
+        }
+        else if(cmdList[0] == "print"){
+            if(cmdList.size() == 1){
+                player.getState().printAll();
+            }
+            else{
+                auto geister = Geister(cmdList[1]);
+                geister.printAll();
+            }
         }
         else{
             std::cout << "recieve: " << recv << std::endl;
