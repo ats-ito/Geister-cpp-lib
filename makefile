@@ -59,7 +59,7 @@ endif
 
 VPATH := Player
 
-TARGETS := $(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT) randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
+TARGETS := $(addprefix $(BIN_DIR)/, randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
 .PHONY: all
 all: $(TARGETS)
@@ -67,10 +67,7 @@ all: $(TARGETS)
 .PHONY: clean
 clean:
 	rm -rf $(OBJ_DIR)/*.*
-	
-PlayerTest_OBJ := $(addprefix $(OBJ_DIR)/,PlayerTest.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
-$(addprefix $(BIN_DIR)/,PlayerTest.$(EXE_EXT)): $(PlayerTest_OBJ)
-	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
+
 
 randomPlayer_OBJ := $(addprefix $(OBJ_DIR)/,randomPlayer.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,randomPlayer.$(LIB_EXT)): $(randomPlayer_OBJ)
@@ -95,7 +92,7 @@ competition_OBJ := $(addprefix $(OBJ_DIR)/,competition.$(OBJ_EXT) unit.$(OBJ_EXT
 $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
-OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition PlayerTest unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
+OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
 DEPS   := $(OBJS:.$(OBJ_EXT)=.d)
 
 ifdef USE_FS
