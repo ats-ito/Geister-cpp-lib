@@ -54,6 +54,7 @@ void Simulator::setColorRandom(){
             }
         }
     }
+    current.countTaken();
 }
     
 double Simulator::playout(){
