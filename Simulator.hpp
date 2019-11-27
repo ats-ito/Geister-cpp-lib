@@ -1,5 +1,5 @@
-#ifndef __SIMULATOR__
-#define __SIMULATOR__
+#ifndef SIMULATOR_HPP
+#define SIMULATOR_HPP
 
 #include "Geister.hpp"
 #include <random>
