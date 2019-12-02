@@ -11,10 +11,10 @@ class Geister
 {
 protected:
     std::array<Unit, 16> units;
-    int takeBlue1st;
-    int takeBlue2nd;
-    int takeRed1st;
-    int takeRed2nd;
+    int takenBlue1st;
+    int takenBlue2nd;
+    int takenRed1st;
+    int takenRed2nd;
 public:
     int turn;
     std::vector<std::pair<Hand, std::string>> history;
@@ -66,15 +66,15 @@ public:
 
     virtual operator std::string() const { return toString(); }
 
-    int takeCount(UnitColor c) const{
+    int takenCount(UnitColor c) const{
         if(c == UnitColor::Blue)
-            return takeBlue1st;
+            return takenBlue1st;
         if(c == UnitColor::Red)
-            return takeRed1st;
+            return takenRed1st;
         if(c == UnitColor::blue)
-            return takeBlue2nd;
+            return takenBlue2nd;
         if(c == UnitColor::red)
-            return takeRed2nd;
+            return takenRed2nd;
         return -1;
     }
 };
