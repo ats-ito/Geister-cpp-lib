@@ -32,7 +32,7 @@ using namespace nonsugar;
 
 static std::string getFileName(std::string path){
     int last = 0;
-    for(int i = 0; i < path.size(); ++i){
+    for(size_t i = 0; i < path.size(); ++i){
         if(path[i] == '/' || path[i] == '\\'){
             last = i+1;
         }
