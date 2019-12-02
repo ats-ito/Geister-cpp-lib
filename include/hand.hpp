@@ -99,8 +99,8 @@ struct Hand{
         unit = Unit();
         unit.name = src[0];
         unit.color = src[1];
-        unit.x = src[2];
-        unit.y = src[3];
+        unit.x = src[2] - '0';
+        unit.y = src[3] - '0';
         direct = Direction(src[5]);
     }
 
