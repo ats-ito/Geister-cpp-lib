@@ -2,8 +2,8 @@
 #define HUMANPLAYER
 #include <string>
 #include <iostream>
-#include "../Player.hpp"
-#include "../random.hpp"
+#include "Player.hpp"
+#include "random.hpp"
 
 
 class HumanPlayer: public Player{

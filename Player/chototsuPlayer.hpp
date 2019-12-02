@@ -1,8 +1,8 @@
 #ifndef CHOTOTSUPLAYER
 #define CHOTOTSUPLAYER
 #include <string>
-#include "../Player.hpp"
-#include "../random.hpp"
+#include "Player.hpp"
+#include "random.hpp"
 
 
 class ChototsuPlayer: public Player{

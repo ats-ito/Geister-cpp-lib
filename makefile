@@ -46,6 +46,7 @@ $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -
 endif
 PLAYER_CLASS ?= RandomPlayer
 
+SRC_DIR ?= src
 BIN_DIR ?= bin
 OBJ_DIR ?= obj
 EXIST_BIN_DIR := $(shell find ./ -type d -name $(BIN_DIR) | awk -F"/" '{ print $$NF }')
@@ -57,7 +58,7 @@ ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
 $(shell mkdir $(OBJ_DIR))
 endif
 
-VPATH := Player
+VPATH := Player:$(SRC_DIR)
 
 TARGETS := $(addprefix $(BIN_DIR)/, randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
@@ -102,6 +103,6 @@ DEFS += -DUSE_FS
 endif
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) $(DEFS) -I./ -I./lib/ -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEFS) -I. -I./include -I./include/lib -c $< -o $@
 
 -include $(DEPS)

@@ -1,8 +1,8 @@
 #ifndef RANDOMPLAYER
 #define RANDOMPLAYER
 #include <string>
-#include "../random.hpp"
-#include "../Player.hpp"
+#include "random.hpp"
+#include "Player.hpp"
 
 
 class RandomPlayer: public Player{
