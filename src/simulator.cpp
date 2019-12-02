@@ -1,6 +1,6 @@
-#include "Geister.hpp"
+#include "geister.hpp"
 #include "unit.hpp"
-#include "Simulator.hpp"
+#include "simulator.hpp"
 #include <array>
 #include <algorithm>
 #include <map>

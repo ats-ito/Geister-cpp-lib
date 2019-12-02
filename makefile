@@ -46,6 +46,7 @@ $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -
 endif
 PLAYER_CLASS ?= RandomPlayer
 
+SRC_DIR ?= src
 BIN_DIR ?= bin
 OBJ_DIR ?= obj
 EXIST_BIN_DIR := $(shell find ./ -type d -name $(BIN_DIR) | awk -F"/" '{ print $$NF }')
@@ -57,7 +58,7 @@ ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
 $(shell mkdir $(OBJ_DIR))
 endif
 
-VPATH := Player
+VPATH := Player:$(SRC_DIR)
 
 TARGETS := $(addprefix $(BIN_DIR)/, randomPlayer.$(LIB_EXT) chototsuPlayer.$(LIB_EXT) $(PLAYER_NAME).$(EXE_EXT) client.$(EXE_EXT) competition.$(EXE_EXT) $(PLAYER_NAME).$(LIB_EXT))
 
@@ -69,30 +70,30 @@ clean:
 	rm -rf $(OBJ_DIR)/*.*
 
 
-randomPlayer_OBJ := $(addprefix $(OBJ_DIR)/,randomPlayer.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
+randomPlayer_OBJ := $(addprefix $(OBJ_DIR)/,randomPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,randomPlayer.$(LIB_EXT)): $(randomPlayer_OBJ)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
-chototsuPlayer_OBJ := $(addprefix $(OBJ_DIR)/,chototsuPlayer.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT))
+chototsuPlayer_OBJ := $(addprefix $(OBJ_DIR)/,chototsuPlayer.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,chototsuPlayer.$(LIB_EXT)): $(chototsuPlayer_OBJ)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
-Player_OBJ := $(addprefix $(OBJ_DIR)/,Player.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT) Simulator.$(OBJ_EXT))
-$(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(EXE_EXT)): $(Player_OBJ)
+player_OBJ := $(addprefix $(OBJ_DIR)/,player.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT) simulator.$(OBJ_EXT))
+$(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(EXE_EXT)): $(player_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
-$(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(LIB_EXT)): $(Player_OBJ)
+$(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(LIB_EXT)): $(player_OBJ)
 	$(CXX) $(CXXFLAGS) -shared $^ $(LIBS) -o $@
 
-client_OBJ := $(addprefix $(OBJ_DIR)/,client.$(OBJ_EXT) Geister.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT))
+client_OBJ := $(addprefix $(OBJ_DIR)/,client.$(OBJ_EXT) geister.$(OBJ_EXT) unit.$(OBJ_EXT) tcpClient.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,client.$(EXE_EXT)): $(client_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
-competition_OBJ := $(addprefix $(OBJ_DIR)/,competition.$(OBJ_EXT) unit.$(OBJ_EXT) Geister.$(OBJ_EXT))
+competition_OBJ := $(addprefix $(OBJ_DIR)/,competition.$(OBJ_EXT) unit.$(OBJ_EXT) geister.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
-OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
+OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition unit tcpClient geister simulator randomPlayer chototsuPlayer player))
 DEPS   := $(OBJS:.$(OBJ_EXT)=.d)
 
 DEFS = -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
@@ -102,6 +103,6 @@ DEFS += -DUSE_FS
 endif
 
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) $(DEFS) -I./ -I./lib/ -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEFS) -I. -I./include -I./include/lib -c $< -o $@
 
 -include $(DEPS)
