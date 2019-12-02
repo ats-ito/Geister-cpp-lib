@@ -5,10 +5,10 @@
 std::vector<char> Geister::unitList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
 Geister::Geister(){
-    this->takeBlue1st = 0;
-    this->takeBlue2nd = 0;
-    this->takeRed1st = 0;
-    this->takeRed2nd = 0;
+    this->takenBlue1st = 0;
+    this->takenBlue2nd = 0;
+    this->takenRed1st = 0;
+    this->takenRed2nd = 0;
     this->turn = 0;
     units = {
         Unit(1, 4, 'U', 'A'),
@@ -31,10 +31,10 @@ Geister::Geister(){
 }
 
 Geister::Geister(const Geister& geister){
-    this->takeBlue1st = geister.takeBlue1st;
-    this->takeBlue2nd = geister.takeBlue2nd;
-    this->takeRed1st = geister.takeRed1st;
-    this->takeRed2nd = geister.takeRed2nd;
+    this->takenBlue1st = geister.takenBlue1st;
+    this->takenBlue2nd = geister.takenBlue2nd;
+    this->takenRed1st = geister.takenRed1st;
+    this->takenRed2nd = geister.takenRed2nd;
     this->turn = geister.turn;
     units = geister.units;
 }
@@ -427,19 +427,19 @@ std::string& Geister::toString() const
 
 void Geister::take(Unit unit){
     if(unit.color == UnitColor::Blue){
-        takeBlue1st += 1;
+        takenBlue1st += 1;
         return;
     }
     else if(unit.color == UnitColor::blue){
-        takeBlue2nd += 1;
+        takenBlue2nd += 1;
         return;
     }
     else if(unit.color == UnitColor::Red){
-        takeRed1st += 1;
+        takenRed1st += 1;
         return;
     }
     else if(unit.color == UnitColor::red){
-        takeRed2nd += 1;
+        takenRed2nd += 1;
         return;
     }
 }
@@ -572,13 +572,13 @@ void Geister::move(Hand h){
 
 double Geister::checkResult() const{
     // 駒取りによる勝敗
-    if(takeBlue1st == 4)
+    if(takenBlue1st == 4)
 		return -2;
-	if(takeRed2nd == 4)
+	if(takenRed2nd == 4)
         return -3;
-    if(takeBlue2nd == 4)
+    if(takenBlue2nd == 4)
 		return 2;
-	if(takeRed1st == 4)
+	if(takenRed1st == 4)
         return 3;
 
     // 駒の脱出による勝敗
@@ -609,8 +609,8 @@ Geister Geister::mask(){
 }
 
 void Geister::changeSide(){
-    std::swap(takeBlue1st, takeBlue2nd);
-    std::swap(takeRed1st, takeRed2nd);
+    std::swap(takenBlue1st, takenBlue2nd);
+    std::swap(takenRed1st, takenRed2nd);
 
 	for(int i = 0; i < 8; ++i){
 		auto tmp = units[i];
@@ -640,26 +640,26 @@ void Geister::changeSide(){
 }
 
 void Geister::countTaken() {
-    takeBlue1st = 0;
-    takeRed1st = 0;
-    takeBlue2nd = 0;
-    takeRed2nd = 0;
+    takenBlue1st = 0;
+    takenRed1st = 0;
+    takenBlue2nd = 0;
+    takenRed2nd = 0;
 
     for(int i = 0; i < 8; ++i){
         if(units[i].isTaken()){
             if(units[i].color.isBlue())
-                takeBlue1st++;
+                takenBlue1st++;
             else if(units[i].color.isRed())
-                takeRed1st++;
+                takenRed1st++;
             continue;
         }
     }
     for(int i = 8; i < 16; ++i){
         if(units[i].isTaken()){
             if(units[i].color.isBlue())
-                takeBlue2nd++;
+                takenBlue2nd++;
             else if(units[i].color.isRed())
-                takeRed2nd++;
+                takenRed2nd++;
             continue;
         }
     }
