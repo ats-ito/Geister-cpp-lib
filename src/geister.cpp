@@ -82,10 +82,10 @@ Geister::Geister(std::string red1, std::string red2){
         OpUnit(2, 0, 'b', 'g'),
         OpUnit(1, 0, 'b', 'h')
     };
-    for(int i = 0; i < red1.size(); ++i){
+    for(size_t i = 0; i < red1.size(); ++i){
         units[red1[i] - 'A'].color = UnitColor::Red;
     }
-    for(int i = 0; i < red2.size(); ++i){
+    for(size_t i = 0; i < red2.size(); ++i){
         units[red2[i] - 'A' + 8].color = UnitColor::red;
     }
     countTaken();
@@ -103,10 +103,10 @@ void Geister::setState(std::string state){
                 else if(state[moveIndex*3] - beforeState[moveIndex*3] == -1){
                     u = Hand(units[moveIndex], Direction::West);
                 }
-                else if(state[moveIndex*3+1] != beforeState[moveIndex*3+1] == 1){
+                else if(state[moveIndex*3+1] - beforeState[moveIndex*3+1] == 1){
                     u = Hand(units[moveIndex], Direction::South);
                 }
-                else if(state[moveIndex*3+1] != beforeState[moveIndex*3+1] == -1){
+                else if(state[moveIndex*3+1] - beforeState[moveIndex*3+1] == -1){
                     u = Hand(units[moveIndex], Direction::North);
                 }
                 else{
@@ -600,7 +600,7 @@ Unit* Geister::getUnitByPos(int x, int y){
 
 Geister Geister::mask(){
 	Geister res(*this);
-	for(int i = 8; i < units.size(); ++i){
+	for(size_t i = 8; i < units.size(); ++i){
 		auto& u = res.units[i];
 		if(u.onBoard())
 			u.color = UnitColor::unknown;
