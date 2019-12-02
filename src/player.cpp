@@ -1,6 +1,6 @@
-#include "Player.hpp"
+#include "player.hpp"
 #include "Player/all.hpp"
-#include "Geister.hpp"
+#include "geister.hpp"
 #include "hand.hpp"
 #include <iostream>
 

@@ -1,5 +1,5 @@
 #include "nonsugar.hpp"
-#include "Geister.hpp"
+#include "geister.hpp"
 #include <string>
 #include <vector>
 #include <iostream>

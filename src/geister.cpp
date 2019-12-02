@@ -1,4 +1,4 @@
-#include "Geister.hpp"
+#include "geister.hpp"
 #include "unit.hpp"
 #include <iostream>
 

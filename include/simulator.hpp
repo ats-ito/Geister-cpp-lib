@@ -1,7 +1,7 @@
 #ifndef SIMULATOR_HPP
 #define SIMULATOR_HPP
 
-#include "Geister.hpp"
+#include "geister.hpp"
 #include <random>
 #include "random.hpp"
 
