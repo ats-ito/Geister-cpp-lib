@@ -2,7 +2,7 @@
 #define HUMANPLAYER
 #include <string>
 #include <iostream>
-#include "Player.hpp"
+#include "player.hpp"
 #include "random.hpp"
 
 

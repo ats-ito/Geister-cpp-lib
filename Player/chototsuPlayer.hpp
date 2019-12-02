@@ -1,7 +1,7 @@
 #ifndef CHOTOTSUPLAYER
 #define CHOTOTSUPLAYER
 #include <string>
-#include "Player.hpp"
+#include "player.hpp"
 #include "random.hpp"
 
 

@@ -1,6 +1,6 @@
 #include "clx/tcp.h"
 #include "nonsugar.hpp"
-#include "Geister.hpp"
+#include "geister.hpp"
 #include "tcpClient.hpp"
 #include <string>
 #include <vector>

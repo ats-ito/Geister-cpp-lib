@@ -2,7 +2,7 @@
 #define RANDOMPLAYER
 #include <string>
 #include "random.hpp"
-#include "Player.hpp"
+#include "player.hpp"
 
 
 class RandomPlayer: public Player{

@@ -1,3 +1,3 @@
 #include "chototsuPlayer.hpp"
-#include "HumanPlayer.hpp"
+#include "humanPlayer.hpp"
 #include "randomPlayer.hpp"

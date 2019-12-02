@@ -1,5 +1,5 @@
 #include "hand.hpp"
-#include "Geister.hpp"
+#include "geister.hpp"
 #include <string>
 #include <vector>
 
