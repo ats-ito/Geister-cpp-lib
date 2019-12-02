@@ -1,4 +1,4 @@
-USE_FS ?= ""
+USE_FS ?= "true"
 
 ifeq  ($(shell uname),Darwin)
 	CXX ?= clang++
@@ -95,12 +95,13 @@ $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition unit tcpClient Geister Simulator randomPlayer chototsuPlayer Player))
 DEPS   := $(OBJS:.$(OBJ_EXT)=.d)
 
+DEFS = -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
+
 ifdef USE_FS
-$(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -DUSE_FS -I./ -I./lib/ -c $< -o $@
-else
-$(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
-	$(CXX) $(CXXFLAGS) -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS) -I./ -I./lib/ -c $< -o $@
+DEFS += -DUSE_FS
 endif
+
+$(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) -I./ -I./lib/ -c $< -o $@
 
 -include $(DEPS)
