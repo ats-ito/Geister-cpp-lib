@@ -15,14 +15,14 @@ ifeq ($(OS),Windows_NT)
 	EXE_EXT ?= exe
 else
 	LIBS ?= -ldl
-	ifeq ($(CXX),clang++)
+	ifneq ($(filter clang++%, $(CXX)),)
 		CXXFLAGS += -fPIC -stdlib=libc++
 		LIBS += -stdlib=libc++ -lc++experimental -lc++abi
 		ifdef USE_FS
 			LIBS += -lc++fs
 		endif
 	endif
-	ifeq ($(CXX),g++)
+	ifneq ($(filter g++%, $(CXX)),)
 		CXXFLAGS += -fPIC
 		LIBS += -lstdc++
 		ifdef USE_FS
