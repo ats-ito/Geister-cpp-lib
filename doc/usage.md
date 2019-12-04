@@ -3,7 +3,7 @@
 プレイヤの自動対戦用ツール
 ### 基本コマンド
 ```
-./competition.exe {先手プレイヤ} {後手プレイヤ}
+./competition.exe {先手プレイヤファイル} {後手プレイヤファイル}
 ```
 ### オプション
 - -o：出力の制御
@@ -27,7 +27,7 @@
     - 3：両方隠す
 - -h：ヘルプの表示
   
-#### オプション指定の例
+### 実行例
 - 先手randomPlayer，後手chototsuPlayer
 - 対戦回数：100
 - 出力は対局ごとの結果のみ
@@ -37,4 +37,28 @@
 ./competition.exe -o1 -c100 -l -m0 ./randomPlayer.dll ./chototsuPlayer.dll
 ```
 
+### 出力例
+後で書く
+
 ## client
+[サーバ](https://github.com/miyo/geister_server.java)への接続用ツール
+### 基本コマンド
+```
+./client.exe {プレイヤファイル}
+```
+### オプション
+- -H：接続先のホスト指定
+  - デフォルト値：localhost
+- -p：接続先のポート指定
+  - デフォルト値：10001
+  - 先手の場合は10000，後手の場合は10001
+  
+### 実行例
+- 接続先：localhost:10000
+- プレイヤ：randomPlayer
+```
+./competition.exe -H localhost -p 10000 ./randomPlayer.dll
+```
+
+### 出力例
+後で書く
