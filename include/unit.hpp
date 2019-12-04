@@ -164,13 +164,6 @@ public:
     }
 };
 
-class OpUnit : public Unit{
-public:
-    double blue;
-    OpUnit();
-    OpUnit(int x, int y, int color, char name);
-    OpUnit(int x, int y, char color, char name);
-};
 
 inline std::ostream& operator<<(std::ostream& stream, const Unit& value){
     return stream << value.toString();
