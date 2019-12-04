@@ -71,6 +71,10 @@ struct UnitColor{
                 return 'U';
             case unknown:
                 return 'u';
+            case Purple:
+                return 'P';
+            case purple:
+                return 'p';
             default:
                 return ' ';
         }
@@ -91,6 +95,10 @@ struct UnitColor{
                 return std::string("Unknown");
             case unknown:
                 return std::string("unknown");
+            case Purple:
+                return std::string("Purple");
+            case purple:
+                return std::string("purple");
             default:
                 return std::string("Not defined");
         }
@@ -131,6 +139,10 @@ struct UnitColor{
                 return unknown;
             case unknown:
                 return Unknown;
+            case Purple:
+                return purple;
+            case purple:
+                return Purple;
             default:
                 return NotDefine;
         }
@@ -161,6 +173,15 @@ public:
     bool isEscape() const
     {
         return x == 8 && y == 8;
+    }
+
+    bool is1st() const
+    {
+        return color.is1st();
+    }
+    bool is2nd() const
+    {
+        return color.is2nd();
     }
 };
 

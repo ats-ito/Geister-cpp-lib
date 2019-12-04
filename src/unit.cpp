@@ -76,6 +76,12 @@ UnitColor::UnitColor(char c) {
         case 'u':
             color = unknown;
             break;
+        case 'P':
+            color = Purple;
+            break;
+        case 'p':
+            color = purple;
+            break;
     }
 }
     
