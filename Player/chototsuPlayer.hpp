@@ -24,7 +24,7 @@ public:
 
         const auto& units = game.allUnit();
         for(const auto& u: units){
-            if(u.color.toInt() == 0){
+            if(u.color == UnitColor::Blue){
                 if(u.x == 0 && u.y == 0){
                     return Hand({u, Direction::West});
                 }
@@ -34,7 +34,7 @@ public:
             }
         }
         for(const auto& u: units){
-            if(u.color.toInt() == 0 && u.y == 0){
+            if(u.color == UnitColor::Blue && u.y == 0){
                 if(u.x < 3 && u.x > 0){
                     return Hand({u, Direction::West});
                 }
