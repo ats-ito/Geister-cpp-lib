@@ -8,11 +8,11 @@
 class ChototsuPlayer: public Player{
     cpprefjp::random_device rd;
     std::mt19937 mt;
-    std::uniform_int_distribution<int> serector1;
+    std::uniform_int_distribution<int> choiceRandom;
 public:
     ChototsuPlayer():
     mt(rd()),
-    serector1(0, 1)
+    choiceRandom(0, 1)
     {}
 
     virtual std::string decideRed(){
@@ -43,12 +43,12 @@ public:
                 }
             }
         }
-        int mostFrontPos = 6;
-        int mostFrontIndex = -1;
-        for(int u = 0; u < 8; ++u){
+        int mostFrontPos = units[0].y;
+        int mostFrontIndex = 0;
+        for(int u = 1; u < 8; ++u){
             const auto& unit = units[u];
             if(unit.color == UnitColor::Blue && unit.y <= mostFrontPos && unit.y > 0){
-                if(unit.y < mostFrontPos || serector1(mt)){
+                if(unit.y < mostFrontPos || choiceRandom(mt)){
                     mostFrontIndex = u;
                     mostFrontPos = unit.y;
                 }
