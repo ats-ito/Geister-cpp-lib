@@ -1,5 +1,3 @@
-#ifndef RANDOMPLAYER
-#define RANDOMPLAYER
 #include <string>
 #include "random.hpp"
 #include "player.hpp"
@@ -33,5 +31,3 @@ public:
         return game.getLegalMove1st();
     }
 };
-
-#endif

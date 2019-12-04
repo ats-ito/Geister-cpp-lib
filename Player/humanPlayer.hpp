@@ -1,5 +1,3 @@
-#ifndef HUMANPLAYER
-#define HUMANPLAYER
 #include <string>
 #include <iostream>
 #include "player.hpp"
@@ -35,5 +33,3 @@ public:
         return Hand(unit, direct);
     }
 };
-
-#endif
