@@ -76,6 +76,12 @@ UnitColor::UnitColor(char c) {
         case 'u':
             color = unknown;
             break;
+        case 'P':
+            color = Purple;
+            break;
+        case 'p':
+            color = purple;
+            break;
     }
 }
     
@@ -111,28 +117,4 @@ Unit::Unit(int x, int y, UnitColor color, char name){
 
 std::string Unit::toString() const{
     return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
-}
-
-OpUnit::OpUnit(){
-    x = -1;
-    y = -1;
-    color = UnitColor::unknown;
-    name = ' ';
-    blue = 0;
-}
-    
-OpUnit::OpUnit(int x, int y, int color, char name){
-    this->x = x;
-    this->y = y;
-    this->color = UnitColor(color);
-    this->name = name;
-    blue = 0;
-}
-    
-OpUnit::OpUnit(int x, int y, char color, char name){
-    this->x = x;
-    this->y = y;
-    this->color = UnitColor(color);
-    this->name = name;
-    blue = 0;
 }

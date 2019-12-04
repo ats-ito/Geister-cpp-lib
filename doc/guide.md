@@ -1,17 +1,19 @@
 # プレイヤの開発手順
 ## 仕様
-各ツールにおいて，プレイヤは動的ライブラリとして実行時にリンクされます．  
-そのため，呼び出される関数は固定です．  
-実際に呼び出される関数は以下の2つとなります．
-- std::string decideRed();
-- std::string decideHand(std::string res);
+プレイヤはplayer.cppをコンパイルして動的ライブラリとして生成されます．  
+生成される動的ライブラリは，各ツールの実行時にリンクされます．  
+そのため，実際には特定の関数が呼び出されることで動作します．  
+呼び出される関数は以下の2つです．
+- std::string decideRed();：初期配置の決定
+- std::string decideHand(std::string res);：着手の決定
 
 これらは実際にはその内部でさらにPLAYER_CLASSで指定したクラス（デフォルトはRandomPlayer）の所定のメンバ関数を呼んでいます．  
-また，Player.cppではPlayer/all.hppをインクルードしており，同ファイルにはPlayer/以下の*.hppファイルがすべてインクルードされます．  
+また，Player.cppではPlayer/all.hppをインクルードしており，同ファイルにはmake実行時にPlayer/以下の*.hppファイルがすべてインクルードされます．  
+
 ## 開発手順
 新規にプレイヤを開発する基本的な手順は，
 1. Player/以下に拡張子.hppのファイルを作成（ファイル名は任意）
-2. 作成したファイル内にPlayer.hppを継承したクラスを作成（クラス名は任意）
+2. 作成したファイル内にPlayerクラスを継承したクラスを作成（クラス名は任意）
 3. 作成したクラス内に次の2つのメンバ関数を実装
    - std::string decideRed();
    - std::string decideHand(std::string res);
