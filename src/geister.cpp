@@ -19,14 +19,14 @@ Geister::Geister(){
         Unit(2, 5, 'U', 'F'),
         Unit(3, 5, 'U', 'G'),
         Unit(4, 5, 'U', 'H'),
-        OpUnit(4, 1, 'u', 'a'),
-        OpUnit(3, 1, 'u', 'b'),
-        OpUnit(2, 1, 'u', 'c'),
-        OpUnit(1, 1, 'u', 'd'),
-        OpUnit(4, 0, 'u', 'e'),
-        OpUnit(3, 0, 'u', 'f'),
-        OpUnit(2, 0, 'u', 'g'),
-        OpUnit(1, 0, 'u', 'h')
+        Unit(4, 1, 'u', 'a'),
+        Unit(3, 1, 'u', 'b'),
+        Unit(2, 1, 'u', 'c'),
+        Unit(1, 1, 'u', 'd'),
+        Unit(4, 0, 'u', 'e'),
+        Unit(3, 0, 'u', 'f'),
+        Unit(2, 0, 'u', 'g'),
+        Unit(1, 0, 'u', 'h')
     };
 }
 
@@ -50,14 +50,14 @@ Geister::Geister(std::string info){
         Unit(info[15] - '0', info[16] - '0', info[17], 'F'),
         Unit(info[18] - '0', info[19] - '0', info[20], 'G'),
         Unit(info[21] - '0', info[22] - '0', info[23], 'H'),
-        OpUnit(info[24] - '0', info[25] - '0', info[26], 'a'),
-        OpUnit(info[27] - '0', info[28] - '0', info[29], 'b'),
-        OpUnit(info[30] - '0', info[31] - '0', info[32], 'c'),
-        OpUnit(info[33] - '0', info[34] - '0', info[35], 'd'),
-        OpUnit(info[36] - '0', info[37] - '0', info[38], 'e'),
-        OpUnit(info[39] - '0', info[40] - '0', info[41], 'f'),
-        OpUnit(info[42] - '0', info[43] - '0', info[44], 'g'),
-        OpUnit(info[45] - '0', info[46] - '0', info[47], 'h')
+        Unit(info[24] - '0', info[25] - '0', info[26], 'a'),
+        Unit(info[27] - '0', info[28] - '0', info[29], 'b'),
+        Unit(info[30] - '0', info[31] - '0', info[32], 'c'),
+        Unit(info[33] - '0', info[34] - '0', info[35], 'd'),
+        Unit(info[36] - '0', info[37] - '0', info[38], 'e'),
+        Unit(info[39] - '0', info[40] - '0', info[41], 'f'),
+        Unit(info[42] - '0', info[43] - '0', info[44], 'g'),
+        Unit(info[45] - '0', info[46] - '0', info[47], 'h')
     };
     countTaken();
 }
@@ -73,14 +73,14 @@ Geister::Geister(std::string red1, std::string red2){
         Unit(2, 5, 'B', 'F'),
         Unit(3, 5, 'B', 'G'),
         Unit(4, 5, 'B', 'H'),
-        OpUnit(4, 1, 'b', 'a'),
-        OpUnit(3, 1, 'b', 'b'),
-        OpUnit(2, 1, 'b', 'c'),
-        OpUnit(1, 1, 'b', 'd'),
-        OpUnit(4, 0, 'b', 'e'),
-        OpUnit(3, 0, 'b', 'f'),
-        OpUnit(2, 0, 'b', 'g'),
-        OpUnit(1, 0, 'b', 'h')
+        Unit(4, 1, 'b', 'a'),
+        Unit(3, 1, 'b', 'b'),
+        Unit(2, 1, 'b', 'c'),
+        Unit(1, 1, 'b', 'd'),
+        Unit(4, 0, 'b', 'e'),
+        Unit(3, 0, 'b', 'f'),
+        Unit(2, 0, 'b', 'g'),
+        Unit(1, 0, 'b', 'h')
     };
     for(size_t i = 0; i < red1.size(); ++i){
         units[red1[i] - 'A'].color = UnitColor::Red;
