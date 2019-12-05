@@ -4,6 +4,7 @@
 #include "geister.hpp"
 #include <random>
 #include "random.hpp"
+#include "result.hpp"
 
 
 class Simulator{
@@ -31,7 +32,7 @@ public:
 
     virtual double evaluate() const
     {
-        return current.checkResult() > 0 ? 1.0 : -1.0;
+        return static_cast<int>(current.getResult()) > 0 ? 1.0 : -1.0;
     }
 };
 

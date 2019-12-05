@@ -7,6 +7,7 @@
 #include <map>
 #include "random.hpp"
 #include "hand.hpp"
+#include "result.hpp"
 #ifdef USE_FS
 #ifdef _WIN32
 #include <filesystem>
@@ -164,9 +165,9 @@ int run(void* dll1, void* dll2){
         }
     }
 
-    int result = 0;
+    Result result = Result::OnPlay;
 
-    while(result == 0){
+    while(!game.isEnd()){
         if(game.turn >= 200) break;
         auto hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
@@ -198,8 +199,8 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.checkResult();
-        if(result)
+        result = game.getResult();
+        if(game.isEnd())
             break;
         game.changeSide();
         hand = Hand(decideHand2(game.mask()));
@@ -236,7 +237,7 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.checkResult();
+        result = game.getResult();
     }
     // game.turn++;
     if(outputLevel > 0){
@@ -249,7 +250,7 @@ int run(void* dll1, void* dll2){
         digestFile << result << "," << game.turn << std::endl;
     }
 #endif
-    return result;
+    return result == Result::Draw ? 0 : static_cast<int>(result);
 }
 
 int main(int argc, char** argv){
