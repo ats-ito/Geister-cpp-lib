@@ -1,10 +1,12 @@
 #include "geister.hpp"
 #include "unit.hpp"
+#include "result.hpp"
 #include <iostream>
 
 std::vector<char> Geister::unitList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-Geister::Geister(){
+Geister::Geister():result(Result::OnPlay)
+{
     this->takenBlue1st = 0;
     this->takenBlue2nd = 0;
     this->takenRed1st = 0;
@@ -30,7 +32,8 @@ Geister::Geister(){
     };
 }
 
-Geister::Geister(const Geister& geister){
+Geister::Geister(const Geister& geister):result(Result::OnPlay)
+{
     this->takenBlue1st = geister.takenBlue1st;
     this->takenBlue2nd = geister.takenBlue2nd;
     this->takenRed1st = geister.takenRed1st;
@@ -39,7 +42,8 @@ Geister::Geister(const Geister& geister){
     units = geister.units;
 }
 
-Geister::Geister(std::string info){
+Geister::Geister(std::string info):result(Result::OnPlay)
+{
     this->turn = 0;
     units = {
         Unit(info[0] - '0', info[1] - '0', info[2], 'A'),
@@ -62,7 +66,8 @@ Geister::Geister(std::string info){
     countTaken();
 }
 
-Geister::Geister(std::string red1, std::string red2){
+Geister::Geister(std::string red1, std::string red2):result(Result::OnPlay)
+{
     this->turn = 0;
     units = {
         Unit(1, 4, 'B', 'A'),
@@ -437,26 +442,43 @@ std::string& Geister::toString() const
 	return res;
 }
 
-void Geister::take(Unit unit){
+void Geister::take(Unit& unit){
+    unit.x = 9;
+    unit.y = 9;
     if(unit.is1st()){
         if(unit.color.isRed()){
-            takenRed1st += 1;
+            if(++takenRed1st == 4)
+                result = Result::TakenRed1st;
             return;
         }
         else if(unit.color.isBlue()){
-            takenBlue1st += 1;
+            if(++takenBlue1st == 4)
+                result = Result::TakeBlue2nd;
             return;
         }
     }
     else if(unit.is2nd()){
         if(unit.color.isRed()){
-            takenRed2nd += 1;
+            if(++takenRed2nd == 4)
+                result = Result::TakenRed2nd;
             return;
         }
         else if(unit.color.isBlue()){
-            takenBlue2nd += 1;
+            if(++takenBlue2nd == 4)
+                result = Result::TakeBlue1st;
             return;
         }
+    }
+}
+
+void Geister::escape(Unit& unit){
+    unit.x = 8;
+    unit.y = 8;
+    if(unit.is1st()){
+        result = Result::Escape1st;
+    }
+    else{
+        result = Result::Escape2nd;
     }
 }
 
@@ -469,50 +491,40 @@ void Geister::move(char u, char direct){
         history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
         if(direct == 'N'){
             Unit* target = getUnitByPos(x, y - 1);
-            if(target && target->color.is2nd()){
+            if(target && target->is2nd()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x;
             unit->y = y - 1;
         }
         else if(direct == 'E'){
             if((unit->color.isBlue() && x == 5 && y == 0)){
-                unit->x = 8;
-                unit->y = 8;
+                escape(*unit);
                 return;
             }
             Unit* target = getUnitByPos(x + 1, y);
-            if(target && target->color.is2nd()){
+            if(target && target->is2nd()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x + 1;
             unit->y = y;
         }
         else if(direct == 'W'){
             if((unit->color.isBlue() && x == 0 && y == 0)){
-                unit->x = 8;
-                unit->y = 8;
+                escape(*unit);
                 return;
             }
             Unit* target = getUnitByPos(x - 1, y);
-            if(target && target->color.is2nd()){
+            if(target && target->is2nd()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x - 1;
             unit->y = y;
         }
         else if(direct == 'S'){
             Unit* target = getUnitByPos(x, y + 1);
-            if(target && target->color.is2nd()){
+            if(target && target->is2nd()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x;
             unit->y = y + 1;
@@ -526,50 +538,40 @@ void Geister::move(char u, char direct){
         history.push_back({Hand(Unit(x, y, unit->color, u), Direction(direct)), toString()});
         if(direct == 'N'){
             Unit* target = getUnitByPos(x, y - 1);
-            if(target && target->color.is1st()){
+            if(target && target->is1st()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x;
             unit->y = y - 1;
         }
         else if(direct == 'E'){
             if((unit->color.isBlue() && x == 5 && y == 5)){
-                unit->x = 8;
-                unit->y = 8;
+                escape(*unit);
                 return;
             }
             Unit* target = getUnitByPos(x + 1, y);
-            if(target && target->color.is1st()){
+            if(target && target->is1st()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x + 1;
             unit->y = y;
         }
         else if(direct == 'W'){
             if((unit->color.isBlue() && x == 0 && y == 5)){
-                unit->x = 8;
-                unit->y = 8;
+                escape(*unit);
                 return;
             }
             Unit* target = getUnitByPos(x - 1, y);
-            if(target && target->color.is1st()){
+            if(target && target->is1st()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x - 1;
             unit->y = y;
         }
         else if(direct == 'S'){
             Unit* target = getUnitByPos(x, y + 1);
-            if(target && target->color.is1st()){
+            if(target && target->is1st()){
                 take(*target);
-                target->x = 9;
-                target->y = 9;
             }
             unit->x = x;
             unit->y = y + 1;
@@ -579,30 +581,20 @@ void Geister::move(char u, char direct){
         }
     }
     else return;
-    turn++;
+    if(++turn >= 200 && result == Result::OnPlay)
+        result = Result::Draw;
 }
 
 void Geister::move(Hand h){
     move(h.unit.name, h.direct.toChar());
 }
 
-double Geister::checkResult() const{
-    // 駒取りによる勝敗
-    if(takenBlue1st == 4)
-		return -2;
-	if(takenRed2nd == 4)
-        return -3;
-    if(takenBlue2nd == 4)
-		return 2;
-	if(takenRed1st == 4)
-        return 3;
+Result Geister::getResult() const{
+    return result;
+}
 
-    // 駒の脱出による勝敗
-    for(auto&& u: units)
-        if(u.isEscape())
-            return (u.is1st()) ? 1 : -1;
-
-    return 0;
+bool Geister::isEnd() const{
+    return result != Result::OnPlay;
 }
 
 Unit* Geister::getUnitByPos(int x, int y){
@@ -653,6 +645,9 @@ void Geister::changeSide(){
 		units[i+8].name = tmp.name - 'A' + 'a';
 		units[i+8].color = tmp.color.reverseSide();
 	}
+
+    if(result != Result::Draw)
+        result = static_cast<Result>(-static_cast<int>(result));
 }
 
 void Geister::countTaken() {
@@ -679,4 +674,12 @@ void Geister::countTaken() {
             continue;
         }
     }
+    if(takenBlue1st == 4)
+        result = Result::TakeBlue2nd;
+    if(takenBlue2nd == 4)
+        result = Result::TakeBlue1st;
+    if(takenRed1st == 4)
+        result = Result::TakenRed1st;
+    if(takenRed2nd == 4)
+        result = Result::TakenRed2nd;
 }
