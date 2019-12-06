@@ -1,6 +1,7 @@
 #include "geister.hpp"
 #include "unit.hpp"
 #include "simulator.hpp"
+#include "result.hpp"
 #include <array>
 #include <algorithm>
 #include <map>
@@ -59,14 +60,14 @@ void Simulator::setColorRandom(){
     
 double Simulator::playout(){
     while(true){
-        if(current.checkResult() != 0)
+        if(current.isEnd())
             break;
         // 相手の手番
         auto lm = current.getLegalMove2nd();
         std::uniform_int_distribution<int> selector1(0, lm.size() - 1);
         auto m = lm[selector1(mt)];
         current.move(m);
-        if(current.checkResult() != 0)
+        if(current.isEnd())
             break;
         // 自分の手番
         lm = current.getLegalMove1st();

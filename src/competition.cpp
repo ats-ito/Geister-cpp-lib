@@ -7,6 +7,7 @@
 #include <map>
 #include "random.hpp"
 #include "hand.hpp"
+#include "result.hpp"
 #ifdef USE_FS
 #ifdef _WIN32
 #include <filesystem>
@@ -42,6 +43,7 @@ static std::string getFileName(std::string path){
 
 
 bool logEnable = false;
+std::string logRoot;
 std::string dllPath1, dllPath2;
 std::string dllName1, dllName2;
 #ifdef USE_FS
@@ -164,9 +166,9 @@ int run(void* dll1, void* dll2){
         }
     }
 
-    int result = 0;
+    Result result = Result::OnPlay;
 
-    while(result == 0){
+    while(!game.isEnd()){
         if(game.turn >= 200) break;
         auto hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
@@ -198,8 +200,8 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.checkResult();
-        if(result)
+        result = game.getResult();
+        if(game.isEnd())
             break;
         game.changeSide();
         hand = Hand(decideHand2(game.mask()));
@@ -236,7 +238,7 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.checkResult();
+        result = game.getResult();
     }
     // game.turn++;
     if(outputLevel > 0){
@@ -249,32 +251,37 @@ int run(void* dll1, void* dll2){
         digestFile << result << "," << game.turn << std::endl;
     }
 #endif
-    return result;
+    return result == Result::Draw ? 0 : static_cast<int>(result);
 }
 
 int main(int argc, char** argv){
     double match = 1;
     try {
-        auto const cmd = command<char>("client", "geister client")
+        auto const cmd = command<char>("competition", "geister competition")
             .flag<'h'>({'h'}, {"help"}, "produce help message")
             .flag<'v'>({'v'}, {"version"}, "print version string")
             .flag<'l'>({'l'}, {"log"}, "enable log record")
+            .flag<'d', std::string>({'d'}, {"dest"}, "N", "log destination")
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
             .flag<'c', int>({'c'}, {"match"}, "N", "match count")
             .flag<'m', int>({'m'}, {"mask"}, "N", "mask player number")
-            .argument<'d', std::vector<std::string>>("Player-Path")
+            .argument<'p', std::vector<std::string>>("Player-Path")
             ;
-        auto const opts = parse(argc, argv, cmd);
+        auto const opts = parse(argc, argv, cmd, argument_order::flexible);
         if (opts.has<'h'>()) {
             std::cout << usage(cmd);
             return 0;
         }
         if (opts.has<'v'>()) {
-            std::cout << "client, version 1.0\n";
+            std::cout << "competition, version 1.0\n";
             return 0;
         }
         if (opts.has<'l'>()) {
             logEnable = true;
+        }
+        if (opts.has<'d'>()){
+            logEnable = true;
+            logRoot = opts.get<'d'>();
         }
         if (opts.has<'o'>()) {
             outputLevel = opts.get<'o'>();
@@ -285,9 +292,9 @@ int main(int argc, char** argv){
         if (opts.has<'m'>()) {
             mask = opts.get<'m'>();
         }
-        if(opts.get<'d'>().size() > 0){
-            dllPath1 = opts.get<'d'>()[0];
-            dllPath2 = opts.get<'d'>()[1];
+        if(opts.get<'p'>().size() > 0){
+            dllPath1 = opts.get<'p'>()[0];
+            dllPath2 = opts.get<'p'>()[1];
 #ifdef USE_FS
             dllName1 = fs::path(dllPath1).filename().generic_string();
             dllName2 = fs::path(dllPath2).filename().generic_string();
@@ -324,7 +331,7 @@ int main(int argc, char** argv){
 
 #ifdef USE_FS
     if(logEnable){
-        fs::create_directory("./log");
+        fs::create_directory(logRoot + "log");
 
         //時刻取得用
         char dn[256];
@@ -336,7 +343,7 @@ int main(int argc, char** argv){
             pnow->tm_hour, pnow->tm_min, pnow->tm_sec, (int)match);
         std::string dirName(dn);
 
-        logDir = "./log/" + dllName1 + "-" + dllName2 + "/" + dirName;
+        logDir = logRoot + "log/" + dllName1 + "-" + dllName2 + "/" + dirName;
         fs::create_directories(logDir);
 
         digestFile.open(logDir + "/" + dllName1 + "-" + dllName2 + "_digest.txt", std::ios::out);

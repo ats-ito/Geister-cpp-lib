@@ -3,6 +3,7 @@
 #include <string>
 #include "unit.hpp"
 #include "hand.hpp"
+#include "result.hpp"
 
 #ifndef GEISTER
 #define GEISTER
@@ -15,6 +16,7 @@ protected:
     int takenBlue2nd;
     int takenRed1st;
     int takenRed2nd;
+    Result result;
 public:
     int turn;
     std::vector<std::pair<Hand, std::string>> history;
@@ -48,13 +50,17 @@ public:
 
     virtual std::string& toString() const;
 
-    virtual void take(Unit unit);
+    virtual void take(Unit& unit);
+    
+    virtual void escape(Unit& unit);
 
     virtual void move(char u, char direct);
 
     virtual void move(Hand h);
 
-    virtual double checkResult() const;
+    virtual Result getResult() const;
+
+    virtual bool isEnd() const;
 
     virtual Unit* getUnitByPos(int x, int y);
 
