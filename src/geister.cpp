@@ -5,13 +5,14 @@
 
 std::vector<char> Geister::unitList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-Geister::Geister():result(Result::OnPlay)
+Geister::Geister():
+result(Result::OnPlay),
+takenBlue1st(0),
+takenBlue2nd(0),
+takenRed1st(0),
+takenRed2nd(0),
+turn(0)
 {
-    this->takenBlue1st = 0;
-    this->takenBlue2nd = 0;
-    this->takenRed1st = 0;
-    this->takenRed2nd = 0;
-    this->turn = 0;
     units = {
         Unit(1, 4, 'U', 'A'),
         Unit(2, 4, 'U', 'B'),
@@ -32,19 +33,21 @@ Geister::Geister():result(Result::OnPlay)
     };
 }
 
-Geister::Geister(const Geister& geister):result(Result::OnPlay)
+Geister::Geister(const Geister& geister):
+result(geister.result),
+takenBlue1st(geister.takenBlue1st),
+takenBlue2nd(geister.takenBlue2nd),
+takenRed1st(geister.takenRed1st),
+takenRed2nd(geister.takenRed2nd),
+turn(geister.turn),
+units(geister.units)
 {
-    this->takenBlue1st = geister.takenBlue1st;
-    this->takenBlue2nd = geister.takenBlue2nd;
-    this->takenRed1st = geister.takenRed1st;
-    this->takenRed2nd = geister.takenRed2nd;
-    this->turn = geister.turn;
-    units = geister.units;
 }
 
-Geister::Geister(std::string info):result(Result::OnPlay)
+Geister::Geister(std::string info):
+result(Result::OnPlay),
+turn(0)
 {
-    this->turn = 0;
     units = {
         Unit(info[0] - '0', info[1] - '0', info[2], 'A'),
         Unit(info[3] - '0', info[4] - '0', info[5], 'B'),
@@ -63,12 +66,21 @@ Geister::Geister(std::string info):result(Result::OnPlay)
         Unit(info[42] - '0', info[43] - '0', info[44], 'g'),
         Unit(info[45] - '0', info[46] - '0', info[47], 'h')
     };
+    for(auto&& u: units){
+        if(u.isEscape()){
+            if(u.is1st())
+                result = Result::Escape1st;
+            else if(u.is2nd())
+                result = Result::Escape2nd;
+        }
+    }
     countTaken();
 }
 
-Geister::Geister(std::string red1, std::string red2):result(Result::OnPlay)
+Geister::Geister(std::string red1, std::string red2):
+result(Result::OnPlay),
+turn(0)
 {
-    this->turn = 0;
     units = {
         Unit(1, 4, 'B', 'A'),
         Unit(2, 4, 'B', 'B'),
@@ -127,6 +139,14 @@ void Geister::setState(std::string state){
         units[i].x = state[i * 3] - '0';
         units[i].y = state[i * 3 + 1] - '0';
         units[i].color = UnitColor(state[i * 3 + 2]);
+    }
+    for(auto&& u: units){
+        if(u.isEscape()){
+            if(u.is1st())
+                result = Result::Escape1st;
+            else if(u.is2nd())
+                result = Result::Escape2nd;
+        }
     }
     countTaken();
 }
