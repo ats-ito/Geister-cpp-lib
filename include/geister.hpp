@@ -37,6 +37,7 @@ public:
     void printInfo() const;
 
     virtual std::array<Unit, 16>& allUnit();
+    virtual const std::array<Unit, 16>& allUnit() const;
 
     virtual bool canMove1st(Unit unit, Direction direct) const;
 
@@ -83,7 +84,11 @@ public:
             return takenRed2nd;
         return -1;
     }
+
+    virtual Hand diff(const Geister& target);
 };
+
+Hand diff(const Geister& left, const Geister& right);
 
 inline std::ostream& operator<<(std::ostream& stream, const Geister& value){
     return stream << value.toString();
