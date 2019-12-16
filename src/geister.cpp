@@ -152,7 +152,31 @@ void Geister::setState(std::string state){
 }
 
 void Geister::initialize(){
-    setState("14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u");
+    result = Result::OnPlay;
+    takenBlue1st = 0;
+    takenBlue2nd = 0;
+    takenRed1st = 0;
+    takenRed2nd = 0;
+    turn = 0;
+    history.clear();
+    units = {
+        Unit(1, 4, 'U', 'A'),
+        Unit(2, 4, 'U', 'B'),
+        Unit(3, 4, 'U', 'C'),
+        Unit(4, 4, 'U', 'D'),
+        Unit(1, 5, 'U', 'E'),
+        Unit(2, 5, 'U', 'F'),
+        Unit(3, 5, 'U', 'G'),
+        Unit(4, 5, 'U', 'H'),
+        Unit(4, 1, 'u', 'a'),
+        Unit(3, 1, 'u', 'b'),
+        Unit(2, 1, 'u', 'c'),
+        Unit(1, 1, 'u', 'd'),
+        Unit(4, 0, 'u', 'e'),
+        Unit(3, 0, 'u', 'f'),
+        Unit(2, 0, 'u', 'g'),
+        Unit(1, 0, 'u', 'h')
+    };
 }
 
 void Geister::printAll() const
