@@ -28,8 +28,12 @@ protected:
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
 public:
-    Geister getState(){
+    virtual Geister getState(){
         return game;
+    }
+
+    virtual void initialize(){
+        game.initialize();
     }
 
     virtual std::string name(){

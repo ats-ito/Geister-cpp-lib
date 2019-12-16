@@ -15,6 +15,7 @@ std::string decideHand(const std::string& res){
 __declspec(dllexport)
 #endif
 std::string decideRed(){
+    player.initialize();
     return player.decideRed();
 }
 }
