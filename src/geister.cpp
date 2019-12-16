@@ -109,32 +109,6 @@ turn(0)
 }
 
 void Geister::setState(std::string state){
-    if(auto beforeState = toString(); state != beforeState){
-        int moveIndex = 0;
-        Hand u;
-        for(moveIndex = 0; moveIndex < 16; ++moveIndex){
-            if(state[moveIndex*3] != beforeState[moveIndex*3] || state[moveIndex*3+1] != beforeState[moveIndex*3+1]){
-                if(state[moveIndex*3] - beforeState[moveIndex*3] == 1){
-                    u = Hand(units[moveIndex], Direction::East);
-                }
-                else if(state[moveIndex*3] - beforeState[moveIndex*3] == -1){
-                    u = Hand(units[moveIndex], Direction::West);
-                }
-                else if(state[moveIndex*3+1] - beforeState[moveIndex*3+1] == 1){
-                    u = Hand(units[moveIndex], Direction::South);
-                }
-                else if(state[moveIndex*3+1] - beforeState[moveIndex*3+1] == -1){
-                    u = Hand(units[moveIndex], Direction::North);
-                }
-                else{
-                    continue;
-                }
-                history.push_back({u, toString()});
-                break;
-            }
-        }
-    }
-    
     for(int i = 0; i < 16; ++i){
         units[i].x = state[i * 3] - '0';
         units[i].y = state[i * 3 + 1] - '0';
@@ -260,6 +234,11 @@ void Geister::printInfo() const
 std::array<Unit, 16>& Geister::allUnit(){
     return units;
 }
+const std::array<Unit, 16>& Geister::allUnit() const
+{
+    return units;
+}
+
 
 bool Geister::canMove1st(Unit unit, Direction direct) const
 {
@@ -699,4 +678,66 @@ void Geister::countTaken() {
         result = Result::TakenRed1st;
     if(takenRed2nd == 4)
         result = Result::TakenRed2nd;
+}
+
+Hand Geister::diff(const Geister& target){
+    std::vector<Hand> res;
+    for(size_t u = 0; u < 16; ++u){
+        auto& unit = units[u];
+        auto& targetUnit = target.units[u];
+        if(unit.x != targetUnit.x || unit.y != targetUnit.y){
+            if((targetUnit.y - unit.y) == -1){
+                res.emplace_back(unit, Direction::North);
+            }
+            else if((targetUnit.x - unit.x) == 1){
+                res.emplace_back(unit, Direction::East);
+            }
+            else if((targetUnit.x - unit.x) == -1){
+                res.emplace_back(unit, Direction::West);
+            }
+            else if((targetUnit.y - unit.y) == 1){
+                res.emplace_back(unit, Direction::South);
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    if (res.size() == 1)
+    {
+        return res[0];
+    }
+    else
+        return Hand();
+}
+
+Hand diff(const Geister& left, const Geister& right){
+    std::vector<Hand> res;
+    for(size_t u = 0; u < 16; ++u){
+        const auto& leftUnit = left.allUnit()[u];
+        const auto& rightUnit = right.allUnit()[u];
+        if(leftUnit.x != rightUnit.x || leftUnit.y != rightUnit.y){
+            if((rightUnit.y - leftUnit.y) == -1){
+                res.emplace_back(leftUnit, Direction::North);
+            }
+            else if((rightUnit.x - leftUnit.x) == 1){
+                res.emplace_back(leftUnit, Direction::East);
+            }
+            else if((rightUnit.x - leftUnit.x) == -1){
+                res.emplace_back(leftUnit, Direction::West);
+            }
+            else if((rightUnit.y - leftUnit.y) == 1){
+                res.emplace_back(leftUnit, Direction::South);
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    if (res.size() == 1)
+    {
+        return res[0];
+    }
+    else
+        return Hand();
 }
