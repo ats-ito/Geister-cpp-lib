@@ -255,6 +255,9 @@ int run(void* dll1, void* dll2){
 }
 
 int main(int argc, char** argv){
+    std::cin.tie(0);
+    std::ios::sync_with_stdio(false);
+    
     double match = 1;
     try {
         auto const cmd = command<char>("competition", "geister competition")

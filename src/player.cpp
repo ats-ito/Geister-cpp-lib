@@ -68,6 +68,8 @@ std::string decideRed(){
 }
 
 int main(int argc, char *argv[]){
+    std::cin.tie(0);
+    std::ios::sync_with_stdio(false);
     std::string recv;
     while(std::cin.good()){
         std::getline(std::cin, recv);
@@ -101,7 +103,6 @@ int main(int argc, char *argv[]){
         }
         else{
             std::cout << "recieve: " << recv << std::endl;
-            // std::cerr << "recieve: " << recv << std::endl;
         }
     }
     return 0;
