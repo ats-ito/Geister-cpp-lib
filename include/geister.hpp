@@ -1,3 +1,4 @@
+#include <iostream>
 #include <array>
 #include <vector>
 #include <string>
@@ -32,46 +33,113 @@ public:
 
     void initialize();
 
-    void printAll() const;
     void printBoard() const;
-    void printInfo() const;
+    void printInfo() const
+    {
+        for(int i = 0; i < 16; ++i){
+            std::cout << units[i].name << "(" << units[i].color.toChar() << "): " << units[i].x << ", " << units[i].y << std::endl;
+        }
+    }
+    void printAll() const
+    {
+        printBoard();
+        printInfo();
+    }
 
-    virtual std::array<Unit, 16>& allUnit();
-    virtual const std::array<Unit, 16>& allUnit() const;
+    std::array<Unit, 16>& allUnit(){
+        return units;
+    }
+    const std::array<Unit, 16>& allUnit() const
+    {
+        return units;
+    }
 
-    virtual bool canMove1st(Unit unit, Direction direct) const;
+    bool canMove1st(Unit unit, Direction direct) const;
 
-    virtual bool canMove1st(Unit unit, char direct) const;
+    bool canMove1st(Unit unit, char direct) const;
 
-    virtual std::vector<Hand> getLegalMove1st() const;
+    std::vector<Hand> getLegalMove1st() const;
 
-    virtual bool canMove2nd(Unit unit, char direct) const;
+    bool canMove2nd(Unit unit, char direct) const;
 
-    virtual std::vector<Hand> getLegalMove2nd() const;
+    std::vector<Hand> getLegalMove2nd() const;
 
-    virtual std::string& toString() const;
+    std::string& toString() const
+    {
+        static std::string res = "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u";
+        for(int i = 0; i < 16; ++i){
+            res[i*3] = '0' + units[i].x;
+            res[i*3 + 1] = '0' + units[i].y;
+            res[i*3 + 2] = units[i].color.toChar();
+        }
+        return res;
+    }
 
-    virtual void take(Unit& unit);
+    void take(Unit& unit){
+        unit.x = 9;
+        unit.y = 9;
+        if(unit.is1st()){
+            if(unit.color.isRed()){
+                if(++takenRed1st == 4)
+                    result = Result::TakenRed1st;
+                return;
+            }
+            else if(unit.color.isBlue()){
+                if(++takenBlue1st == 4)
+                    result = Result::TakeBlue2nd;
+                return;
+            }
+        }
+        else if(unit.is2nd()){
+            if(unit.color.isRed()){
+                if(++takenRed2nd == 4)
+                    result = Result::TakenRed2nd;
+                return;
+            }
+            else if(unit.color.isBlue()){
+                if(++takenBlue2nd == 4)
+                    result = Result::TakeBlue1st;
+                return;
+            }
+        }
+    }
     
-    virtual void escape(Unit& unit);
+    void escape(Unit& unit){
+        unit.x = 8;
+        unit.y = 8;
+        if(unit.is1st()){
+            result = Result::Escape1st;
+        }
+        else{
+            result = Result::Escape2nd;
+        }
+    }
 
-    virtual void move(char u, char direct);
+    void move(char u, char direct);
 
-    virtual void move(Hand h);
+    void move(Hand h){
+        move(h.unit.name, h.direct.toChar());
+    }
 
-    virtual Result getResult() const;
+    Result getResult() const
+    {
+        return result;
+    }
 
-    virtual bool isEnd() const;
+    bool isEnd() const
+    {
+        return result != Result::OnPlay;
+    }
 
-    virtual Unit* getUnitByPos(int x, int y);
+    Unit* getUnitByPos(int x, int y);
 
-    virtual Geister mask();
+    Geister mask();
 
-    virtual void changeSide();
+    void changeSide();
 
-    virtual void countTaken();
+    void countTaken();
 
-    virtual operator std::string() const { return toString(); }
+    operator std::string() const { return toString(); }
 
     int takenCount(UnitColor c) const{
         if(c == UnitColor::Blue)
@@ -85,7 +153,7 @@ public:
         return -1;
     }
 
-    virtual Hand diff(const Geister& target);
+    Hand diff(const Geister& target);
 };
 
 Hand diff(const Geister& left, const Geister& right);
