@@ -42,7 +42,7 @@ ifneq ($(PC),pc)
 	PLAYER_CLASS ?= $(PC)
 endif
 ifdef PLAYER_CLASS
-$(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "\#include \"" $$1 "\""}' > Player/all.hpp)
+$(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "#include \"" $$1 "\""}' > Player/all.hpp)
 endif
 PLAYER_CLASS ?= RandomPlayer
 
