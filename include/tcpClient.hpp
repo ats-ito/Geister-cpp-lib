@@ -10,17 +10,34 @@ using namespace std;
 
 class TCPClient{
 public:
-    TCPClient(string host, int port);
+    TCPClient(string host, int port){
+        this->host = host;
+        this->port = port;
+        connect();
+    }
 
-    void connect();
+    void connect(){
+        s.connect(host, port);
+    }
 
-    void send(string message);
+    void send(string message){
+        s.send(message);
+    }
 
-    string recv();
+    string recv(){
+        char buff[256];
+        s.recv(buff);
 
-    void move(string unit, string direct);
+        return string(buff);
+    }
 
-    void close();
+    void move(string unit, string direct){
+        send("MOV:" + unit + "," + direct + "\r\n");
+    }
+
+    void close(){
+        s.close();
+    }
 
 private:
     // asio::io_service io_service;
