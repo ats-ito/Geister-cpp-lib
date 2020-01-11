@@ -85,7 +85,7 @@ $(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(EXE_EXT)): $(player_OBJ)
 $(addprefix $(BIN_DIR)/,$(PLAYER_NAME).$(LIB_EXT)): $(player_OBJ)
 	$(CXX) $(CXXFLAGS) -shared $^ $(LIBS) -o $@
 
-client_OBJ := $(addprefix $(OBJ_DIR)/,client.$(OBJ_EXT) geister.$(OBJ_EXT) tcpClient.$(OBJ_EXT))
+client_OBJ := $(addprefix $(OBJ_DIR)/,client.$(OBJ_EXT) geister.$(OBJ_EXT))
 $(addprefix $(BIN_DIR)/,client.$(EXE_EXT)): $(client_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
@@ -93,7 +93,7 @@ competition_OBJ := $(addprefix $(OBJ_DIR)/,competition.$(OBJ_EXT) geister.$(OBJ_
 $(addprefix $(BIN_DIR)/,competition.$(EXE_EXT)): $(competition_OBJ)
 	$(CXX) $(CXXFLAGS) $^ $(LIBS) -o $@
 
-OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition tcpClient geister simulator randomPlayer chototsuPlayer player))
+OBJS := $(addprefix $(OBJ_DIR)/,$(addsuffix .$(OBJ_EXT),client competition geister simulator randomPlayer chototsuPlayer player))
 DEPS   := $(OBJS:.$(OBJ_EXT)=.d)
 
 DEFS = -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
