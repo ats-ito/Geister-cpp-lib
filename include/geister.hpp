@@ -2,6 +2,7 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "unit.hpp"
 #include "hand.hpp"
 #include "result.hpp"
@@ -22,14 +23,14 @@ public:
     int turn;
     std::vector<std::pair<Hand, std::string>> history;
 
-    static std::vector<char> unitList;
+    static std::array<char, 16> unitList;
 
     Geister();
     Geister(std::string info);
     Geister(std::string red1st, std::string red2nd);
     Geister(const Geister &geister);
 
-    void setState(std::string state);
+    void setState(const std::string& state);
 
     void initialize();
 
@@ -54,15 +55,15 @@ public:
         return units;
     }
 
-    bool canMove1st(Unit unit, Direction direct) const;
+    bool canMove1st(const Unit& unit, const Direction direct) const;
 
-    bool canMove1st(Unit unit, char direct) const;
+    bool canMove1st(const Unit& unit, const char direct) const;
 
-    std::vector<Hand> getLegalMove1st() const;
+    std::vector<Hand>& getLegalMove1st() const;
 
-    bool canMove2nd(Unit unit, char direct) const;
+    bool canMove2nd(const Unit& unit, const char direct) const;
 
-    std::vector<Hand> getLegalMove2nd() const;
+    std::vector<Hand>& getLegalMove2nd() const;
 
     std::string& toString() const
     {
@@ -115,9 +116,9 @@ public:
         }
     }
 
-    void move(char u, char direct);
+    void move(const char u, const char direct);
 
-    void move(Hand h){
+    void move(const Hand& h){
         move(h.unit.name, h.direct.toChar());
     }
 
@@ -131,17 +132,37 @@ public:
         return result != Result::OnPlay;
     }
 
-    Unit* getUnitByPos(int x, int y);
+    Unit* getUnitByPos(const int x, const int y){
+        for(int i = 0; i < 16; ++i){
+            if(units[i].x == x && units[i].y == y){
+                return &units[i];
+            }
+        }
+        return nullptr;
+    }
 
     Geister mask();
 
     void changeSide();
 
-    void countTaken();
+    void countTaken(){
+        if((takenBlue1st = std::count_if(units.begin(), units.begin()+8,
+            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+            result = Result::TakeBlue2nd;
+        if((takenRed1st = std::count_if(units.begin(), units.begin()+8,
+            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+            result = Result::TakenRed1st;
+        if((takenBlue2nd = std::count_if(units.begin()+8, units.end(),
+            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+            result = Result::TakeBlue1st;
+        if((takenRed2nd = takenRed2nd = std::count_if(units.begin()+8, units.end(),
+            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+            result = Result::TakenRed2nd;
+    }
 
     operator std::string() const { return toString(); }
 
-    int takenCount(UnitColor c) const{
+    int takenCount(const UnitColor& c) const{
         if(c == UnitColor::Blue)
             return takenBlue1st;
         if(c == UnitColor::Red)
@@ -154,6 +175,25 @@ public:
     }
 
     Hand diff(const Geister& target);
+
+    bool exist1st(const int x, const int y)const{
+        for(int i = 0; i < 8; ++i){
+            const auto& u = units[i];
+            if(u.x == x && u.y == y){
+                return true;
+            }
+        }
+        return false;
+    }
+    bool exist2nd(const int x, const int y)const{
+        for(int i = 8; i < 16; ++i){
+            const auto& u = units[i];
+            if(u.x == x && u.y == y){
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 Hand diff(const Geister& left, const Geister& right);
