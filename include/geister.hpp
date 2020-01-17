@@ -28,7 +28,6 @@ public:
     Geister();
     Geister(std::string info);
     Geister(std::string red1st, std::string red2nd);
-    Geister(const Geister &geister);
 
     void setState(const std::string& state);
 

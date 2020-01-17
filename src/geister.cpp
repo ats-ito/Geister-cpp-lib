@@ -31,17 +31,6 @@ units{
 {
 }
 
-Geister::Geister(const Geister& geister):
-result(geister.result),
-takenBlue1st(geister.takenBlue1st),
-takenBlue2nd(geister.takenBlue2nd),
-takenRed1st(geister.takenRed1st),
-takenRed2nd(geister.takenRed2nd),
-turn(geister.turn),
-units(geister.units)
-{
-}
-
 Geister::Geister(std::string info):
 result(Result::OnPlay),
 turn(0),
