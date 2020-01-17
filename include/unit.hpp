@@ -48,8 +48,8 @@ struct UnitColor{
         purple = 0b111,
     } color;
 
-    UnitColor() : color(NotDefine) {}
-    UnitColor(Color color) : color(color) {}
+    constexpr UnitColor() : color(NotDefine) {}
+    constexpr UnitColor(Color color) : color(color) {}
     UnitColor(int number) {
         switch (number)
         {
@@ -230,10 +230,10 @@ public:
     UnitColor color;
     char name;
 
-    Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
+    constexpr Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
     Unit(int x, int y, int color, char name): x{x}, y{y}, color(color), name{name}{}
     Unit(int x, int y, char color, char name): x{x}, y{y}, color(color), name{name}{}
-    Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
+    constexpr Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
 
     std::string toString() const{
         return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
