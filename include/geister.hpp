@@ -26,10 +26,12 @@ public:
     static std::array<char, 16> unitList;
 
     Geister();
-    Geister(std::string info);
-    Geister(std::string red1st, std::string red2nd);
+    Geister(const std::string& info);
+    Geister(const std::string& red1st, const std::string& red2nd);
+    Geister(const Geister& game, const std::string& red1, const std::string& red2);
 
     void setState(const std::string& state);
+    void setColor(const std::string& first, const std::string& second);
 
     void initialize();
 
@@ -46,9 +48,6 @@ public:
         printInfo();
     }
 
-    std::array<Unit, 16>& allUnit(){
-        return units;
-    }
     const std::array<Unit, 16>& allUnit() const
     {
         return units;

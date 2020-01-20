@@ -31,7 +31,7 @@ units{
 {
 }
 
-Geister::Geister(std::string info):
+Geister::Geister(const std::string& info):
 result(Result::OnPlay),
 turn(0),
 units{
@@ -61,7 +61,7 @@ units{
     countTaken();
 }
 
-Geister::Geister(std::string red1, std::string red2):
+Geister::Geister(const std::string& red1, const std::string& red2):
 result(Result::OnPlay),
 turn(0),
 units{
@@ -92,6 +92,15 @@ units{
     countTaken();
 }
 
+Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
+result(game.result),
+turn(game.turn),
+units(game.units),
+history(game.history)
+{
+    setColor(red1, red2);
+}
+
 void Geister::setState(const std::string& state){
     for(int i = 0; i < 16; ++i){
         units[i].x = state[i * 3] - '0';
@@ -104,6 +113,26 @@ void Geister::setState(const std::string& state){
                 result = Result::Escape1st;
             else if(u.is2nd())
                 result = Result::Escape2nd;
+        }
+    }
+    countTaken();
+}
+
+void Geister::setColor(const std::string& first, const std::string& second){
+    if(!first.empty()){
+        for(char c = 'A'; c <= 'H'; ++c){
+            if(first.find(c) != std::string::npos)
+                units[c - 'A'].color = UnitColor::Red;
+            else
+                units[c - 'A'].color = UnitColor::Blue;
+        }
+    }
+    if(!second.empty()){
+        for(char c = 'A'; c <= 'H'; ++c){
+            if(second.find(c) != std::string::npos)
+                units[c - 'A'+8].color = UnitColor::red;
+            else
+                units[c - 'A'+8].color = UnitColor::blue;
         }
     }
     countTaken();
