@@ -63,9 +63,9 @@ int run(void* dll1, void* dll2){
 #endif
 #ifdef _WIN32
     T decideHand1=(T)GetProcAddress(dll1, "decideHand");
-	T decideHand2=(T)GetProcAddress(dll2, "decideHand");
+    T decideHand2=(T)GetProcAddress(dll2, "decideHand");
     T2 decideRed1=(T2)GetProcAddress(dll1, "decideRed");
-	T2 decideRed2=(T2)GetProcAddress(dll2, "decideRed");
+    T2 decideRed2=(T2)GetProcAddress(dll2, "decideRed");
 #else
     T decideHand1=(T)dlsym(dll1, "decideHand");
     T decideHand2=(T)dlsym(dll2, "decideHand");
@@ -99,9 +99,9 @@ int run(void* dll1, void* dll2){
         
         logFile.open(filepath, std::ios::out);
     }
-#endif    
+#endif
     cpprefjp::random_device rd;
-	std::mt19937 mt(rd());
+    std::mt19937 mt(rd());
 
     const std::vector<std::string> pattern = {
         "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
@@ -118,7 +118,7 @@ int run(void* dll1, void* dll2){
     
     int turn = 0;
 
-	std::uniform_int_distribution<int> serector(0, pattern.size() - 1);
+    std::uniform_int_distribution<int> serector(0, pattern.size() - 1);
     std::string red_ptn1;
     std::string red_ptn2;
     
@@ -172,11 +172,12 @@ int run(void* dll1, void* dll2){
         if(game.turn >= 200) break;
         auto hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
-            std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
+            std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #ifdef USE_FS
-        if(logEnable)
+        if(logEnable){
             logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+        }
 #endif
         game.move(hand);
         if(outputLevel > 2){
@@ -205,16 +206,16 @@ int run(void* dll1, void* dll2){
             break;
         game.changeSide();
         hand = Hand(decideHand2(game.mask()));
+        game.changeSide();
         if(outputLevel > 1){
-            std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << std::endl;
+            std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #ifdef USE_FS
         if(logEnable){
-            game.changeSide();
             logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
-            game.changeSide();
         }
 #endif
+        game.changeSide();
         game.move(hand);
         game.changeSide();
         if(outputLevel > 2){
@@ -242,7 +243,7 @@ int run(void* dll1, void* dll2){
     }
     // game.turn++;
     if(outputLevel > 0){
-        std::cout << result << ": " << game.turn << std::endl;
+        std::cout << result << ": " << game.turn << '\t' << game << std::endl;
     }
 #ifdef USE_FS
     if(logEnable){
