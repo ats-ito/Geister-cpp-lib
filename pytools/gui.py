@@ -78,9 +78,11 @@ def donothing():
     pass
 
 def openFile():
+    global root
     global v1
     fn = filedialog.askopenfilename()#filetypes = typ, initialdir = dir)
-    # print(fn)
+    print(fn)
+    root.title(fn)
     kifu = []
     with open(fn, 'r') as f:
         kifu = f.readlines()
