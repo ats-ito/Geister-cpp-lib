@@ -7,20 +7,33 @@ struct Position{
     int x;
     int y;
 
-    Position();
-    Position(int x, int y);
+    constexpr Position():x{}, y{}{
+    }
+    constexpr Position(int x, int y): x{x}, y{y}{
+    }
 
-    Position move(int dx, int dy);
-    Position moveByDir(char dir);
+    void move(int dx, int dy){
+        x += dx;
+        y += dy;
+    }
+    Position moveByDir(char dir){
+        return *this;
+    }
     
-    bool onBoard()const;
+    bool onBoard()const{
+        return x < 6 && y < 6;
+    }
 
-    Position operator+(Position displacement);
-    Position operator-(Position displacement);
-
-    static Position outBoard;
-    static Position escapeBoard;
+    Position operator+(Position displacement){
+        return {x+displacement.x, y+displacement.y};
+    }
+    Position operator-(Position displacement){
+        return {x-displacement.x, y-displacement.y};
+    }
 };
+
+constexpr inline Position outBoard{9, 9};
+constexpr inline Position escapeBoard{8, 8};
 
 struct UnitColor{
     enum Color: unsigned char{
@@ -35,10 +48,71 @@ struct UnitColor{
         purple = 0b111,
     } color;
 
-    UnitColor() : color(NotDefine) {}
-    UnitColor(Color color) : color(color) {}
-    UnitColor(int number);
-    UnitColor(char color);
+    constexpr UnitColor() : color(NotDefine) {}
+    constexpr UnitColor(Color color) : color(color) {}
+    UnitColor(int number) {
+        switch (number)
+        {
+            case 0:
+                color = Blue;
+                break;
+            case 1:
+                color = blue;
+                break;
+            case 2:
+                color = Red;
+                break;
+            case 3:
+                color = red;
+                break;
+            case 4:
+                color = Unknown;
+                break;
+            case 5:
+                color = unknown;
+                break;
+            case 6:
+                color = Purple;
+                break;
+            case 7:
+                color = purple;
+                break;
+            default:
+                color = NotDefine;
+        }
+    }
+    UnitColor(char c) {
+        switch (c)
+        {
+            case 'B':
+                color = Blue;
+                break;
+            case 'b':
+                color = blue;
+                break;
+            case 'R':
+                color = Red;
+                break;
+            case 'r':
+                color = red;
+                break;
+            case 'U':
+                color = Unknown;
+                break;
+            case 'u':
+                color = unknown;
+                break;
+            case 'P':
+                color = Purple;
+                break;
+            case 'p':
+                color = purple;
+                break;
+            default:
+                color = NotDefine;
+        }
+    }
+    
 
     bool operator==(const UnitColor& c)const { return color == c.color; }
     bool operator!=(const UnitColor& c)const { return color != c.color; }
@@ -155,12 +229,15 @@ public:
     Position pos;
     UnitColor color;
     char name;
-    Unit();
-    Unit(int x, int y, int color, char name);
-    Unit(int x, int y, char color, char name);
-    Unit(int x, int y, UnitColor color, char name);
 
-    std::string toString() const;
+    constexpr Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
+    Unit(int x, int y, int color, char name): x{x}, y{y}, color(color), name{name}{}
+    Unit(int x, int y, char color, char name): x{x}, y{y}, color(color), name{name}{}
+    constexpr Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
+
+    std::string toString() const{
+        return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
+    }
 
     bool onBoard() const
     {

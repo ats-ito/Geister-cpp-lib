@@ -143,7 +143,7 @@ int main(int argc, char** argv){
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
             .argument<'d', std::vector<std::string>>("DLL-Path")
             ;
-        auto const opts = parse(argc, argv, cmd);
+        auto const opts = parse(argc, argv, cmd, argument_order::flexible);
         if (opts.has<'h'>()) {
             std::cout << usage(cmd);
             return 0;

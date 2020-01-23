@@ -1,6 +1,8 @@
+#include <iostream>
 #include <array>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "unit.hpp"
 #include "hand.hpp"
 #include "result.hpp"
@@ -21,59 +23,144 @@ public:
     int turn;
     std::vector<std::pair<Hand, std::string>> history;
 
-    static std::vector<char> unitList;
+    static std::array<char, 16> unitList;
 
     Geister();
-    Geister(std::string info);
-    Geister(std::string red1st, std::string red2nd);
-    Geister(const Geister &geister);
+    Geister(const std::string& info);
+    Geister(const std::string& red1st, const std::string& red2nd);
+    Geister(const Geister& game, const std::string& red1, const std::string& red2);
 
-    void setState(std::string state);
+    void setState(const std::string& state);
+    void setColor(const std::string& first, const std::string& second);
 
     void initialize();
 
-    void printAll() const;
     void printBoard() const;
-    void printInfo() const;
+    void printInfo() const
+    {
+        for(int i = 0; i < 16; ++i){
+            std::cout << units[i].name << "(" << units[i].color.toChar() << "): " << units[i].x << ", " << units[i].y << std::endl;
+        }
+    }
+    void printAll() const
+    {
+        printBoard();
+        printInfo();
+    }
 
-    virtual std::array<Unit, 16>& allUnit();
-    virtual const std::array<Unit, 16>& allUnit() const;
+    const std::array<Unit, 16>& allUnit() const
+    {
+        return units;
+    }
 
-    virtual bool canMove1st(Unit unit, Direction direct) const;
+    bool canMove1st(const Unit& unit, const Direction direct) const;
 
-    virtual bool canMove1st(Unit unit, char direct) const;
+    bool canMove1st(const Unit& unit, const char direct) const;
 
-    virtual std::vector<Hand> getLegalMove1st() const;
+    std::vector<Hand>& getLegalMove1st() const;
 
-    virtual bool canMove2nd(Unit unit, char direct) const;
+    bool canMove2nd(const Unit& unit, const char direct) const;
 
-    virtual std::vector<Hand> getLegalMove2nd() const;
+    std::vector<Hand>& getLegalMove2nd() const;
 
-    virtual std::string& toString() const;
+    std::string& toString() const
+    {
+        static std::string res = "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u";
+        for(int i = 0; i < 16; ++i){
+            res[i*3] = '0' + units[i].x;
+            res[i*3 + 1] = '0' + units[i].y;
+            res[i*3 + 2] = units[i].color.toChar();
+        }
+        return res;
+    }
 
-    virtual void take(Unit& unit);
+    void take(Unit& unit){
+        unit.x = 9;
+        unit.y = 9;
+        if(unit.is1st()){
+            if(unit.color.isRed()){
+                if(++takenRed1st == 4)
+                    result = Result::TakenRed1st;
+                return;
+            }
+            else if(unit.color.isBlue()){
+                if(++takenBlue1st == 4)
+                    result = Result::TakeBlue2nd;
+                return;
+            }
+        }
+        else if(unit.is2nd()){
+            if(unit.color.isRed()){
+                if(++takenRed2nd == 4)
+                    result = Result::TakenRed2nd;
+                return;
+            }
+            else if(unit.color.isBlue()){
+                if(++takenBlue2nd == 4)
+                    result = Result::TakeBlue1st;
+                return;
+            }
+        }
+    }
     
-    virtual void escape(Unit& unit);
+    void escape(Unit& unit){
+        unit.x = 8;
+        unit.y = 8;
+        if(unit.is1st()){
+            result = Result::Escape1st;
+        }
+        else{
+            result = Result::Escape2nd;
+        }
+    }
 
-    virtual void move(char u, char direct);
+    void move(const char u, const char direct);
 
-    virtual void move(Hand h);
+    void move(const Hand& h){
+        move(h.unit.name, h.direct.toChar());
+    }
 
-    virtual Result getResult() const;
+    Result getResult() const
+    {
+        return result;
+    }
 
-    virtual bool isEnd() const;
+    bool isEnd() const
+    {
+        return result != Result::OnPlay;
+    }
 
-    virtual Unit* getUnitByPos(int x, int y);
+    Unit* getUnitByPos(const int x, const int y){
+        for(int i = 0; i < 16; ++i){
+            if(units[i].x == x && units[i].y == y){
+                return &units[i];
+            }
+        }
+        return nullptr;
+    }
 
-    virtual Geister mask();
+    Geister mask();
 
-    virtual void changeSide();
+    void changeSide();
 
-    virtual void countTaken();
+    void countTaken(){
+        if((takenBlue1st = std::count_if(units.begin(), units.begin()+8,
+            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+            result = Result::TakeBlue2nd;
+        if((takenRed1st = std::count_if(units.begin(), units.begin()+8,
+            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+            result = Result::TakenRed1st;
+        if((takenBlue2nd = std::count_if(units.begin()+8, units.end(),
+            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+            result = Result::TakeBlue1st;
+        if((takenRed2nd = takenRed2nd = std::count_if(units.begin()+8, units.end(),
+            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+            result = Result::TakenRed2nd;
+    }
 
-    virtual operator std::string() const { return toString(); }
+    operator std::string() const { return toString(); }
 
-    int takenCount(UnitColor c) const{
+    int takenCount(const UnitColor& c) const{
         if(c == UnitColor::Blue)
             return takenBlue1st;
         if(c == UnitColor::Red)
@@ -85,7 +172,26 @@ public:
         return -1;
     }
 
-    virtual Hand diff(const Geister& target);
+    Hand diff(const Geister& target);
+
+    bool exist1st(const int x, const int y)const{
+        for(int i = 0; i < 8; ++i){
+            const auto& u = units[i];
+            if(u.x == x && u.y == y){
+                return true;
+            }
+        }
+        return false;
+    }
+    bool exist2nd(const int x, const int y)const{
+        for(int i = 8; i < 16; ++i){
+            const auto& u = units[i];
+            if(u.x == x && u.y == y){
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 Hand diff(const Geister& left, const Geister& right);

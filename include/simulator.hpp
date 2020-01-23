@@ -19,16 +19,21 @@ public:
 
     Simulator(const Simulator&);
     Simulator(const Geister& geister);
-    Simulator(const Geister& geister, std::string ptn);
+    Simulator(const Geister& geister, const std::string& ptn);
     
+    virtual std::vector<std::string>& getLegalPattern() const;
     // 未判明の相手駒色を適当に仮定
-    virtual void setColorRandom();
+    virtual std::string getRandomPattern() const;
+
+    virtual void setColor(const std::string& ptn);
     
+    virtual void setColorRandom();
+
     virtual double playout();
+    
+    virtual double run(const size_t count = 1);
 
-    virtual double run();
-
-    virtual double run(int count);
+    virtual double run(const std::string& ptn, const size_t count = 1);
 
     virtual double evaluate() const
     {
