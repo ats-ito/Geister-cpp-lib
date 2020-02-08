@@ -92,14 +92,14 @@ int run(int port, std::string dll){
         if(visibleInfo && output)
             std::cout << res << std::endl;
     }
-    auto game = Geister(res.substr(4));
+    Geister game = Geister(res.substr(4));
 
     while(res.substr(0, 3) != "WON" && res.substr(0, 3) != "LST" && res.substr(0, 3) != "DRW"){
         if(output > 2)
             game.printBoard();
-        auto hand = Hand(decideHand(game));
-        auto name = string{hand.unit.name};
-        auto direct = string{hand.direct.toChar()};
+        Hand hand = Hand(decideHand(game));
+        std::string name = string{hand.unit.name};
+        std::string direct = string{hand.direct.toChar()};
         if(output > 1)
             std::cout << name << " " << direct << std::endl;
         cl.move(name, direct);
@@ -114,7 +114,7 @@ int run(int port, std::string dll){
             turn += 1;
         }
     }
-    auto result = res.substr(0, 3);
+    std::string result = res.substr(0, 3);
     game.setState(res.substr(4));
     std::map<std::string, double> score = {{"WON", 1}, {"LST", 0}, {"DRW", 0.1}};
     if(output > 1)

@@ -176,7 +176,7 @@ public:
 
     bool exist1st(const int x, const int y)const{
         for(int i = 0; i < 8; ++i){
-            const auto& u = units[i];
+            const Unit& u = units[i];
             if(u.x == x && u.y == y){
                 return true;
             }
@@ -185,7 +185,7 @@ public:
     }
     bool exist2nd(const int x, const int y)const{
         for(int i = 8; i < 16; ++i){
-            const auto& u = units[i];
+            const Unit& u = units[i];
             if(u.x == x && u.y == y){
                 return true;
             }

@@ -48,7 +48,7 @@ std::vector<std::string>& Simulator::getLegalPattern() const
             red.emplace_back(u - 8 + 'A');
     }
     // 判明している情報と矛盾するパターンを除外
-    for(auto p: pattern){
+    for(const char* p: pattern){
         // 青と分かっている駒を含むパターンを除外
         if(std::find_if(blue.begin(), blue.end(),
             [&](char b){ return std::string(p).find(b) != std::string::npos; }) != blue.end())
@@ -69,7 +69,7 @@ std::vector<std::string>& Simulator::getLegalPattern() const
 // 未判明の相手駒色を適当に仮定
 std::string Simulator::getRandomPattern() const
 {
-    auto& legalPattern = getLegalPattern();
+    std::vector<std::string>& legalPattern = getLegalPattern();
     std::uniform_int_distribution<int> selector(0, legalPattern.size() - 1);
     return legalPattern[selector(mt)];
 }
@@ -86,7 +86,7 @@ void Simulator::setColorRandom(){
     int assumeTakeBlue = 4;
     int assumeTakeRed = 4;
     for(int i = 8; i < 16; ++i){
-        auto color = current.allUnit()[i].color;
+        UnitColor color = current.allUnit()[i].color;
         if(color == UnitColor::blue)
             assumeTakeBlue -= 1;
         if(color == UnitColor::red){
@@ -117,16 +117,16 @@ double Simulator::playout(){
         if(current.isEnd())
             break;
         // 相手の手番
-        auto& lm2 = current.getLegalMove2nd();
+        std::vector<Hand>& lm2 = current.getLegalMove2nd();
         selector.param(std::uniform_int_distribution<>::param_type(0, lm2.size() - 1));
-        auto& m2 = lm2[selector(mt)];
+        Hand& m2 = lm2[selector(mt)];
         current.move(m2);
         if(current.isEnd())
             break;
         // 自分の手番
-        auto& lm1 = current.getLegalMove1st();
+        std::vector<Hand>& lm1 = current.getLegalMove1st();
         selector.param(std::uniform_int_distribution<>::param_type(0, lm1.size() - 1));
-        auto& m1 = lm1[selector(mt)];
+        Hand& m1 = lm1[selector(mt)];
         current.move(m1);
     }
     return evaluate();

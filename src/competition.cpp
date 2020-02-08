@@ -90,8 +90,8 @@ int run(void* dll1, void* dll2){
             pnow->tm_hour, pnow->tm_min, pnow->tm_sec);
         std::string filename(fn);
 
-        constexpr auto ext = ".txt";
-        auto fp = logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename + ".0" + ext;
+        constexpr const char* ext = ".txt";
+        std::string fp = logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename + ".0" + ext;
         fs::path filepath(fp);
         for(int i=1; fs::exists(filepath); ++i){
             filepath = fs::path(logDir + "/" + dllName1 + "-" + dllName2 + "_" + filename + "." + std::to_string(i) + ext);
@@ -149,7 +149,7 @@ int run(void* dll1, void* dll2){
             game.printBoard();
         else if(mask == 1){
             game.changeSide();
-            auto g = game.mask();
+            Geister g = game.mask();
             g.changeSide();
             g.printBoard();
             game.changeSide();
@@ -159,7 +159,7 @@ int run(void* dll1, void* dll2){
         }
         else if(mask == 3){
             game.changeSide();
-            auto g = game.mask();
+            Geister g = game.mask();
             g.changeSide();
             g.mask().printBoard();
             game.changeSide();
@@ -170,7 +170,7 @@ int run(void* dll1, void* dll2){
 
     while(!game.isEnd()){
         if(game.turn >= 200) break;
-        auto hand = Hand(decideHand1(game.mask()));
+        Hand hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
@@ -185,7 +185,7 @@ int run(void* dll1, void* dll2){
                 game.printBoard();
             else if(mask == 1){
                 game.changeSide();
-                auto g = game.mask();
+                Geister g = game.mask();
                 g.changeSide();
                 g.printBoard();
                 game.changeSide();
@@ -195,7 +195,7 @@ int run(void* dll1, void* dll2){
             }
             else if(mask == 3){
                 game.changeSide();
-                auto g = game.mask();
+                Geister g = game.mask();
                 g.changeSide();
                 g.mask().printBoard();
                 game.changeSide();
@@ -223,7 +223,7 @@ int run(void* dll1, void* dll2){
                 game.printBoard();
             else if(mask == 1){
                 game.changeSide();
-                auto g = game.mask();
+                Geister g = game.mask();
                 g.changeSide();
                 g.printBoard();
                 game.changeSide();
@@ -233,7 +233,7 @@ int run(void* dll1, void* dll2){
             }
             else if(mask == 3){
                 game.changeSide();
-                auto g = game.mask();
+                Geister g = game.mask();
                 g.changeSide();
                 g.mask().printBoard();
                 game.changeSide();
@@ -376,7 +376,7 @@ int main(int argc, char** argv){
         if(res == -3) winreason[5]++;
         if(outputLevel > 0){
             std::cout << win1st << ":" << win2nd << ":" << draw << " - ";
-            for(auto x: winreason)
+            for(const int x: winreason)
                 std::cout << x << ",";
             std::cout << std::endl;
         }
@@ -385,7 +385,7 @@ int main(int argc, char** argv){
         std::cout << dllName1 << " vs " << dllName2 << std::endl;
         std::cout << "Match: " << match << std::endl;
         std::cout << win1st << ":" << win2nd << ":" << draw << " - ";
-        for(auto x: winreason)
+        for(const int x: winreason)
             std::cout << x << ",";
         std::cout << std::endl;
     }
