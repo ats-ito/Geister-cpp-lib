@@ -32,6 +32,15 @@ public:
 
     void setState(const std::string& state);
     void setColor(const std::string& first, const std::string& second);
+    void setColor(const char unit, const UnitColor color){
+        if('A' <= unit && unit <= 'H'){
+            units[unit-'A'].color = color;
+        }
+        else if('a' <= unit && unit <= 'h'){
+            units[unit-'a'+8].color = color;
+        }
+        countTaken();
+    }
 
     void initialize();
 
