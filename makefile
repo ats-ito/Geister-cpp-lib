@@ -14,7 +14,7 @@ ifeq ($(OS),Windows_NT)
 	LIB_EXT ?= dll
 	EXE_EXT ?= exe
 else
-	LIBS ?= -ldl
+	LIBS ?= -ldl -lpthread
 	ifneq ($(filter clang++%, $(CXX)),)
 		CXXFLAGS += -fPIC -stdlib=libc++
 		LIBS += -stdlib=libc++ -lc++experimental -lc++abi
