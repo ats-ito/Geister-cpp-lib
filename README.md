@@ -80,4 +80,4 @@ Macについては検証環境がないため未確認となります
 --- | --- | ---
 clxライブラリ | TCP通信 | http://clx.cielquis.net/
 nonsugarライブラリ | コマンドラインパーサ | https://github.com/iorate/nonsugar
-
+asio | TCP通信 | https://think-async.com/Asio/
