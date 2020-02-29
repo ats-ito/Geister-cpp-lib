@@ -22,8 +22,8 @@ public:
     virtual std::string decideHand(std::string res){
         game.setState(res);
 
-        const auto& units = game.allUnit();
-        for(const auto& u: units){
+        const std::array<Unit, 16>& units = game.allUnit();
+        for(const Unit& u: units){
             if(u.color == UnitColor::Blue){
                 if(u.x == 0 && u.y == 0){
                     return Hand({u, Direction::West});
@@ -33,7 +33,7 @@ public:
                 }
             }
         }
-        for(const auto& u: units){
+        for(const Unit& u: units){
             if(u.color == UnitColor::Blue && u.y == 0){
                 if(u.x < 3 && u.x > 0){
                     return Hand({u, Direction::West});
@@ -46,7 +46,7 @@ public:
         int mostFrontPos = units[0].y;
         int mostFrontIndex = 0;
         for(int u = 1; u < 8; ++u){
-            const auto& unit = units[u];
+            const Unit& unit = units[u];
             if(unit.color == UnitColor::Blue && unit.y <= mostFrontPos && unit.y > 0){
                 if(unit.y < mostFrontPos || choiceRandom(mt)){
                     mostFrontIndex = u;

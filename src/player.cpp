@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
         std::getline(std::cin, recv);
         if(recv.size() == 0) continue;
         // std::cin >> recv;
-        auto cmdList = split(recv, " ");
+        std::vector<std::string> cmdList = split(recv, " ");
         if(cmdList[0] == "exit"){
             break;
         }
@@ -83,12 +83,12 @@ int main(int argc, char *argv[]){
           std::cout << "ENTRY " << player.name() << std::endl;
         }
         else if(cmdList[0] == "hand"){
-            auto hand = player.decideHand(cmdList[1]);
+            Hand hand = player.decideHand(cmdList[1]);
             std::cout << hand << std::endl;
             // std::cerr << hand << std::endl;
         }
         else if(cmdList[0] == "red"){
-            auto red = player.decideRed();
+            std::string red = player.decideRed();
             std::cout << red << std::endl;
             // std::cerr << red << std::endl;
         }
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
                 player.getState().printAll();
             }
             else{
-                auto geister = Geister(cmdList[1]);
+                Geister geister = Geister(cmdList[1]);
                 geister.printAll();
             }
         }

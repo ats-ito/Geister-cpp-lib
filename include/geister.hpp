@@ -32,6 +32,15 @@ public:
 
     void setState(const std::string& state);
     void setColor(const std::string& first, const std::string& second);
+    void setColor(const char unit, const UnitColor color){
+        if('A' <= unit && unit <= 'H'){
+            units[unit-'A'].color = color;
+        }
+        else if('a' <= unit && unit <= 'h'){
+            units[unit-'a'+8].color = color;
+        }
+        countTaken();
+    }
 
     void initialize();
 
@@ -176,7 +185,7 @@ public:
 
     bool exist1st(const int x, const int y)const{
         for(int i = 0; i < 8; ++i){
-            const auto& u = units[i];
+            const Unit& u = units[i];
             if(u.x == x && u.y == y){
                 return true;
             }
@@ -185,7 +194,7 @@ public:
     }
     bool exist2nd(const int x, const int y)const{
         for(int i = 8; i < 16; ++i){
-            const auto& u = units[i];
+            const Unit& u = units[i];
             if(u.x == x && u.y == y){
                 return true;
             }
