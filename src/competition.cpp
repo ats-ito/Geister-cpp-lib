@@ -44,7 +44,7 @@ static std::string getFileName(std::string path){
 
 
 bool logEnable = false;
-std::string logRoot;
+std::string logRoot = "log";
 std::string dllPath1, dllPath2;
 std::string dllName1, dllName2;
 #ifdef USE_FS
@@ -336,7 +336,7 @@ int main(int argc, char** argv){
 
 #ifdef USE_FS
     if(logEnable){
-        fs::create_directory(logRoot + "log");
+        fs::create_directory(logRoot);
 
         //時刻取得用
         char dn[256];
@@ -348,7 +348,7 @@ int main(int argc, char** argv){
             pnow->tm_hour, pnow->tm_min, pnow->tm_sec, (int)match);
         std::string dirName(dn);
 
-        logDir = logRoot + "log/" + dllName1 + "-" + dllName2 + "/" + dirName;
+        logDir = logRoot + dllName1 + "-" + dllName2 + "/" + dirName;
         fs::create_directories(logDir);
 
         digestFile.open(logDir + "/" + dllName1 + "-" + dllName2 + "_digest.txt", std::ios::out);
