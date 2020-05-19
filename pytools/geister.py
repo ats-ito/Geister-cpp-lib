@@ -41,13 +41,24 @@ class Geister:
             for j in range(6):
                 for k in range(16):
                     if self.units[k].x == j and self.units[k].y == i:
-                        print(color[self.units[k].color], end=" ")
+                        if self.units[k].color <= 1:
+                            print('\033[34m{}\033[0m'.format(self.units[k].name), end=' ')
+                        elif self.units[k].color <= 3:
+                            print('\033[31m{}\033[0m'.format(self.units[k].name), end=' ')
+                        else:
+                            print('{}'.format(self.units[k].name), end=' ')
                         break
                 else:
                     print(" ", end=" ")
             print("")
+    
+    def printInfo(self):
         for i in range(16):
             print(self.units[i].name, "(", color[self.units[i].color], "): ", self.units[i].x, ", ", self.units[i].y, sep="")
+
+    def printAll(self):
+        self.printBoard()
+        self.printInfo()
 
     def canMove(self, unit, direct, x, y, color, field):
         if direct == 0:
