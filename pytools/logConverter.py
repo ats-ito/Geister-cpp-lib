@@ -14,17 +14,19 @@ if __name__ == "__main__":
     # print(args[1], file=sys.stderr)
     if kifu[0][7] == '1':
         kifu[0], kifu[1] = kifu[1], kifu[0]
-    print('Set,1,{},{}'.format(kifu[0][-4:], game.toString()))
-    game.setRed(kifu[0][-4:])
-    print('Set,2,{},{}'.format(kifu[1][-4:], game.toString()))
+    kifu = [k.split(',') for k in kifu]
+    firstRed = kifu[0][1][-4:]
+    secondRed = kifu[1][1][-4:]
+    print('Set,1,{},{}'.format(firstRed, game.toString()))
+    game.setRed(firstRed)
+    print('Set,2,{},{}'.format(secondRed, game.toString()))
     game.changeSide()
-    game.setRed(kifu[1][-4:])
+    game.setRed(secondRed)
     game.changeSide()
     player = 1
     for k in kifu[2:]:
-        k_split = k.split(',')
-        unit = k_split[-2][-1]
-        direct = k_split[-1][0]
+        unit = k[1][4]
+        direct = k[2]
         # print(k, file=sys.stderr)
         print('Move,{},{},{},{}'.format(player, unit, direct, game.toString()))
         if player == 2:
