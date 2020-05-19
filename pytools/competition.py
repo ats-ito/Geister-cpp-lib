@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
 import socket
 import random
 import geister
@@ -26,22 +27,29 @@ def match(first, second, logEnable, outputLevel, matchCount):
         if outputLevel > 2:
             game.printBoard()
         result = 0
-        while(result == 0):
+        while result == 0:
             if outputLevel > 2:
                 game.printBoard()
-            hand = first.send("hand " + game.toString())
+            msg = 'hand {}'.format(game.toString())
+            hand = ''
+            while hand == '':
+                hand = first.send(msg)
             if outputLevel > 1:
-                print(hand)
-            game.move(hand[0], hand[4])
+                print('Hand,0,{}'.format(hand))
+            unit, direct = hand.split(',')
+            game.move(unit[0], direct[0])
             if outputLevel > 2:
                 game.printBoard()
             result = game.checkResult()
             if(result):
                 break
             game.changeSide()
-            hand = second.send("hand " + game.toString())
+            msg = 'hand {}'.format(game.toString())
+            hand = ''
+            while hand == '':
+                hand = second.send(msg)
             if outputLevel > 1:
-                print(hand)
+                print('Hand,1,{}'.format(hand))
             game.move(hand[0], hand[4])
             game.changeSide()
             result = game.checkResult()
@@ -63,8 +71,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     first = execute.Execute([args.player1])
     second = execute.Execute([args.player2])
-    print("1st {}".format(first.recieve()))
-    print("2nd {}".format(second.recieve()))
+    # print("1st {}".format(first.recieve()))
+    # print("2nd {}".format(second.recieve()))
     results = match(first, second, logEnable=args.log, outputLevel=args.output, matchCount=args.count)
     # print(results)
     resultList = {1:0,2:0,3:0,-1:0,-2:0,-3:0,0:0}
