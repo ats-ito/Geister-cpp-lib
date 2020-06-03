@@ -301,10 +301,10 @@ std::vector<Hand>& Geister::getLegalMove1st() const
             if(y < 5 && !exist1st(x, y+1)){
                 legalMoves.emplace_back(unit, Direction::South);
             }
-            if((x > 0 && !exist1st(x-1, y)) || (y == 0 && c.isBlue())){
+            if(!exist1st(x-1, y) && (x > 0 || (y == 0 && c.isBlue()))){
                 legalMoves.emplace_back(unit, Direction::West);
             }
-            if((x < 5 && !exist1st(x+1, y)) || (y == 0 && c.isBlue())){
+            if(!exist1st(x+1, y) && (x < 5 || (y == 0 && c.isBlue()))){
                 legalMoves.emplace_back(unit, Direction::East);
             }
         }
@@ -354,10 +354,10 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
             if(y < 5 && !exist2nd(x, y+1)){
                 legalMoves.emplace_back(unit, Direction::South);
             }
-            if((x > 0 && !exist2nd(x-1, y)) || (y == 5 && c.isBlue())){
+            if(!exist2nd(x-1, y) && (x > 0 || (y == 5 && c.isBlue()))){
                 legalMoves.emplace_back(unit, Direction::West);
             }
-            if((x < 5 && !exist2nd(x+1, y)) || (y == 5 && c.isBlue())){
+            if(!exist2nd(x+1, y) && (x < 5 || (y == 5 && c.isBlue()))){
                 legalMoves.emplace_back(unit, Direction::East);
             }
         }
