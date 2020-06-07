@@ -1,8 +1,8 @@
+#ifndef HAND_HPP
+#define HAND_HPP
+
 #include <string>
 #include "unit.hpp"
-
-#ifndef HAND
-#define HAND
 
 struct Direction{
     enum Directions: unsigned char{
