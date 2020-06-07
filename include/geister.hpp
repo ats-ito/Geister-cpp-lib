@@ -1,3 +1,6 @@
+#ifndef GEISTER_HPP
+#define GEISTER_HPP
+
 #include <iostream>
 #include <array>
 #include <vector>
@@ -6,9 +9,6 @@
 #include "unit.hpp"
 #include "hand.hpp"
 #include "result.hpp"
-
-#ifndef GEISTER
-#define GEISTER
 
 class Geister
 {

@@ -8,26 +8,23 @@
 #include "random.hpp"
 #include "hand.hpp"
 #include "result.hpp"
-#define USE_FS
-#ifdef USE_FS
-#ifdef _WIN32
+#if __has_include(<filesystem>)
+#define FS_ENABLE
 #include <filesystem>
-#else
+#elif __has_include(<experimental/filesystem>)
+#define FS_EXPERIMENTAL_ENABLE
 #include <experimental/filesystem>
 #endif
-#endif
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <windows.h>
 #else
 #include <dlfcn.h>
 #endif
 
-#ifdef USE_FS
-#ifdef _WIN32
+#if defined(FS_ENABLE)
 namespace fs = std::filesystem;
-#else
+#elif defined(FS_EXPERIMENTAL_ENABLE)
 namespace fs = std::experimental::filesystem;
-#endif
 #endif
 
 using namespace nonsugar;
@@ -47,7 +44,7 @@ bool logEnable = false;
 std::string logRoot = "log";
 std::string dllPath1, dllPath2;
 std::string dllName1, dllName2;
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
 std::string logDir;
 std::ofstream digestFile;
 #endif
@@ -77,7 +74,7 @@ int run(void* dll1, void* dll2){
         std::cerr << "cant call decideHand" << std::endl;
         exit(1);
     }
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     std::ofstream logFile;
     if(logEnable){
         //時刻取得用
@@ -138,7 +135,7 @@ int run(void* dll1, void* dll2){
         if(!(mask & 0b10))
             std::cout << "2ndPlayerSet: " << red_ptn2 << std::endl;
     }
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         logFile << "Set," << "1," << red_ptn1 << "," << "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u" << std::endl;
         logFile << "Set," << "2," << red_ptn2 << "," << game.mask() << std::endl;
@@ -174,7 +171,7 @@ int run(void* dll1, void* dll2){
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
             logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
         }
@@ -210,7 +207,7 @@ int run(void* dll1, void* dll2){
         if(outputLevel > 1){
             std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
             logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
         }
@@ -246,7 +243,7 @@ int run(void* dll1, void* dll2){
         std::cout << result << ": " << game.turn << '\t' << game << std::endl;
     }
     int resultInt = result == Result::Draw ? 0 : static_cast<int>(result);
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         logFile << "Result," << resultInt << "," << game << std::endl;
         logFile << "Turn," << game.turn << std::endl;
@@ -300,7 +297,7 @@ int main(int argc, char** argv){
         if(opts.get<'p'>().size() > 0){
             dllPath1 = opts.get<'p'>()[0];
             dllPath2 = opts.get<'p'>()[1];
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
             dllName1 = fs::path(dllPath1).filename().generic_string();
             dllName2 = fs::path(dllPath2).filename().generic_string();
 #else
@@ -334,7 +331,7 @@ int main(int argc, char** argv){
         exit(1);
     }
 
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         fs::create_directory(logRoot);
 
@@ -390,7 +387,7 @@ int main(int argc, char** argv){
             std::cout << x << ",";
         std::cout << std::endl;
     }
-#ifdef USE_FS
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         std::ofstream summary(logDir + "/" + dllName1 + "-" + dllName2 + "_summary.txt", std::ios::out);
         summary << "1stPlayer," << dllName1 << std::endl;
