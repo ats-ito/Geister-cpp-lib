@@ -1,10 +1,10 @@
+#ifndef PLAYER
+#define PLAYER
+
 #include "hand.hpp"
 #include "geister.hpp"
 #include <string>
 #include <vector>
-
-#ifndef PLAYER
-#define PLAYER
 
 #ifndef PLAYER_NAME
 #define PLAYER_NAME No_Name
