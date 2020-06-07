@@ -1,5 +1,3 @@
-USE_FS ?= true
-
 ifeq  ($(shell uname),Darwin)
 	CXX ?= clang++
 else
@@ -21,16 +19,10 @@ else
 	EXE_EXT ?= out
 	ifneq ($(filter clang++%, $(CXX)),)
 		CXXFLAGS += -stdlib=libc++
-		LDFLAGS += -stdlib=libc++ -lc++experimental -lc++abi
-		ifdef USE_FS
-			LDFLAGS += -lc++fs
-		endif
+		LDFLAGS += -stdlib=libc++ -lc++experimental -lc++abi -lc++fs
 	endif
 	ifneq ($(filter g++%, $(CXX)),)
-		LDFLAGS += -lstdc++
-		ifdef USE_FS
-			LDFLAGS += -lstdc++fs
-		endif
+		LDFLAGS += -lstdc++ -lstdc++fs
 	endif
 endif
 
@@ -49,10 +41,6 @@ PLAYER_CLASS_FILE := $(shell grep -rl -e "class $(PLAYER_CLASS)" Player)
 $(shell sed -i "2c #include \"$(PLAYER_CLASS_FILE)\"" src/player.cpp)
 
 DEFS := -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
-
-ifdef USE_FS
-DEFS += -DUSE_FS
-endif
 
 SRC_DIR ?= src
 BIN_DIR ?= bin
