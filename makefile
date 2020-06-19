@@ -37,7 +37,7 @@ ifdef PLAYER_CLASS
 # $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "#include \"" $$1 "\""}' > Player/all.hpp)
 endif
 PLAYER_CLASS ?= RandomPlayer
-PLAYER_CLASS_FILE := $(shell grep -rl -e "class $(PLAYER_CLASS)" Player)
+PLAYER_CLASS_FILE := $(shell grep -wrl -e "class $(PLAYER_CLASS)" Player)
 $(shell sed -i "2c #include \"$(PLAYER_CLASS_FILE)\"" src/player.cpp)
 
 DEFS := -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
