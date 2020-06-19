@@ -37,7 +37,7 @@ public:
 
     virtual double evaluate() const
     {
-        return static_cast<int>(current.getResult()) > 0 ? 1.0 : -1.0;
+        return current.getResult() == Result::Draw ? 0 : static_cast<int>(current.getResult()) > 0 ? 1.0 : -1.0;
     }
 };
 
