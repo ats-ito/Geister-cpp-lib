@@ -1,7 +1,7 @@
-#include <string>
-
 #ifndef UNIT_HPP
 #define UNIT_HPP
+
+#include <string>
 
 struct Position{
     int x;
