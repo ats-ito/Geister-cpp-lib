@@ -166,7 +166,6 @@ int run(void* dll1, void* dll2){
     Result result = Result::OnPlay;
 
     while(!game.isEnd()){
-        if(game.turn >= 200) break;
         Hand hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
