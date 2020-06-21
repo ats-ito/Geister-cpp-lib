@@ -197,7 +197,7 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.getResult();
+        result = game.result();
         if(game.isEnd())
             break;
         game.changeSide();
@@ -235,18 +235,18 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.getResult();
+        result = game.result();
     }
     // game.turn++;
     if(outputLevel > 0){
-        std::cout << result << ": " << game.turn << '\t' << game << std::endl;
+        std::cout << result << ": " << game.turn() << '\t' << game << std::endl;
     }
     int resultInt = result == Result::Draw ? 0 : static_cast<int>(result);
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         logFile << "Result," << resultInt << "," << game << std::endl;
-        logFile << "Turn," << game.turn << std::endl;
-        digestFile << resultInt << "," << game.turn << std::endl;
+        logFile << "Turn," << game.turn() << std::endl;
+        digestFile << resultInt << "," << game.turn() << std::endl;
     }
 #endif
     return resultInt;

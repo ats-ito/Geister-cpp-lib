@@ -1,15 +1,13 @@
 #include "geister.hpp"
 #include <iostream>
 
-std::array<char, 16> Geister::unitList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-
 Geister::Geister():
-result(Result::OnPlay),
+mResult(Result::OnPlay),
 takenBlue1st(0),
 takenBlue2nd(0),
 takenRed1st(0),
 takenRed2nd(0),
-turn(0),
+mTurn(0),
 units{
     Unit(1, 4, 'U', 'A'),
     Unit(2, 4, 'U', 'B'),
@@ -32,8 +30,8 @@ units{
 }
 
 Geister::Geister(const std::string& info):
-result(Result::OnPlay),
-turn(0),
+mResult(Result::OnPlay),
+mTurn(0),
 units{
     Unit(info[0] - '0', info[1] - '0', info[2], 'A'),
     Unit(info[3] - '0', info[4] - '0', info[5], 'B'),
@@ -55,15 +53,15 @@ units{
 {
     for(const Unit& u: units){
         if(u.isEscape()){
-            result = u.is1st() ? Result::Escape1st : Result::Escape2nd;
+            mResult = u.is1st() ? Result::Escape1st : Result::Escape2nd;
         }
     }
     countTaken();
 }
 
 Geister::Geister(const std::string& red1, const std::string& red2):
-result(Result::OnPlay),
-turn(0),
+mResult(Result::OnPlay),
+mTurn(0),
 units{
     Unit(1, 4, 'B', 'A'),
     Unit(2, 4, 'B', 'B'),
@@ -93,10 +91,10 @@ units{
 }
 
 Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
-result(game.result),
-turn(game.turn),
+mResult(game.mResult),
+mTurn(game.mTurn),
 units(game.units),
-history(game.history)
+mHistory(game.mHistory)
 {
     setColor(red1, red2);
 }
@@ -110,9 +108,9 @@ void Geister::setState(const std::string& state){
     for(const Unit& u: units){
         if(u.isEscape()){
             if(u.is1st())
-                result = Result::Escape1st;
+                mResult = Result::Escape1st;
             else if(u.is2nd())
-                result = Result::Escape2nd;
+                mResult = Result::Escape2nd;
         }
     }
     countTaken();
@@ -139,13 +137,13 @@ void Geister::setColor(const std::string& first, const std::string& second){
 }
 
 void Geister::initialize(){
-    result = Result::OnPlay;
+    mResult = Result::OnPlay;
     takenBlue1st = 0;
     takenBlue2nd = 0;
     takenRed1st = 0;
     takenRed2nd = 0;
-    turn = 0;
-    history.clear();
+    mTurn = 0;
+    mHistory.clear();
     units = {
         Unit(1, 4, 'U', 'A'),
         Unit(2, 4, 'U', 'B'),
@@ -370,7 +368,7 @@ void Geister::move(const char u, const char direct){
         Unit& unit = units[u - 'A'];
         int x = unit.x;
         int y = unit.y;
-        history.emplace_back(Hand(unit, direct), toString());
+        mHistory.emplace_back(Hand(unit, direct), toString());
         if(direct == 'N'){
             --y;
         }
@@ -404,7 +402,7 @@ void Geister::move(const char u, const char direct){
         Unit& unit = units[u - 'a' + 8];
         int x = unit.x;
         int y = unit.y;
-        history.emplace_back(Hand(unit, direct), toString());
+        mHistory.emplace_back(Hand(unit, direct), toString());
         if(direct == 'N'){
             --y;
         }
@@ -435,8 +433,8 @@ void Geister::move(const char u, const char direct){
         unit.y = y;
     }
     else return;
-    if(++turn >= 200 && result == Result::OnPlay)
-        result = Result::Draw;
+    if(++mTurn >= 200 && mResult == Result::OnPlay)
+        mResult = Result::Draw;
 }
 
 Geister Geister::mask(){
@@ -479,8 +477,8 @@ void Geister::changeSide(){
         units[i+8].color = tmp.color.reverseSide();
     }
 
-    if(result != Result::Draw)
-        result = static_cast<Result>(-static_cast<int>(result));
+    if(mResult != Result::Draw)
+        mResult = static_cast<Result>(-static_cast<int>(mResult));
 }
 
 Hand Geister::diff(const Geister& target){
