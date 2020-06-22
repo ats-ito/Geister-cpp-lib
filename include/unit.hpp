@@ -260,6 +260,20 @@ public:
     {
         return color.is2nd();
     }
+
+    void reverseSide(){
+        if(x <= 5){
+            x = 5 - x;
+            y = 5 - y;
+        }
+        if(is1st()){
+            name += 'a' - 'A';
+        }
+        else{
+            name += 'A' - 'a';
+        }
+        color = color.reverseSide();
+    }
 };
 
 

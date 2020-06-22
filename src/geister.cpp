@@ -452,29 +452,9 @@ void Geister::changeSide(){
     std::swap(takenRed1st, takenRed2nd);
 
     for(int i = 0; i < 8; ++i){
-        Unit tmp = units[i];
-
-        if(units[i+8].x > 5){
-            units[i].x = units[i+8].x;
-            units[i].y = units[i+8].y;
-        }
-        else{
-            units[i].x = 5 - units[i+8].x;
-            units[i].y = 5 - units[i+8].y;
-        }
-        units[i].name = units[i+8].name - 'a' + 'A';
-        units[i].color = units[i+8].color.reverseSide();
-
-        if(tmp.x > 5){
-            units[i+8].x = tmp.x;
-            units[i+8].y = tmp.y;
-        }
-        else{
-            units[i+8].x = 5 - tmp.x;
-            units[i+8].y = 5 - tmp.y;
-        }
-        units[i+8].name = tmp.name - 'A' + 'a';
-        units[i+8].color = tmp.color.reverseSide();
+        units[i].reverseSide();
+        units[i+8].reverseSide();
+        std::iter_swap(units.begin()+i, units.begin()+8+i);
     }
 
     if(mResult != Result::Draw)
