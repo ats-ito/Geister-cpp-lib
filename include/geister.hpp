@@ -21,8 +21,13 @@ protected:
     Result mResult;
     int mTurn;
     std::vector<std::pair<Hand, std::string>> mHistory;
-public:
 
+    void countTaken();
+
+    void take(Unit& unit);
+    
+    void escape(Unit& unit);
+public:
     constexpr static std::array<char, 16> unitIDs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     Geister();
@@ -53,10 +58,7 @@ public:
     std::vector<Hand>& getLegalMove2nd() const;
 
     std::string& toString() const;
-
-    void take(Unit& unit);
-    
-    void escape(Unit& unit);
+    operator std::string() const;
 
     void move(const char u, const char direct);
 
@@ -72,20 +74,16 @@ public:
 
     Unit* getUnitByPos(const int x, const int y);
 
+    bool exist1st(const int x, const int y)const;
+    bool exist2nd(const int x, const int y)const;
+
     Geister mask();
 
     void changeSide();
 
-    void countTaken();
-
-    operator std::string() const { return toString(); }
-
     int takenCount(const UnitColor& c) const noexcept;
 
     Hand diff(const Geister& target);
-
-    bool exist1st(const int x, const int y)const;
-    bool exist2nd(const int x, const int y)const;
 };
 
 Hand diff(const Geister& left, const Geister& right);

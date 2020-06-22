@@ -39,6 +39,8 @@ inline std::string& Geister::toString() const
 	}
 	return res;
 }
+inline Geister::operator std::string() const { return toString(); }
+
 
 inline void Geister::escape(Unit& unit){
 	unit.x = 8;
