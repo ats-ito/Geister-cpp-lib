@@ -373,14 +373,14 @@ void Geister::move(const char u, const char direct){
             --y;
         }
         else if(direct == 'E'){
-            if((unit.color.isBlue() && x == 5 && y == 0)){
+            if(x == 5){
                 escape(unit);
                 return;
             }
             ++x;
         }
         else if(direct == 'W'){
-            if(unit.color.isBlue() && x == 0 && y == 0){
+            if(x == 0){
                 escape(unit);
                 return;
             }
@@ -407,14 +407,14 @@ void Geister::move(const char u, const char direct){
             --y;
         }
         else if(direct == 'E'){
-            if((unit.color.isBlue() && x == 5 && y == 5)){
+            if(x == 5){
                 escape(unit);
                 return;
             }
             ++x;
         }
         else if(direct == 'W'){
-            if((unit.color.isBlue() && x == 0 && y == 5)){
+            if(x == 0){
                 escape(unit);
                 return;
             }
