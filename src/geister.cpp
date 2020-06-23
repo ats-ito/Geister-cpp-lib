@@ -290,8 +290,8 @@ std::vector<Hand>& Geister::getLegalMove1st() const
     for(int i = 0; i < 8; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
-            const int& x = unit.x;
-            const int& y = unit.y;
+            const int x = unit.x;
+            const int y = unit.y;
             const UnitColor& c = unit.color;
             if(y > 0 && !exist1st(x, y-1)){
                 legalMoves.emplace_back(unit, Direction::North);
@@ -343,8 +343,8 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
     for(int i = 8; i < 16; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
-            const int& x = unit.x;
-            const int& y = unit.y;
+            const int x = unit.x;
+            const int y = unit.y;
             const UnitColor& c = unit.color;
             if(y > 0 && !exist2nd(x, y-1)){
                 legalMoves.emplace_back(unit, Direction::North);
