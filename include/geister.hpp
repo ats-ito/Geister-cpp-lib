@@ -28,6 +28,7 @@ protected:
     
     void escape(Unit& unit);
 public:
+    constexpr static uint16_t maxTurn = 200;
     constexpr static std::array<char, 16> unitIDs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     Geister();

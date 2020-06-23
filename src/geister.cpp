@@ -433,7 +433,7 @@ void Geister::move(const char u, const char direct){
         unit.y = y;
     }
     else return;
-    if(++mTurn >= 200 && mResult == Result::OnPlay)
+    if(++mTurn >= maxTurn && mResult == Result::OnPlay)
         mResult = Result::Draw;
 }
 
