@@ -45,12 +45,7 @@ inline Geister::operator std::string() const { return toString(); }
 inline void Geister::escape(Unit& unit){
 	unit.x = 8;
 	unit.y = 8;
-	if(unit.is1st()){
-		mResult = Result::Escape1st;
-	}
-	else{
-		mResult = Result::Escape2nd;
-	}
+	mResult = unit.is1st() ? Result::Escape1st : Result::Escape2nd;
 }
 
 inline void Geister::move(const Hand& h){
