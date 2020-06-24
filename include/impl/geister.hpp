@@ -73,16 +73,16 @@ inline Unit* Geister::getUnitByPos(const int x, const int y){
 
 inline void Geister::countTaken(){
 	if((takenBlue1st = std::count_if(units.begin(), units.begin()+8,
-		[&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+		[&](Unit& u){ return u.isTaken() && u.isBlue(); })) == 4)
 		mResult = Result::TakeBlue2nd;
 	if((takenRed1st = std::count_if(units.begin(), units.begin()+8,
-		[&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+		[&](Unit& u){ return u.isTaken() && u.isRed(); })) == 4)
 		mResult = Result::TakenRed1st;
 	if((takenBlue2nd = std::count_if(units.begin()+8, units.end(),
-		[&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
+		[&](Unit& u){ return u.isTaken() && u.isBlue(); })) == 4)
 		mResult = Result::TakeBlue1st;
 	if((takenRed2nd = std::count_if(units.begin()+8, units.end(),
-		[&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
+		[&](Unit& u){ return u.isTaken() && u.isRed(); })) == 4)
 		mResult = Result::TakenRed2nd;
 }
 
@@ -102,24 +102,24 @@ inline void Geister::take(Unit& unit){
 	unit.x = 9;
 	unit.y = 9;
 	if(unit.is1st()){
-		if(unit.color.isRed()){
+		if(unit.isRed()){
 			if(++takenRed1st == 4)
 				mResult = Result::TakenRed1st;
 			return;
 		}
-		else if(unit.color.isBlue()){
+		else if(unit.isBlue()){
 			if(++takenBlue1st == 4)
 				mResult = Result::TakeBlue2nd;
 			return;
 		}
 	}
 	else if(unit.is2nd()){
-		if(unit.color.isRed()){
+		if(unit.isRed()){
 			if(++takenRed2nd == 4)
 				mResult = Result::TakenRed2nd;
 			return;
 		}
-		else if(unit.color.isBlue()){
+		else if(unit.isBlue()){
 			if(++takenBlue2nd == 4)
 				mResult = Result::TakeBlue1st;
 			return;

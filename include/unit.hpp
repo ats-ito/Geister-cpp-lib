@@ -261,6 +261,15 @@ public:
         return color.is2nd();
     }
 
+    bool isBlue() const
+    {
+        return color.isBlue();
+    }
+    bool isRed() const
+    {
+        return color.isRed();
+    }
+
     void reverseSide(){
         if(x <= 5){
             x = 5 - x;
