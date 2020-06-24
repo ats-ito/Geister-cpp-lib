@@ -276,10 +276,10 @@ public:
             y = 5 - y;
         }
         if(is1st()){
-            name += 'a' - 'A';
+            name = std::tolower(name);
         }
         else{
-            name += 'A' - 'a';
+            name = std::toupper(name);
         }
         color = color.reverseSide();
     }
