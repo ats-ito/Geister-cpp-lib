@@ -230,64 +230,31 @@ public:
     UnitColor color;
     char name;
 
-    constexpr Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
-    Unit(int x, int y, int color, char name): x{x}, y{y}, color(color), name{name}{}
-    Unit(int x, int y, char color, char name): x{x}, y{y}, color(color), name{name}{}
-    constexpr Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
+    constexpr Unit();
+    Unit(int x, int y, int color, char name);
+    Unit(int x, int y, char color, char name);
+    constexpr Unit(int x, int y, UnitColor color, char name);
 
-    std::string toString() const{
-        return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
-    }
+    std::string toString() const;
 
-    bool onBoard() const
-    {
-        return 0 <= x && x <= 5 && 0 <= y && y <= 5;
-    }
-    bool isTaken() const
-    {
-        return x == 9 && y == 9;
-    }
-    bool isEscape() const
-    {
-        return x == 8 && y == 8;
-    }
+    bool onBoard() const;
+    bool isTaken() const;
+    bool isEscape() const;
 
-    bool is1st() const
-    {
-        return color.is1st();
-    }
-    bool is2nd() const
-    {
-        return color.is2nd();
-    }
+    bool is1st() const;
+    bool is2nd() const;
 
-    bool isBlue() const
-    {
-        return color.isBlue();
-    }
-    bool isRed() const
-    {
-        return color.isRed();
-    }
+    bool isBlue() const;
+    bool isRed() const;
 
-    void reverseSide(){
-        if(x <= 5){
-            x = 5 - x;
-            y = 5 - y;
-        }
-        if(is1st()){
-            name = std::tolower(name);
-        }
-        else{
-            name = std::toupper(name);
-        }
-        color = color.reverseSide();
-    }
+    void reverseSide();
 };
 
 
 inline std::ostream& operator<<(std::ostream& stream, const Unit& value){
     return stream << value.toString();
 }
+
+#include "impl/unit.hpp"
 
 #endif
