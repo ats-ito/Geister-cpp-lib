@@ -55,3 +55,110 @@ inline void Unit::reverseSide(){
 	}
 	color = color.reverseSide();
 }
+
+
+
+inline constexpr UnitColor::UnitColor() : color(NotDefine) {}
+inline constexpr UnitColor::UnitColor(Color color) : color(color) {}
+inline UnitColor::UnitColor(char c) {
+	switch (c)
+	{
+		case 'B':
+			color = Blue;
+			break;
+		case 'b':
+			color = blue;
+			break;
+		case 'R':
+			color = Red;
+			break;
+		case 'r':
+			color = red;
+			break;
+		case 'U':
+			color = Unknown;
+			break;
+		case 'u':
+			color = unknown;
+			break;
+		case 'P':
+			color = Purple;
+			break;
+		case 'p':
+			color = purple;
+			break;
+		default:
+			color = NotDefine;
+	}
+}
+
+
+inline bool UnitColor::operator==(const UnitColor& c) const { return color == c.color; }
+inline bool UnitColor::operator!=(const UnitColor& c) const { return color != c.color; }
+
+inline bool UnitColor::isBlue() const
+{
+	return static_cast<unsigned char>(color) & 0b010;
+}
+inline bool UnitColor::isRed() const
+{
+	return static_cast<unsigned char>(color) & 0b100;
+}
+inline bool UnitColor::is1st() const
+{
+	return !(static_cast<unsigned char>(color) & 0b1);
+}
+inline bool UnitColor::is2nd() const
+{
+	return static_cast<unsigned char>(color) & 0b1;
+}
+
+inline char UnitColor::toChar() const
+{
+	switch (color)
+	{
+		case Blue:
+			return 'B';
+		case blue:
+			return 'b';
+		case Red:
+			return 'R';
+		case red:
+			return 'r';
+		case Unknown:
+			return 'U';
+		case unknown:
+			return 'u';
+		case Purple:
+			return 'P';
+		case purple:
+			return 'p';
+		default:
+			return ' ';
+	}
+}
+
+inline UnitColor UnitColor::reverseSide() const
+{
+	switch (color)
+	{
+		case Blue:
+			return blue;
+		case blue:
+			return Blue;
+		case Red:
+			return red;
+		case red:
+			return Red;
+		case Unknown:
+			return unknown;
+		case unknown:
+			return Unknown;
+		case Purple:
+			return purple;
+		case purple:
+			return Purple;
+		default:
+			return NotDefine;
+	}
+}
