@@ -93,8 +93,8 @@ units{
 Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
 mResult(game.mResult),
 mTurn(game.mTurn),
-units(game.units),
-mHistory(game.mHistory)
+units(game.units)
+// ,mHistory(game.mHistory)
 {
     setColor(red1, red2);
 }
@@ -143,7 +143,7 @@ void Geister::initialize(){
     takenRed1st = 0;
     takenRed2nd = 0;
     mTurn = 0;
-    mHistory.clear();
+    // mHistory.clear();
     units = {
         Unit(1, 4, 'U', 'A'),
         Unit(2, 4, 'U', 'B'),
@@ -366,7 +366,7 @@ void Geister::move(const char u, const char direct){
         Unit& unit = units[u - 'A'];
         int x = unit.x;
         int y = unit.y;
-        mHistory.emplace_back(Hand(unit, direct), toString());
+        // mHistory.emplace_back(Hand(unit, direct), toString());
         if(direct == 'N'){
             --y;
         }
@@ -400,7 +400,7 @@ void Geister::move(const char u, const char direct){
         Unit& unit = units[u - 'a' + 8];
         int x = unit.x;
         int y = unit.y;
-        mHistory.emplace_back(Hand(unit, direct), toString());
+        // mHistory.emplace_back(Hand(unit, direct), toString());
         if(direct == 'N'){
             --y;
         }

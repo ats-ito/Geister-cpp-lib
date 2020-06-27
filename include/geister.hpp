@@ -20,7 +20,7 @@ protected:
     int takenRed2nd;
     Result mResult;
     int mTurn;
-    std::vector<std::pair<Hand, std::string>> mHistory;
+    // std::vector<std::pair<Hand, std::string>> mHistory;
 
     void countTaken();
 
@@ -69,7 +69,7 @@ public:
 
     int turn() const noexcept;
 
-    const std::vector<std::pair<Hand, std::string>>& history() const noexcept;
+    // const std::vector<std::pair<Hand, std::string>>& history() const noexcept;
 
     bool isEnd() const noexcept;
 

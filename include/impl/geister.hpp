@@ -151,7 +151,7 @@ inline int Geister::turn() const noexcept
 	return mTurn;
 }
 
-inline const std::vector<std::pair<Hand, std::string>>& Geister::history() const noexcept
-{
-	return mHistory;
-}
+// inline const std::vector<std::pair<Hand, std::string>>& Geister::history() const noexcept
+// {
+// 	return mHistory;
+// }
