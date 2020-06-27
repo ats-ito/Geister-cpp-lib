@@ -3,38 +3,6 @@
 
 #include <string>
 
-struct Position{
-    int x;
-    int y;
-
-    constexpr Position():x{}, y{}{
-    }
-    constexpr Position(int x, int y): x{x}, y{y}{
-    }
-
-    void move(int dx, int dy){
-        x += dx;
-        y += dy;
-    }
-    Position moveByDir(char dir){
-        return *this;
-    }
-    
-    bool onBoard()const{
-        return x < 6 && y < 6;
-    }
-
-    Position operator+(Position displacement){
-        return {x+displacement.x, y+displacement.y};
-    }
-    Position operator-(Position displacement){
-        return {x-displacement.x, y-displacement.y};
-    }
-};
-
-constexpr inline Position outBoard{9, 9};
-constexpr inline Position escapeBoard{8, 8};
-
 struct UnitColor{
     enum Color: unsigned char{
         NotDefine = 0b000,
@@ -50,37 +18,6 @@ struct UnitColor{
 
     constexpr UnitColor() : color(NotDefine) {}
     constexpr UnitColor(Color color) : color(color) {}
-    UnitColor(int number) {
-        switch (number)
-        {
-            case 0:
-                color = Blue;
-                break;
-            case 1:
-                color = blue;
-                break;
-            case 2:
-                color = Red;
-                break;
-            case 3:
-                color = red;
-                break;
-            case 4:
-                color = Unknown;
-                break;
-            case 5:
-                color = unknown;
-                break;
-            case 6:
-                color = Purple;
-                break;
-            case 7:
-                color = purple;
-                break;
-            default:
-                color = NotDefine;
-        }
-    }
     UnitColor(char c) {
         switch (c)
         {
@@ -154,50 +91,6 @@ struct UnitColor{
         }
     }
 
-    std::string toString()const{
-        switch (color)
-        {
-            case Blue:
-                return std::string("Blue");
-            case blue:
-                return std::string("blue");
-            case Red:
-                return std::string("Red");
-            case red:
-                return std::string("red");
-            case Unknown:
-                return std::string("Unknown");
-            case unknown:
-                return std::string("unknown");
-            case Purple:
-                return std::string("Purple");
-            case purple:
-                return std::string("purple");
-            default:
-                return std::string("Not defined");
-        }
-    }
-
-    int toInt()const{
-        switch (color)
-        {
-            case Blue:
-                return 0;
-            case blue:
-                return 1;
-            case Red:
-                return 2;
-            case red:
-                return 3;
-            case Unknown:
-                return 4;
-            case unknown:
-                return 5;
-            default:
-                return 7;
-        }
-    }
-
     UnitColor reverseSide()const{
         switch (color)
         {
@@ -226,13 +119,10 @@ struct UnitColor{
 class Unit{
 public:
     int x, y;
-    Position pos;
     UnitColor color;
     char name;
 
     constexpr Unit();
-    Unit(int x, int y, int color, char name);
-    Unit(int x, int y, char color, char name);
     constexpr Unit(int x, int y, UnitColor color, char name);
 
     std::string toString() const;

@@ -3,8 +3,6 @@
 #endif
 
 inline constexpr Unit::Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
-inline Unit::Unit(int x, int y, int color, char name): x{x}, y{y}, color(color), name{name}{}
-inline Unit::Unit(int x, int y, char color, char name): x{x}, y{y}, color(color), name{name}{}
 inline constexpr Unit::Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
 
 inline std::string Unit::toString() const{
