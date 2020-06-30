@@ -2,6 +2,7 @@
 #define UNIT_HPP
 
 #include <string>
+#include <array>
 
 struct UnitColor{
     enum Color: unsigned char{
@@ -36,6 +37,8 @@ struct UnitColor{
 
 class Unit{
 public:
+    constexpr static std::array<char, 16> nameList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+
     int x, y;
     UnitColor color;
     char name;
