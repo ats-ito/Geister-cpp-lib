@@ -61,15 +61,11 @@ public:
     std::string& toString() const;
     operator std::string() const;
 
-    void move(const char u, const char direct);
-
-    void move(const Hand& h);
+    void move(const Hand& hand);
 
     Result result() const noexcept;
 
     int turn() const noexcept;
-
-    // const std::vector<std::pair<Hand, std::string>>& history() const noexcept;
 
     bool isEnd() const noexcept;
 

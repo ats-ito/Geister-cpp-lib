@@ -94,7 +94,6 @@ Geister::Geister(const Geister& game, const std::string& red1, const std::string
 mResult(game.mResult),
 mTurn(game.mTurn),
 units(game.units)
-// ,mHistory(game.mHistory)
 {
     setColor(red1, red2);
 }
@@ -361,76 +360,70 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
     return legalMoves;
 }
 
-void Geister::move(const char u, const char direct){
-    if('A' <= u && u <= 'H'){
-        Unit& unit = units[u - 'A'];
-        int x = unit.x;
-        int y = unit.y;
-        // mHistory.emplace_back(Hand(unit, direct), toString());
-        if(direct == 'N'){
+void Geister::move(const Hand& hand){
+    int x = hand.unit.x;
+    int y = hand.unit.y;
+    if(hand.unit.is1st()){
+        Unit& unit = units[hand.unit.name - 'A'];
+        if(hand.direct == Direction::North){
             --y;
         }
-        else if(direct == 'E'){
+        else if(hand.direct == Direction::East){
             if(x == 5){
                 escape(unit);
                 return;
             }
             ++x;
         }
-        else if(direct == 'W'){
+        else if(hand.direct == Direction::West){
             if(x == 0){
                 escape(unit);
                 return;
             }
             --x;
         }
-        else if(direct == 'S'){
+        else if(hand.direct == Direction::South){
             ++y;
         }
-        else{
-            return;
-        }
-        if(Unit* target = getUnitByPos(x, y); target && target->is2nd()){
+        else return;
+
+        if(Unit* target = getUnitByPos(x, y); target){
             take(*target);
         }
         unit.x = x;
         unit.y = y;
     }
-    else if(u >= 'a' && u <= 'h'){
-        Unit& unit = units[u - 'a' + 8];
-        int x = unit.x;
-        int y = unit.y;
-        // mHistory.emplace_back(Hand(unit, direct), toString());
-        if(direct == 'N'){
+    else 
+    {
+        Unit& unit = units[hand.unit.name - 'a' + 8];
+        if(hand.direct == Direction::North){
             --y;
         }
-        else if(direct == 'E'){
+        else if(hand.direct == Direction::East){
             if(x == 5){
                 escape(unit);
                 return;
             }
             ++x;
         }
-        else if(direct == 'W'){
+        else if(hand.direct == Direction::West){
             if(x == 0){
                 escape(unit);
                 return;
             }
             --x;
         }
-        else if(direct == 'S'){
+        else if(hand.direct == Direction::South){
             ++y;
         }
-        else{
-            return;
-        }
-        if(Unit* target = getUnitByPos(x, y); target && target->is1st()){
+        else return;
+
+        if(Unit* target = getUnitByPos(x, y); target){
             take(*target);
         }
         unit.x = x;
         unit.y = y;
     }
-    else return;
     if(++mTurn >= maxTurn && mResult == Result::OnPlay)
         mResult = Result::Draw;
 }

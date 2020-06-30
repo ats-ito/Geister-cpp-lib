@@ -48,10 +48,6 @@ inline void Geister::escape(Unit& unit){
 	mResult = unit.is1st() ? Result::Escape1st : Result::Escape2nd;
 }
 
-inline void Geister::move(const Hand& h){
-	move(h.unit.name, h.direct.toChar());
-}
-
 inline Result Geister::result() const noexcept
 {
 	return mResult;
@@ -150,8 +146,3 @@ inline int Geister::turn() const noexcept
 {
 	return mTurn;
 }
-
-// inline const std::vector<std::pair<Hand, std::string>>& Geister::history() const noexcept
-// {
-// 	return mHistory;
-// }
