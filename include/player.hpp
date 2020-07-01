@@ -4,7 +4,7 @@
 #include "hand.hpp"
 #include "geister.hpp"
 #include <string>
-#include <vector>
+#include <array>
 
 #ifndef PLAYER_NAME
 #define PLAYER_NAME No_Name
@@ -28,7 +28,7 @@ protected:
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
 public:
-    virtual Geister getState(){
+    virtual Geister& getState(){
         return game;
     }
 
