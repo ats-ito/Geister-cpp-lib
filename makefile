@@ -4,7 +4,7 @@ else
 	CXX ?= g++
 endif
 
-CXXFLAGS ?= -MMD -MP -w -std=c++17 -Ofast -march=native -mtune=native
+CXXFLAGS ?= -MMD -MP -std=c++17 -w -O
 
 ifeq ($(OS),Windows_NT)
 	LDFLAGS ?= -lws2_32 -lwsock32 -lwinmm
@@ -71,6 +71,29 @@ all: $(TARGETS)
 .PHONY: clean
 clean:
 	rm -rf $(OBJ_DIR)/*.*
+
+.PHONY: set-release
+set-release:
+	$(eval DEFS += -DNDEBUG)
+	$(eval CXXFLAGS := $(CXXFLAGS:-W%=))
+	$(eval CXXFLAGS := $(CXXFLAGS:-O%=))
+	$(eval CXXFLAGS += -w -Ofast -march=native -mtune=native)
+
+.PHONY: release
+release: set-release all
+	@mkdir -p $(BIN_DIR)/$@
+	@cp $(TARGETS) $(BIN_DIR)/$@
+
+.PHONY: set-debug
+set-debug:
+	$(eval CXXFLAGS := $(CXXFLAGS:-w=))
+	$(eval CXXFLAGS := $(CXXFLAGS:-O%=))
+	$(eval CXXFLAGS += -Wall -Wextra -O0 -g3)
+
+.PHONY: debug
+debug: set-debug all
+	@mkdir -p $(BIN_DIR)/$@
+	@cp $(TARGETS) $(BIN_DIR)/$@
 
 
 player_OBJ := $(addprefix $(OBJ_DIR)/,player.$(OBJ_EXT) geister.$(OBJ_EXT) simulator.$(OBJ_EXT))
