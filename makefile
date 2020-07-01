@@ -33,12 +33,20 @@ PLAYER_NAME ?= Player
 ifneq ($(PC),pc)
 	PLAYER_CLASS ?= $(PC)
 endif
-ifdef PLAYER_CLASS
+# ifdef PLAYER_CLASS
 # $(shell find ./Player -type f -name \*.hpp | awk -F"/" '{ print $$NF }' | grep -v all.hpp | awk '{print "#include \"" $$1 "\""}' > Player/all.hpp)
-endif
+# endif
 PLAYER_CLASS ?= RandomPlayer
-PLAYER_CLASS_FILE := $(shell grep -wrl -e "class $(PLAYER_CLASS)" Player)
+PLAYER_CLASS_FILE != grep -wrl -e "class $(PLAYER_CLASS)" Player
+# TIME != stat -c %y src/player.cpp
+# BEFORE != md5sum src/player.cpp
+ifneq ($(shell sed -n 2p src/player.cpp), \#include "$(PLAYER_CLASS_FILE)")
 $(shell sed -i "2c #include \"$(PLAYER_CLASS_FILE)\"" src/player.cpp)
+endif
+# AFTER != md5sum src/player.cpp
+# ifeq ($(BEFORE),$(AFTER))
+# $(shell touch -d "$(TIME)" src/player.cpp)
+# endif
 
 DEFS := -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
 
