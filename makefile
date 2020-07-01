@@ -109,6 +109,7 @@ $(BIN_DIR)/%.$(LIB_EXT): $(OBJ_DIR)/%.$(OBJ_EXT) $(OBJ_DIR)/geister.$(OBJ_EXT)
 $(BIN_DIR)/%.$(EXE_EXT): $(OBJ_DIR)/%.$(OBJ_EXT) $(OBJ_DIR)/geister.$(OBJ_EXT)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
+.PRECIOUS: $(OBJ_DIR)/%.$(OBJ_EXT)
 $(OBJ_DIR)/%.$(OBJ_EXT): %.cpp
 	$(CXX) $(CXXFLAGS) $(DEFS) -I. -I./include -I./include/lib -c $< -o $@
 
