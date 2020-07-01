@@ -45,14 +45,8 @@ DEFS := -DPLAYER_NAME=$(PLAYER_NAME) -DPLAYER_CLASS=$(PLAYER_CLASS)
 SRC_DIR ?= src
 BIN_DIR ?= bin
 OBJ_DIR ?= obj
-EXIST_BIN_DIR := $(shell find ./ -type d -name $(BIN_DIR) | awk -F"/" '{ print $$NF }')
-ifneq ($(EXIST_BIN_DIR),$(BIN_DIR))
-$(shell mkdir $(BIN_DIR))
-endif
-EXIST_OBJ_DIR := $(shell find ./ -type d -name $(OBJ_DIR) | awk -F"/" '{ print $$NF }')
-ifneq ($(EXIST_OBJ_DIR),$(OBJ_DIR))
-$(shell mkdir $(OBJ_DIR))
-endif
+$(shell mkdir -p $(BIN_DIR))
+$(shell mkdir -p $(OBJ_DIR))
 
 SRCS := $(notdir $(wildcard src/*) $(wildcard Player/*.cpp))
 OBJS := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.$(OBJ_EXT)))
