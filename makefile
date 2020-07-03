@@ -34,9 +34,9 @@ ifneq ($(PC),pc)
 	PLAYER_CLASS ?= $(PC)
 endif
 PLAYER_CLASS ?= RandomPlayer
-PLAYER_CLASS_FILE != grep -wrl -e "class $(PLAYER_CLASS)" Player
-# makeのバージョンが4より古いと上はエラーになるので下を使う
-# PLAYER_CLASS_FILE := $(shell grep -wrl -e "class $(PLAYER_CLASS)" Player)
+PLAYER_CLASS_FILE := $(shell grep -wrl -e "class $(PLAYER_CLASS)" Player)
+# ↓でもいいがmakeのバージョンが4以降でないと対応していない
+# PLAYER_CLASS_FILE != grep -wrl -e "class $(PLAYER_CLASS)" Player
 ifneq ($(shell sed -n 2p src/player.cpp), \#include "$(PLAYER_CLASS_FILE)")
 $(shell sed -i "2c #include \"$(PLAYER_CLASS_FILE)\"" src/player.cpp)
 endif
