@@ -2,58 +2,84 @@
 #include "unit.hpp"
 #endif
 
-inline constexpr Unit::Unit():x{-1}, y{-1}, color{UnitColor::Unknown}, name{' '}{}
-inline constexpr Unit::Unit(int x, int y, UnitColor color, char name): x{x}, y{y}, color{color}, name{name}{}
+inline constexpr Unit::Unit():mX{-1}, mY{-1}, mColor{UnitColor::Unknown}, id{' '}{}
+inline constexpr Unit::Unit(int x, int y, UnitColor color, char name): mX{x}, mY{y}, mColor{color}, id{name}{}
 
 inline std::string Unit::toString() const{
-	return std::string{name} + std::string{color.toChar()} + std::to_string(x) + std::to_string(y);
+	return std::string{id} + std::string{mColor.toChar()} + std::to_string(mX) + std::to_string(mY);
+}
+
+inline const int Unit::x() const
+{
+	return mX;
+}
+inline const int Unit::y() const
+{
+	return mX;
+}
+inline const UnitColor& Unit::color() const
+{
+	return mColor;
+}
+inline const char Unit::name() const
+{
+	return id;
+}
+
+inline void Unit::setColor(UnitColor c){
+	mColor = c;
+}
+
+inline void Unit::setPos(int x, int y){
+	mX = x;
+	mY = y;
 }
 
 inline bool Unit::onBoard() const
 {
-	return 0 <= x && x <= 5 && 0 <= y && y <= 5;
+	return 0 <= mX && mX <= 5 && 0 <= mY && mY <= 5;
 }
 
 inline bool Unit::isTaken() const
 {
-	return x == 9 && y == 9;
+	return mX == 9 && mY == 9;
 }
 
 inline bool Unit::isEscape() const
 {
-	return x == 8 && y == 8;
+	return mX == 8 && mY == 8;
 }
 
 inline bool Unit::is1st() const
 {
-	return color.is1st();
+	return mColor.is1st();
 }
 inline bool Unit::is2nd() const
 {
-	return color.is2nd();
+	return mColor.is2nd();
 }
 
 inline bool Unit::isBlue() const
 {
-	return color.isBlue();
+	return mColor.isBlue();
 }
 inline bool Unit::isRed() const
 {
-	return color.isRed();
+	return mColor.isRed();
 }
 
 inline void Unit::reverseSide(){
-	if(x <= 5){
-		x = 5 - x;
-		y = 5 - y;
+	if(mX <= 5){
+		mX = 5 - mX;
+		mY = 5 - mY;
 	}
 	if(is1st()){
-		name = std::tolower(name);
+		id = std::tolower(id);
 	}
 	else{
-		name = std::toupper(name);
+		id = std::toupper(id);
 	}
-	color = color.reverseSide();
+	mColor = mColor.reverseSide();
 }
 
 

@@ -36,15 +36,24 @@ struct UnitColor{
 };
 
 class Unit{
+    
+    int mX;
+    int mY;
+    UnitColor mColor;
+    char id;
 public:
     constexpr static std::array<char, 16> nameList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-    int x, y;
-    UnitColor color;
-    char name;
-
     constexpr Unit();
     constexpr Unit(int x, int y, UnitColor color, char name);
+
+    const int x() const;
+    const int y() const;
+    const UnitColor& color() const;
+    const char name() const;
+
+    void setColor(UnitColor c);
+    void setPos(int x, int y);
 
     std::string toString() const;
 

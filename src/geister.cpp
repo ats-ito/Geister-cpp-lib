@@ -82,10 +82,10 @@ units{
 }
 {
     for(size_t i = 0; i < red1.size(); ++i){
-        units[red1[i] - 'A'].color = UnitColor::Red;
+        units[red1[i] - 'A'].setColor(UnitColor::Red);
     }
     for(size_t i = 0; i < red2.size(); ++i){
-        units[red2[i] - 'A' + 8].color = UnitColor::red;
+        units[red2[i] - 'A' + 8].setColor(UnitColor::red);
     }
     countTaken();
 }
@@ -100,9 +100,8 @@ units(game.units)
 
 void Geister::setState(const std::string& state){
     for(int i = 0; i < 16; ++i){
-        units[i].x = state[i * 3] - '0';
-        units[i].y = state[i * 3 + 1] - '0';
-        units[i].color = UnitColor(state[i * 3 + 2]);
+        units[i].setPos(state[i * 3] - '0', state[i * 3 + 1] - '0');
+        units[i].setColor(UnitColor(state[i * 3 + 2]));
     }
     for(const Unit& u: units){
         if(u.isEscape()){
@@ -119,17 +118,17 @@ void Geister::setColor(const std::string& first, const std::string& second){
     if(!first.empty()){
         for(char c = 'A'; c <= 'H'; ++c){
             if(first.find(c) != std::string::npos)
-                units[c - 'A'].color = UnitColor::Red;
+                units[c - 'A'].setColor(UnitColor::Red);
             else
-                units[c - 'A'].color = UnitColor::Blue;
+                units[c - 'A'].setColor(UnitColor::Blue);
         }
     }
     if(!second.empty()){
         for(char c = 'A'; c <= 'H'; ++c){
             if(second.find(c) != std::string::npos)
-                units[c - 'A'+8].color = UnitColor::red;
+                units[c - 'A'+8].setColor(UnitColor::red);
             else
-                units[c - 'A'+8].color = UnitColor::blue;
+                units[c - 'A'+8].setColor(UnitColor::blue);
         }
     }
     countTaken();
@@ -175,7 +174,7 @@ void Geister::printBoard() const
                 std::cout << "\e[34m";
             else if(u.isRed())
                 std::cout << "\e[31m";
-            std::cout << u.name;
+            std::cout << u.name();
             std::cout << "\e[0m" << ",";
         }
     }
@@ -187,14 +186,14 @@ void Geister::printBoard() const
             std::cout << " ";
             bool exist = false;
             for(const Unit& u: units){
-                if(u.x == j && u.y == i){
+                if(u.x() == j && u.y() == i){
                     if(u.isBlue() && u.isRed())
                         std::cout << "\e[35m";
                     else if(u.isBlue())
                         std::cout << "\e[34m";
                     else if(u.isRed())
                         std::cout << "\e[31m";
-                    std::cout << u.name;
+                    std::cout << u.name();
                     std::cout << "\e[0m";
                     exist = true;
                     break;
@@ -214,7 +213,7 @@ void Geister::printBoard() const
                 std::cout << "\e[34m";
             else if(u.isRed())
                 std::cout << "\e[31m";
-            std::cout << u.name;
+            std::cout << u.name();
             std::cout << "\e[0m" << ",";
         }
     }
@@ -222,7 +221,7 @@ void Geister::printBoard() const
     for(int i = 0; i < 16; ++i){
         const Unit& u = units[i];
         if(u.isEscape()){
-            std::cout << "Escape: " << "\e[34m" << u.name << "\e[0m" << std::endl;
+            std::cout << "Escape: " << "\e[34m" << u.name() << "\e[0m" << std::endl;
         }
     }
     std::cout << std::endl;
@@ -230,8 +229,8 @@ void Geister::printBoard() const
 
 bool Geister::canMove1st(const Unit& unit, const Direction direct) const
 {
-    int x = unit.x;
-    int y = unit.y;
+    int x = unit.x();
+    int y = unit.y();
     if(!unit.is1st())
         return false;
     if(direct == Direction::North)
@@ -249,7 +248,7 @@ bool Geister::canMove1st(const Unit& unit, const Direction direct) const
     else if(direct == Direction::South)
         y += 1;
     for(const Unit& u: units){
-        if(u.x == x && u.y == y && u.is1st())
+        if(u.x() == x && u.y() == y && u.is1st())
             return false;
     }
     return true;
@@ -257,8 +256,8 @@ bool Geister::canMove1st(const Unit& unit, const Direction direct) const
 
 bool Geister::canMove1st(const Unit& unit, const char direct) const
 {
-    int x = unit.x;
-    int y = unit.y;
+    int x = unit.x();
+    int y = unit.y();
     if(!unit.is1st())
         return false;
     if(direct == 0)
@@ -276,7 +275,7 @@ bool Geister::canMove1st(const Unit& unit, const char direct) const
     else if(direct == 3)
         y += 1;
     for(const Unit& u: units){
-        if(u.x == x && u.y == y && u.is1st())
+        if(u.x() == x && u.y() == y && u.is1st())
             return false;
     }
     return true;
@@ -289,8 +288,8 @@ std::vector<Hand>& Geister::getLegalMove1st() const
     for(int i = 0; i < 8; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
-            const int x = unit.x;
-            const int y = unit.y;
+            const int x = unit.x();
+            const int y = unit.y();
             if(y > 0 && !exist1st(x, y-1)){
                 legalMoves.emplace_back(unit, Direction::North);
             }
@@ -309,8 +308,8 @@ std::vector<Hand>& Geister::getLegalMove1st() const
 }
 
 bool Geister::canMove2nd(const Unit& unit, const char direct) const{
-    int x = unit.x;
-    int y = unit.y;
+    int x = unit.x();
+    int y = unit.y();
     if(!unit.is2nd())
         return false;
     if(direct == 0)
@@ -328,7 +327,7 @@ bool Geister::canMove2nd(const Unit& unit, const char direct) const{
     else if(direct == 3)
         y += 1;
     for(const Unit& u: units){
-        if(u.x == x && u.y == y && u.color.is2nd())
+        if(u.x() == x && u.y() == y && u.color().is2nd())
             return false;
     }
     return true;
@@ -341,8 +340,8 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
     for(int i = 8; i < 16; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
-            const int x = unit.x;
-            const int y = unit.y;
+            const int x = unit.x();
+            const int y = unit.y();
             if(y > 0 && !exist2nd(x, y-1)){
                 legalMoves.emplace_back(unit, Direction::North);
             }
@@ -361,10 +360,10 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
 }
 
 void Geister::move(const Hand& hand){
-    int x = hand.unit.x;
-    int y = hand.unit.y;
+    int x = hand.unit.x();
+    int y = hand.unit.y();
     if(hand.unit.is1st()){
-        Unit& unit = units[hand.unit.name - 'A'];
+        Unit& unit = units[hand.unit.name() - 'A'];
         if(hand.direct == Direction::North){
             --y;
         }
@@ -390,12 +389,11 @@ void Geister::move(const Hand& hand){
         if(Unit* target = getUnitByPos(x, y); target){
             take(*target);
         }
-        unit.x = x;
-        unit.y = y;
+        unit.setPos(x, y);
     }
     else 
     {
-        Unit& unit = units[hand.unit.name - 'a' + 8];
+        Unit& unit = units[hand.unit.name() - 'a' + 8];
         if(hand.direct == Direction::North){
             --y;
         }
@@ -421,8 +419,7 @@ void Geister::move(const Hand& hand){
         if(Unit* target = getUnitByPos(x, y); target){
             take(*target);
         }
-        unit.x = x;
-        unit.y = y;
+        unit.setPos(x, y);
     }
     if(++mTurn >= maxTurn && mResult == Result::OnPlay)
         mResult = Result::Draw;
@@ -433,7 +430,7 @@ Geister Geister::mask(){
     for(size_t i = 8; i < units.size(); ++i){
         Unit& u = res.units[i];
         if(u.onBoard())
-            u.color = UnitColor::unknown;
+            u.setColor(UnitColor::unknown);
     }
     return res;
 }

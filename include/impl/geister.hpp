@@ -3,10 +3,10 @@
 #endif
 inline void Geister::setColor(const char unit, const UnitColor color){
 	if('A' <= unit && unit <= 'H'){
-		units[unit-'A'].color = color;
+		units[unit-'A'].setColor(color);
 	}
 	else if('a' <= unit && unit <= 'h'){
-		units[unit-'a'+8].color = color;
+		units[unit-'a'+8].setColor(color);
 	}
 	countTaken();
 }
@@ -14,7 +14,7 @@ inline void Geister::setColor(const char unit, const UnitColor color){
 inline void Geister::printInfo() const
 {
 	for(int i = 0; i < 16; ++i){
-		std::cout << units[i].name << "(" << units[i].color.toChar() << "): " << units[i].x << ", " << units[i].y << std::endl;
+		std::cout << units[i].name() << "(" << units[i].color().toChar() << "): " << units[i].x() << ", " << units[i].y() << std::endl;
 	}
 }
 
@@ -33,9 +33,9 @@ inline std::string& Geister::toString() const
 {
 	static std::string res = "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u";
 	for(int i = 0; i < 16; ++i){
-		res[i*3] = '0' + units[i].x;
-		res[i*3 + 1] = '0' + units[i].y;
-		res[i*3 + 2] = units[i].color.toChar();
+		res[i*3] = '0' + units[i].x();
+		res[i*3 + 1] = '0' + units[i].y();
+		res[i*3 + 2] = units[i].color().toChar();
 	}
 	return res;
 }
@@ -43,8 +43,7 @@ inline Geister::operator std::string() const { return toString(); }
 
 
 inline void Geister::escape(Unit& unit){
-	unit.x = 8;
-	unit.y = 8;
+	unit.setPos(8, 8);
 	mResult = unit.is1st() ? Result::Escape1st : Result::Escape2nd;
 }
 
@@ -60,7 +59,7 @@ inline bool Geister::isEnd() const noexcept
 
 inline Unit* Geister::getUnitByPos(const int x, const int y){
 	for(int i = 0; i < 16; ++i){
-		if(units[i].x == x && units[i].y == y){
+		if(units[i].x() == x && units[i].y() == y){
 			return &units[i];
 		}
 	}
@@ -95,8 +94,7 @@ inline int Geister::takenCount(const UnitColor& c) const noexcept{
 }
 
 inline void Geister::take(Unit& unit){
-	unit.x = 9;
-	unit.y = 9;
+	unit.setPos(9, 9);
 	if(unit.is1st()){
 		if(unit.isRed()){
 			if(++takenRed1st == 4)
@@ -126,7 +124,7 @@ inline void Geister::take(Unit& unit){
 inline bool Geister::exist1st(const int x, const int y)const{
 	for(int i = 0; i < 8; ++i){
 		const Unit& u = units[i];
-		if(u.x == x && u.y == y){
+		if(u.x() == x && u.y() == y){
 			return true;
 		}
 	}
@@ -135,7 +133,7 @@ inline bool Geister::exist1st(const int x, const int y)const{
 inline bool Geister::exist2nd(const int x, const int y)const{
 	for(int i = 8; i < 16; ++i){
 		const Unit& u = units[i];
-		if(u.x == x && u.y == y){
+		if(u.x() == x && u.y() == y){
 			return true;
 		}
 	}

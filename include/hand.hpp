@@ -94,14 +94,10 @@ struct Hand{
     {
     }
 
-    Hand(std::string src)
+    Hand(std::string src):
+    unit{src[2] - '0', src[3] - '0', src[1], src[0]},
+    direct{src[5]}
     {
-        unit = Unit();
-        unit.name = src[0];
-        unit.color = src[1];
-        unit.x = src[2] - '0';
-        unit.y = src[3] - '0';
-        direct = Direction(src[5]);
     }
 
     std::string toString() const{

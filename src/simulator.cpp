@@ -42,9 +42,9 @@ std::vector<std::string>& Simulator::getLegalPattern() const
     std::vector<char> red;
     // 判明している色ごとにリスト化
     for(int u = 8; u < 16; ++u){
-        if(current.allUnit()[u].color == UnitColor::blue)
+        if(current.allUnit()[u].color() == UnitColor::blue)
             blue.emplace_back(u - 8 + 'A');
-        else if(current.allUnit()[u].color == UnitColor::red)
+        else if(current.allUnit()[u].color() == UnitColor::red)
             red.emplace_back(u - 8 + 'A');
     }
     // 判明している情報と矛盾するパターンを除外
@@ -86,21 +86,21 @@ void Simulator::setColorRandom(){
     int assumeTakeBlue = 4;
     int assumeTakeRed = 4;
     for(int i = 8; i < 16; ++i){
-        UnitColor color = current.allUnit()[i].color;
+        UnitColor color = current.allUnit()[i].color();
         if(color == UnitColor::blue)
             assumeTakeBlue -= 1;
         if(color == UnitColor::red){
             assumeTakeRed -= 1;
-            red += std::toupper(current.allUnit()[i].name);
+            red += std::toupper(current.allUnit()[i].name());
         }
     }
     for(int i = 8; i < 16; ++i){
-        if(current.allUnit()[i].color == UnitColor::unknown){
+        if(current.allUnit()[i].color() == UnitColor::unknown){
             if(assumeTakeBlue > 0 && BorR(mt)){
                 assumeTakeBlue -= 1;
             }
             else if(assumeTakeRed > 0){
-                red += std::toupper(current.allUnit()[i].name);
+                red += std::toupper(current.allUnit()[i].name());
                 assumeTakeRed -= 1;
             }
             else{
@@ -138,7 +138,7 @@ double Simulator::run(const size_t count){
         current = root;
         setColor(getRandomPattern());
         // current.printBoard();
-        // std::cout << current.getResult() << "\n";
+        // std::cout << current.result() << "\n";
         // setColorRandom();
         result += playout();
     }

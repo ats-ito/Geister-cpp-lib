@@ -168,11 +168,11 @@ int run(void* dll1, void* dll2){
     while(!game.isEnd()){
         Hand hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
-            std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
+            std::cout << "1stPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
-            logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+            logFile << "Move," << "1," << hand.unit.name() << "," << hand.direct.toChar() << "," << game << std::endl;
         }
 #endif
         game.move(hand);
@@ -204,11 +204,11 @@ int run(void* dll1, void* dll2){
         hand = Hand(decideHand2(game.mask()));
         game.changeSide();
         if(outputLevel > 1){
-            std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
+            std::cout << "2ndPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
-            logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+            logFile << "Move," << "2," << hand.unit.name() << "," << hand.direct.toChar() << "," << game << std::endl;
         }
 #endif
         game.changeSide();
