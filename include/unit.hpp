@@ -44,7 +44,6 @@ class Unit{
 public:
     constexpr static std::array<char, 16> nameList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-    constexpr Unit();
     constexpr Unit(int x, int y, UnitColor color, char name);
 
     const int x() const;

@@ -2,7 +2,6 @@
 #include "unit.hpp"
 #endif
 
-inline constexpr Unit::Unit():mX{-1}, mY{-1}, mColor{UnitColor::Unknown}, id{' '}{}
 inline constexpr Unit::Unit(int x, int y, UnitColor color, char name): mX{x}, mY{y}, mColor{color}, id{name}{}
 
 inline std::string Unit::toString() const{

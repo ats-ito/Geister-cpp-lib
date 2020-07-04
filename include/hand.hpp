@@ -86,10 +86,6 @@ struct Hand{
     Unit unit;
     Direction direct;
 
-    Hand(): unit(Unit()), direct(Direction::DontMove)
-    {
-    }
-
     Hand(Unit u, Direction d): unit(u), direct(d)
     {
     }
