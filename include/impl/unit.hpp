@@ -14,7 +14,7 @@ inline const int Unit::x() const
 }
 inline const int Unit::y() const
 {
-	return mX;
+	return mY;
 }
 inline const UnitColor& Unit::color() const
 {
