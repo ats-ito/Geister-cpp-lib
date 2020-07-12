@@ -90,8 +90,8 @@ struct Hand{
     {
     }
 
-    Hand(std::string src):
-    unit{src[2] - '0', src[3] - '0', src[1], src[0]},
+    Hand(const std::string& src):
+    unit{src[2]-'0', src[3]-'0', src[1], name2id(src[0])},
     direct{src[5]}
     {
     }

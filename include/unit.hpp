@@ -35,21 +35,24 @@ struct UnitColor{
     UnitColor reverseSide() const;
 };
 
+constexpr uint8_t name2id(char name);
+
 class Unit{
     
     int8_t mX;
     int8_t mY;
     UnitColor mColor;
-    char id;
+    uint8_t mID;
 public:
     constexpr static std::array<char, 16> nameList = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-    constexpr Unit(int x, int y, UnitColor color, char name);
+    constexpr Unit(int8_t x, int8_t y, UnitColor color, uint8_t id);
 
     const int x() const;
     const int y() const;
     const UnitColor& color() const;
     const char name() const;
+    const uint8_t id() const;
 
     void setColor(UnitColor c);
     void setPos(int x, int y);

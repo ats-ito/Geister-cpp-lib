@@ -1,11 +1,36 @@
 #ifndef UNIT_HPP
 #include "unit.hpp"
 #endif
+#include <cassert>
 
-inline constexpr Unit::Unit(int x, int y, UnitColor color, char name): mX{x}, mY{y}, mColor{color}, id{name}{}
+constexpr uint8_t name2id(const char name){
+	assert(('A' <= name && name <= 'H') || ('a' <= name && name <= 'h'));
+	switch (name)
+	{
+	case 'A': return 0;
+	case 'B': return 1;
+	case 'C': return 2;
+	case 'D': return 3;
+	case 'E': return 4;
+	case 'F': return 5;
+	case 'G': return 6;
+	case 'H': return 7;
+	case 'a': return 8;
+	case 'b': return 9;
+	case 'c': return 10;
+	case 'd': return 11;
+	case 'e': return 12;
+	case 'f': return 13;
+	case 'g': return 14;
+	case 'h': return 15;
+	default: return 16;
+	}
+}
+
+inline constexpr Unit::Unit(int8_t x, int8_t y, UnitColor color, uint8_t id): mX{x}, mY{y}, mColor{color}, mID{id}{}
 
 inline std::string Unit::toString() const{
-	return std::string{id} + std::string{mColor.toChar()} + std::to_string(mX) + std::to_string(mY);
+	return std::string{nameList[mID]} + std::string{mColor.toChar()} + std::to_string(mX) + std::to_string(mY);
 }
 
 inline const int Unit::x() const
@@ -22,7 +47,11 @@ inline const UnitColor& Unit::color() const
 }
 inline const char Unit::name() const
 {
-	return id;
+	return nameList[mID];
+}
+inline const uint8_t Unit::id() const
+{
+	return mID;
 }
 
 inline void Unit::setColor(UnitColor c){
@@ -72,12 +101,7 @@ inline void Unit::reverseSide(){
 		mX = 5 - mX;
 		mY = 5 - mY;
 	}
-	if(is1st()){
-		id = std::tolower(id);
-	}
-	else{
-		id = std::toupper(id);
-	}
+	mID ^= 0b1000;
 	mColor = mColor.reverseSide();
 }
 
