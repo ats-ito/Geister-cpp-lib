@@ -37,8 +37,8 @@ struct UnitColor{
 
 class Unit{
     
-    int mX;
-    int mY;
+    int8_t mX;
+    int8_t mY;
     UnitColor mColor;
     char id;
 public:
