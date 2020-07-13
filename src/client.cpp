@@ -70,7 +70,7 @@ int run(TCPClient& client, HANDLE_TYPE& handle){
             if(output > 2)
                 game.printBoard();
             Hand hand = Hand(decideHand(game));
-            std::string name{hand.unit.name};
+            std::string name{hand.unit.name()};
             std::string direct{hand.direct.toChar()};
             if(output > 1)
                 std::cout << name << " " << direct << " " << game.toString() << std::endl;

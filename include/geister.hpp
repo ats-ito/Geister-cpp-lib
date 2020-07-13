@@ -18,12 +18,17 @@ protected:
     int takenBlue2nd;
     int takenRed1st;
     int takenRed2nd;
-    Result result;
-public:
-    int turn;
-    std::vector<std::pair<Hand, std::string>> history;
+    Result mResult;
+    int mTurn;
+    // std::vector<std::pair<Hand, std::string>> mHistory;
 
-    static std::array<char, 16> unitList;
+    void countTaken();
+
+    void take(Unit& unit);
+    
+    void escape(Unit& unit);
+public:
+    constexpr static uint16_t maxTurn = 200;
 
     Geister();
     Geister(const std::string& info);
@@ -32,35 +37,15 @@ public:
 
     void setState(const std::string& state);
     void setColor(const std::string& first, const std::string& second);
-    void setColor(const char unit, const UnitColor color){
-        if('A' <= unit && unit <= 'H'){
-            units[unit-'A'].color = color;
-        }
-        else if('a' <= unit && unit <= 'h'){
-            units[unit-'a'+8].color = color;
-        }
-        countTaken();
-    }
+    void setColor(const char unit, const UnitColor color);
 
     void initialize();
 
     void printBoard() const;
-    void printInfo() const
-    {
-        for(int i = 0; i < 16; ++i){
-            std::cout << units[i].name << "(" << units[i].color.toChar() << "): " << units[i].x << ", " << units[i].y << std::endl;
-        }
-    }
-    void printAll() const
-    {
-        printBoard();
-        printInfo();
-    }
+    void printInfo() const;
+    void printAll() const;
 
-    const std::array<Unit, 16>& allUnit() const
-    {
-        return units;
-    }
+    const std::array<Unit, 16>& allUnit() const noexcept;
 
     bool canMove1st(const Unit& unit, const Direction direct) const;
 
@@ -72,141 +57,33 @@ public:
 
     std::vector<Hand>& getLegalMove2nd() const;
 
-    std::string& toString() const
-    {
-        static std::string res = "14U24U34U44U15U25U35U45U41u31u21u11u40u30u20u10u";
-        for(int i = 0; i < 16; ++i){
-            res[i*3] = '0' + units[i].x;
-            res[i*3 + 1] = '0' + units[i].y;
-            res[i*3 + 2] = units[i].color.toChar();
-        }
-        return res;
-    }
+    std::string& toString() const;
+    operator std::string() const;
 
-    void take(Unit& unit){
-        unit.x = 9;
-        unit.y = 9;
-        if(unit.is1st()){
-            if(unit.color.isRed()){
-                if(++takenRed1st == 4)
-                    result = Result::TakenRed1st;
-                return;
-            }
-            else if(unit.color.isBlue()){
-                if(++takenBlue1st == 4)
-                    result = Result::TakeBlue2nd;
-                return;
-            }
-        }
-        else if(unit.is2nd()){
-            if(unit.color.isRed()){
-                if(++takenRed2nd == 4)
-                    result = Result::TakenRed2nd;
-                return;
-            }
-            else if(unit.color.isBlue()){
-                if(++takenBlue2nd == 4)
-                    result = Result::TakeBlue1st;
-                return;
-            }
-        }
-    }
-    
-    void escape(Unit& unit){
-        unit.x = 8;
-        unit.y = 8;
-        if(unit.is1st()){
-            result = Result::Escape1st;
-        }
-        else{
-            result = Result::Escape2nd;
-        }
-    }
+    void move(const Hand& hand);
 
-    void move(const char u, const char direct);
+    Result result() const noexcept;
 
-    void move(const Hand& h){
-        move(h.unit.name, h.direct.toChar());
-    }
+    int turn() const noexcept;
 
-    Result getResult() const
-    {
-        return result;
-    }
+    bool isEnd() const noexcept;
 
-    bool isEnd() const
-    {
-        return result != Result::OnPlay;
-    }
+    Unit* getUnitByPos(const int x, const int y);
 
-    Unit* getUnitByPos(const int x, const int y){
-        for(int i = 0; i < 16; ++i){
-            if(units[i].x == x && units[i].y == y){
-                return &units[i];
-            }
-        }
-        return nullptr;
-    }
+    bool exist1st(const int x, const int y)const;
+    bool exist2nd(const int x, const int y)const;
 
     Geister mask();
 
     void changeSide();
 
-    void countTaken(){
-        if((takenBlue1st = std::count_if(units.begin(), units.begin()+8,
-            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
-            result = Result::TakeBlue2nd;
-        if((takenRed1st = std::count_if(units.begin(), units.begin()+8,
-            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
-            result = Result::TakenRed1st;
-        if((takenBlue2nd = std::count_if(units.begin()+8, units.end(),
-            [&](Unit& u){ return u.isTaken() && u.color.isBlue(); })) == 4)
-            result = Result::TakeBlue1st;
-        if((takenRed2nd = takenRed2nd = std::count_if(units.begin()+8, units.end(),
-            [&](Unit& u){ return u.isTaken() && u.color.isRed(); })) == 4)
-            result = Result::TakenRed2nd;
-    }
-
-    operator std::string() const { return toString(); }
-
-    int takenCount(const UnitColor& c) const{
-        if(c == UnitColor::Blue)
-            return takenBlue1st;
-        if(c == UnitColor::Red)
-            return takenRed1st;
-        if(c == UnitColor::blue)
-            return takenBlue2nd;
-        if(c == UnitColor::red)
-            return takenRed2nd;
-        return -1;
-    }
-
-    Hand diff(const Geister& target);
-
-    bool exist1st(const int x, const int y)const{
-        for(int i = 0; i < 8; ++i){
-            const Unit& u = units[i];
-            if(u.x == x && u.y == y){
-                return true;
-            }
-        }
-        return false;
-    }
-    bool exist2nd(const int x, const int y)const{
-        for(int i = 8; i < 16; ++i){
-            const Unit& u = units[i];
-            if(u.x == x && u.y == y){
-                return true;
-            }
-        }
-        return false;
-    }
+    int takenCount(const UnitColor& c) const noexcept;
 };
-
-Hand diff(const Geister& left, const Geister& right);
 
 inline std::ostream& operator<<(std::ostream& stream, const Geister& value){
     return stream << value.toString();
 }
+
+#include "impl/geister.hpp"
 
 #endif

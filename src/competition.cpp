@@ -166,14 +166,13 @@ int run(void* dll1, void* dll2){
     Result result = Result::OnPlay;
 
     while(!game.isEnd()){
-        if(game.turn >= 200) break;
         Hand hand = Hand(decideHand1(game.mask()));
         if(outputLevel > 1){
-            std::cout << "1stPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
+            std::cout << "1stPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
-            logFile << "Move," << "1," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+            logFile << "Move," << "1," << hand.unit.name() << "," << hand.direct.toChar() << "," << game << std::endl;
         }
 #endif
         game.move(hand);
@@ -198,18 +197,18 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.getResult();
+        result = game.result();
         if(game.isEnd())
             break;
         game.changeSide();
         hand = Hand(decideHand2(game.mask()));
         game.changeSide();
         if(outputLevel > 1){
-            std::cout << "2ndPlayer: " << hand.unit.name << " " << hand.direct.toChar() << '\t' << game << std::endl;
+            std::cout << "2ndPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
         if(logEnable){
-            logFile << "Move," << "2," << hand.unit.name << "," << hand.direct.toChar() << "," << game << std::endl;
+            logFile << "Move," << "2," << hand.unit.name() << "," << hand.direct.toChar() << "," << game << std::endl;
         }
 #endif
         game.changeSide();
@@ -236,18 +235,18 @@ int run(void* dll1, void* dll2){
                 game.changeSide();
             }
         }
-        result = game.getResult();
+        result = game.result();
     }
     // game.turn++;
     if(outputLevel > 0){
-        std::cout << result << ": " << game.turn << '\t' << game << std::endl;
+        std::cout << result << ": " << game.turn() << '\t' << game << std::endl;
     }
     int resultInt = result == Result::Draw ? 0 : static_cast<int>(result);
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     if(logEnable){
         logFile << "Result," << resultInt << "," << game << std::endl;
-        logFile << "Turn," << game.turn << std::endl;
-        digestFile << resultInt << "," << game.turn << std::endl;
+        logFile << "Turn," << game.turn() << std::endl;
+        digestFile << resultInt << "," << game.turn() << std::endl;
     }
 #endif
     return resultInt;
