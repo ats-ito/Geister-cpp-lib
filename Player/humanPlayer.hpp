@@ -17,19 +17,15 @@ public:
         game.setState(res);
         game.printBoard();
         std::string ret;
-        Unit unit;
-        char direct;
 
         while(true){
             std::cin >> ret;
-            unit = game.allUnit()[ret[0] - 'A'];
-            direct = ret[1];
-            if(game.canMove1st(unit, Direction(direct))){
-                break;
+            Unit unit = game.allUnit()[ret[0] - 'A'];
+            Direction direct{ret[1]};
+            if(game.canMove1st(unit, direct)){
+                return Hand(unit, direct);
             }
             std::cout << "It's Illegal Move! " << Hand(unit, direct).toString() << std::endl;
         }
-
-        return Hand(unit, direct);
     }
 };
