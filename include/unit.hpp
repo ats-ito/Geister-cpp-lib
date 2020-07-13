@@ -52,7 +52,7 @@ public:
     const int y() const;
     const UnitColor& color() const;
     const char name() const;
-    const uint8_t id() const;
+    const int id() const;
 
     void setColor(UnitColor c);
     void setPos(int x, int y);

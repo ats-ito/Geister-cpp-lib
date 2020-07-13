@@ -49,7 +49,7 @@ inline const char Unit::name() const
 {
 	return nameList[mID];
 }
-inline const uint8_t Unit::id() const
+inline const int Unit::id() const
 {
 	return mID;
 }
