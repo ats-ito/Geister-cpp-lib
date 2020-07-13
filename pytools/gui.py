@@ -24,6 +24,8 @@ state_index = 0
 
 game = None
 
+nameList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
 def show_state(state):
     canvas.delete('all')
     canvas.create_image(200,250,image=img)
@@ -32,26 +34,35 @@ def show_state(state):
         y = int(state[i*3+1])
         xPos = x*54+65
         yPos = y*54+115
+        nameY = y*54+100 if i < 8 else y*54+130
         if state[i*3+2] == 'B':
             if x < 6:
                 canvas.create_image(xPos, yPos, image=blue1)
+                canvas.create_text(xPos-15, nameY, text=nameList[i], font=("Consolas", 18, "bold"), fill='black')
             elif x == 8:
                 canvas.create_image(-54+65, 115, image=blue1)
+                canvas.create_text(-54+65, nameY, text=nameList[i])
         if state[i*3+2] == 'R':
             if x < 6:
                 canvas.create_image(xPos, yPos, image=red1)
+                canvas.create_text(xPos-15, nameY, text=nameList[i], font=("Consolas", 18, "bold"), fill='black')
             elif x == 8:
                 canvas.create_image(-54+65, yPos, image=red1)
+                canvas.create_text(-54+65, nameY, text=nameList[i])
         if state[i*3+2] == 'b':
             if x < 6:
                 canvas.create_image(xPos, yPos, image=blue2)
+                canvas.create_text(xPos-15, nameY, text=nameList[i], font=("Consolas", 18, "bold"), fill='black')
             elif x == 8:
                 canvas.create_image(-54+65, yPos, image=blue2)
+                canvas.create_text(-54+65, nameY, text=nameList[i])
         if state[i*3+2] == 'r':
             if x < 6:
                 canvas.create_image(xPos, yPos, image=red2)
+                canvas.create_text(xPos-15, nameY, text=nameList[i], font=("Consolas", 18, "bold"), fill='black')
             elif x == 8:
                 canvas.create_image(-54+65, yPos, image=red2)
+                canvas.create_text(-54+65, nameY, text=nameList[i])
     print(state)
 
 def button_click():
