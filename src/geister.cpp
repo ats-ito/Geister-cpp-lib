@@ -61,6 +61,10 @@ units{
 
 Geister::Geister(const std::string& red1, const std::string& red2):
 mResult(Result::OnPlay),
+takenBlue1st(0),
+takenBlue2nd(0),
+takenRed1st(0),
+takenRed2nd(0),
 mTurn(0),
 units{
     Unit(1, 4, 'B', 0x0),
@@ -87,7 +91,6 @@ units{
     for(size_t i = 0; i < red2.size(); ++i){
         units[red2[i] - 'A' + 8].setColor(UnitColor::red);
     }
-    countTaken();
 }
 
 Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
