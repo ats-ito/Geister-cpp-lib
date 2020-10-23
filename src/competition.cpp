@@ -39,6 +39,11 @@ static std::string getFileName(std::string path){
     return std::string(&path[last]);
 }
 
+#ifdef _WIN32
+using HANDLE_TYPE = HMODULE;
+#else
+using HANDLE_TYPE = void*;
+#endif
 
 bool logEnable = false;
 std::string logRoot = "log";
@@ -51,29 +56,29 @@ std::ofstream digestFile;
 int outputLevel = 2;
 int mask = 0;
 
-using T = std::string (*)(std::string);
-using T2 = std::string (*)();
-
+template<class T>
+T dynamicLink(HANDLE_TYPE& handle, const char* funcName){
 #ifdef _WIN32
-int run(HMODULE dll1, HMODULE dll2){
+    T func=(T)GetProcAddress(handle, funcName);
 #else
-int run(void* dll1, void* dll2){
+    T func=(T)dlsym(handle, funcName);
 #endif
-#ifdef _WIN32
-    T decideHand1=(T)GetProcAddress(dll1, "decideHand");
-    T decideHand2=(T)GetProcAddress(dll2, "decideHand");
-    T2 decideRed1=(T2)GetProcAddress(dll1, "decideRed");
-    T2 decideRed2=(T2)GetProcAddress(dll2, "decideRed");
-#else
-    T decideHand1=(T)dlsym(dll1, "decideHand");
-    T decideHand2=(T)dlsym(dll2, "decideHand");
-    T2 decideRed1=(T2)dlsym(dll1, "decideRed");
-    T2 decideRed2=(T2)dlsym(dll2, "decideRed");
-#endif
-    if(!decideHand1 || !decideHand2){
-        std::cerr << "cant call decideHand" << std::endl;
+    if(!func){
+        std::cerr << "cant call " << funcName << std::endl;
         exit(1);
     }
+    return func;
+}
+
+int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
+    using T = std::string (*)(std::string);
+    using T2 = std::string (*)();
+
+    T decideHand1 = dynamicLink<T>(dll1, "decideHand");
+    T2 decideRed1 = dynamicLink<T2>(dll1, "decideRed");
+    T decideHand2 = dynamicLink<T>(dll2, "decideHand");
+    T2 decideRed2 = dynamicLink<T2>(dll2, "decideRed");
+    
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     std::ofstream logFile;
     if(logEnable){
@@ -314,15 +319,13 @@ int main(int argc, char** argv){
         return 1;
     }
 
+    HANDLE_TYPE handle1;
+    HANDLE_TYPE handle2;
 #ifdef _WIN32
-    HMODULE handle1;
-    HMODULE handle2;
     handle1=LoadLibrary(dllPath1.c_str());
     handle2=LoadLibrary(dllPath2.c_str());
 #else
-    void* handle1;
     handle1=dlopen(dllPath1.c_str(), RTLD_LAZY);
-    void* handle2;
     handle2=dlopen(dllPath2.c_str(), RTLD_LAZY);
 #endif
     if(!handle1 || !handle2){
