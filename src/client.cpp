@@ -39,9 +39,11 @@ T dynamicLink(HANDLE_TYPE& handle, const char* funcName){
 int run(TCPClient& client, HANDLE_TYPE& handle){
     using T = std::string (*)(std::string);
     using T2 = std::string (*)(void);
+    using T3 = void (*)(std::string);
 
     T decideHand = dynamicLink<T>(handle, "decideHand");
     T2 decideRed = dynamicLink<T2>(handle, "decideRed");
+    T3 finalize = dynamicLink<T3>(handle, "finalize");
 
     client.connect(10);
     
@@ -79,6 +81,7 @@ int run(TCPClient& client, HANDLE_TYPE& handle){
     }
     std::string result = res.substr(0, 3);
     game.setState(res.substr(4));
+    finalize(game);
     std::map<std::string, double> score = {{"WON", 1}, {"LST", 0}, {"DRW", 0.1}};
     if(output > 1)
         game.printBoard();

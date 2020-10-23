@@ -7,8 +7,8 @@ import tcpClient
 import execute
 
 
-def run(th, port):
-    cl = tcpClient.Client("localhost", port)
+def run(th, host, port):
+    cl = tcpClient.Client(host, port)
 
     red = "SET:" + th.send("red") + "\r\n"
     print(red)
@@ -43,10 +43,11 @@ if __name__ == "__main__":
 
     # 3. parser.add_argumentで受け取る引数を追加していく
     parser.add_argument('player', help='この引数の説明（なくてもよい）')    # 必須の引数を追加
+    parser.add_argument('-H', '--host', type=str, default='localhost')   # よく使う引数なら省略形があると使う時に便利
     parser.add_argument('-p', '--port', type=int, default=10000)   # よく使う引数なら省略形があると使う時に便利
 
     args = parser.parse_args()    # 4. 引数を解析
 
     e = execute.Execute([args.player])
-    run(e, args.port)
+    run(e, args.host, args.port)
     e.send("exit")
