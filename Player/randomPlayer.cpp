@@ -18,4 +18,10 @@ std::string decideRed(){
     player.initialize();
     return player.decideRed();
 }
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void finalize(std::string res){
+    player.finalize(res);
+}
 }

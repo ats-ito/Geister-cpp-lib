@@ -73,11 +73,14 @@ T dynamicLink(HANDLE_TYPE& handle, const char* funcName){
 int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
     using T = std::string (*)(std::string);
     using T2 = std::string (*)();
+    using T3 = void (*)(std::string);
 
     T decideHand1 = dynamicLink<T>(dll1, "decideHand");
     T2 decideRed1 = dynamicLink<T2>(dll1, "decideRed");
+    T3 finalize1 = dynamicLink<T3>(dll1, "finalize");
     T decideHand2 = dynamicLink<T>(dll2, "decideHand");
     T2 decideRed2 = dynamicLink<T2>(dll2, "decideRed");
+    T3 finalize2 = dynamicLink<T3>(dll2, "finalize");
     
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     std::ofstream logFile;
@@ -242,6 +245,8 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         }
         result = game.result();
     }
+    finalize1(game);
+    finalize2(game);
     // game.turn++;
     if(outputLevel > 0){
         std::cout << result << ": " << game.turn() << '\t' << game << std::endl;
