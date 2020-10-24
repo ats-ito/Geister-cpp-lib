@@ -30,6 +30,9 @@ namespace fs = std::experimental::filesystem;
 using namespace nonsugar;
 
 static std::string getFileName(std::string path){
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
+            return fs::path(path).filename().generic_string();
+#else
     int last = 0;
     for(size_t i = 0; i < path.size(); ++i){
         if(path[i] == '/' || path[i] == '\\'){
@@ -37,6 +40,7 @@ static std::string getFileName(std::string path){
         }
     }
     return std::string(&path[last]);
+#endif
 }
 
 #ifdef _WIN32
@@ -120,8 +124,6 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
-    
-    int turn = 0;
 
     std::uniform_int_distribution<int> serector(0, pattern.size() - 1);
     std::string red_ptn1;
@@ -266,15 +268,15 @@ int main(int argc, char** argv){
     std::cin.tie(0);
     std::ios::sync_with_stdio(false);
     
-    double match = 1;
+    uint64_t match = 1;
     try {
         auto const cmd = command<char>("competition", "geister competition")
-            .flag<'h'>({'h'}, {"help"}, "produce help message")
-            .flag<'v'>({'v'}, {"version"}, "print version string")
-            .flag<'l'>({'l'}, {"log"}, "enable log record")
-            .flag<'d', std::string>({'d'}, {"dest"}, "N", "log destination")
+            .flag<'h'>({'h'}, {"help"}, "", "produce help message")
+            .flag<'v'>({'v'}, {"version"}, "", "print version string")
+            .flag<'l'>({'l'}, {"log"}, "", "enable log record")
+            .flag<'d', std::string>({'d'}, {"dest"}, "PATH", "log destination")
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
-            .flag<'c', int>({'c'}, {"match"}, "N", "match count")
+            .flag<'c', uint64_t>({'c'}, {"match"}, "N", "match count")
             .flag<'m', int>({'m'}, {"mask"}, "N", "mask player number")
             .argument<'p', std::vector<std::string>>("Player-Path")
             ;
@@ -306,13 +308,8 @@ int main(int argc, char** argv){
         if(opts.get<'p'>().size() > 0){
             dllPath1 = opts.get<'p'>()[0];
             dllPath2 = opts.get<'p'>()[1];
-#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
-            dllName1 = fs::path(dllPath1).filename().generic_string();
-            dllName2 = fs::path(dllPath2).filename().generic_string();
-#else
             dllName1 = getFileName(dllPath1);
             dllName2 = getFileName(dllPath2);
-#endif
         }
         else{
             std::cerr << usage(cmd);
@@ -363,7 +360,7 @@ int main(int argc, char** argv){
     int win1st = 0;
     int win2nd = 0;
     int draw = 0;
-    for(int i = 0; i < match; ++i){
+    for(size_t i = 0; i < match; ++i){
         if(outputLevel > 0){
             std::cout << dllName1 << " vs " << dllName2 << std::endl;
             std::cout << "Match: " << i << std::endl;

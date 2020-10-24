@@ -43,7 +43,8 @@ public:
     virtual std::string decideHand(std::string res) = 0;
     virtual std::string decideRed() = 0;
 
-    virtual void finalize(std::string endState){
+    virtual void finalize(const std::string& endState){
+        game.setState(endState);
     }
 };
 

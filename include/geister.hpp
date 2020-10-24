@@ -13,13 +13,13 @@
 class Geister
 {
 protected:
-    std::array<Unit, 16> units;
+    Result mResult;
     int takenBlue1st;
     int takenBlue2nd;
     int takenRed1st;
     int takenRed2nd;
-    Result mResult;
     int mTurn;
+    std::array<Unit, 16> units;
     // std::vector<std::pair<Hand, std::string>> mHistory;
 
     void countTaken();

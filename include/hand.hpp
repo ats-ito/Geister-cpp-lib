@@ -91,7 +91,7 @@ struct Hand{
     }
 
     Hand(const std::string& src):
-    unit{src[2]-'0', src[3]-'0', src[1], name2id(src[0])},
+    unit{static_cast<int8_t>(src[2]-'0'), static_cast<int8_t>(src[3]-'0'), src[1], name2id(src[0])},
     direct{src[5]}
     {
     }

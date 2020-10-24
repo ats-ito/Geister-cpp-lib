@@ -98,16 +98,16 @@ int main(int argc, char** argv){
     int port = 10001;
     std::string libPath;
     
-    int playCount = 1;
+    uint64_t playCount = 1;
 
     try {
         auto const cmd = command<char>("client", "geister client")
-            .flag<'h'>({'h'}, {"help"}, "produce help message")
-            .flag<'v'>({'v'}, {"version"}, "print version string")
+            .flag<'h'>({'h'}, {"help"}, "", "produce help message")
+            .flag<'v'>({'v'}, {"version"}, "", "print version string")
             .flag<'p', int>({'p'}, {"port"}, "N", "connect port")
-            .flag<'H', std::string>({'H'}, {"host"}, "host string", "connect host")
-            .flag<'c', int>({'c'}, {"play"}, "N", "play count")
-            .flag<'r'>({'r'}, {"visible"}, "visible response")
+            .flag<'H', std::string>({'H'}, {"host"}, "HOST_NAME", "connect host")
+            .flag<'c', uint64_t>({'c'}, {"play"}, "N", "play count")
+            .flag<'r'>({'r'}, {"visible"}, "", "visible response")
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
             .argument<'d', std::vector<std::string>>("Library-Path")
             ;
