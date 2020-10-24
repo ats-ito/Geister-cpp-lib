@@ -120,8 +120,6 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
-    
-    int turn = 0;
 
     std::uniform_int_distribution<int> serector(0, pattern.size() - 1);
     std::string red_ptn1;
@@ -266,15 +264,15 @@ int main(int argc, char** argv){
     std::cin.tie(0);
     std::ios::sync_with_stdio(false);
     
-    double match = 1;
+    uint64_t match = 1;
     try {
         auto const cmd = command<char>("competition", "geister competition")
-            .flag<'h'>({'h'}, {"help"}, "produce help message")
-            .flag<'v'>({'v'}, {"version"}, "print version string")
-            .flag<'l'>({'l'}, {"log"}, "enable log record")
-            .flag<'d', std::string>({'d'}, {"dest"}, "N", "log destination")
+            .flag<'h'>({'h'}, {"help"}, "", "produce help message")
+            .flag<'v'>({'v'}, {"version"}, "", "print version string")
+            .flag<'l'>({'l'}, {"log"}, "", "enable log record")
+            .flag<'d', std::string>({'d'}, {"dest"}, "PATH", "log destination")
             .flag<'o', int>({'o'}, {"output"}, "N", "output level")
-            .flag<'c', int>({'c'}, {"match"}, "N", "match count")
+            .flag<'c', uint64_t>({'c'}, {"match"}, "N", "match count")
             .flag<'m', int>({'m'}, {"mask"}, "N", "mask player number")
             .argument<'p', std::vector<std::string>>("Player-Path")
             ;
@@ -363,7 +361,7 @@ int main(int argc, char** argv){
     int win1st = 0;
     int win2nd = 0;
     int draw = 0;
-    for(int i = 0; i < match; ++i){
+    for(size_t i = 0; i < match; ++i){
         if(outputLevel > 0){
             std::cout << dllName1 << " vs " << dllName2 << std::endl;
             std::cout << "Match: " << i << std::endl;

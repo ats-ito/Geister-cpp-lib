@@ -48,11 +48,11 @@ public:
 
     constexpr Unit(int8_t x, int8_t y, UnitColor color, uint8_t id);
 
-    const int x() const;
-    const int y() const;
+    int x() const;
+    int y() const;
     const UnitColor& color() const;
-    const char name() const;
-    const int id() const;
+    char name() const;
+    int id() const;
 
     void setColor(UnitColor c);
     void setPos(int x, int y);

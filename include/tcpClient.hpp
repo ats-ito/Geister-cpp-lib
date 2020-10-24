@@ -20,14 +20,14 @@ public:
     {
     }
 
-    void connect(const uint32_t retryCount = 1){
+    void connect(const size_t retryCount = 1){
 #ifdef USE_ASIO
         asio::ip::tcp::resolver resolver(io_service);
         asio::ip::tcp::resolver::query query(host, "http");
         auto ip = resolver.resolve(query)->endpoint().address();
 #endif
 
-        for (int counter = 1; counter <= 5; ++counter){
+        for (size_t counter = 1; counter <= 5; ++counter){
             try{
 #ifdef USE_ASIO
                 sock.connect(asio::ip::tcp::endpoint(ip, port));
@@ -42,7 +42,7 @@ public:
                     exit(EXIT_FAILURE);
                 }
                 close();
-                std::cerr << counter << std::endl;
+                std::cerr << "connect is failure. retry: " << counter << std::endl;
                 std::this_thread::sleep_for(std::chrono::microseconds(100000*counter));
             }
         }

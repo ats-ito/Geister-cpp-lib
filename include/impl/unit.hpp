@@ -33,11 +33,11 @@ inline std::string Unit::toString() const{
 	return std::string{nameList[mID]} + std::string{mColor.toChar()} + std::to_string(mX) + std::to_string(mY);
 }
 
-inline const int Unit::x() const
+inline int Unit::x() const
 {
 	return mX;
 }
-inline const int Unit::y() const
+inline int Unit::y() const
 {
 	return mY;
 }
@@ -45,11 +45,11 @@ inline const UnitColor& Unit::color() const
 {
 	return mColor;
 }
-inline const char Unit::name() const
+inline char Unit::name() const
 {
 	return nameList[mID];
 }
-inline const int Unit::id() const
+inline int Unit::id() const
 {
 	return mID;
 }
