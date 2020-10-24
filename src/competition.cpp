@@ -30,6 +30,9 @@ namespace fs = std::experimental::filesystem;
 using namespace nonsugar;
 
 static std::string getFileName(std::string path){
+#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
+            return fs::path(path).filename().generic_string();
+#else
     int last = 0;
     for(size_t i = 0; i < path.size(); ++i){
         if(path[i] == '/' || path[i] == '\\'){
@@ -37,6 +40,7 @@ static std::string getFileName(std::string path){
         }
     }
     return std::string(&path[last]);
+#endif
 }
 
 #ifdef _WIN32
@@ -304,13 +308,8 @@ int main(int argc, char** argv){
         if(opts.get<'p'>().size() > 0){
             dllPath1 = opts.get<'p'>()[0];
             dllPath2 = opts.get<'p'>()[1];
-#if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
-            dllName1 = fs::path(dllPath1).filename().generic_string();
-            dllName2 = fs::path(dllPath2).filename().generic_string();
-#else
             dllName1 = getFileName(dllPath1);
             dllName2 = getFileName(dllPath2);
-#endif
         }
         else{
             std::cerr << usage(cmd);

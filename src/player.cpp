@@ -78,6 +78,9 @@ int main(int argc, char *argv[]){
     std::cin.tie(0);
     std::ios::sync_with_stdio(false);
     std::string recv;
+    for(int i = 1; i < argc; ++i){
+        std::cout << argv[i] << std::endl;
+    }
     while(std::cin.good()){
         std::getline(std::cin, recv);
         if(recv.size() == 0) continue;
