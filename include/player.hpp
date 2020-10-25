@@ -28,6 +28,8 @@ protected:
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
 public:
+    virtual ~Player() = default;
+
     virtual Geister& getState(){
         return game;
     }

@@ -7,6 +7,8 @@
 #include <map>
 #include "random.hpp"
 #include "hand.hpp"
+#include <memory>
+#include "player.hpp"
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -36,19 +38,12 @@ T dynamicLink(HANDLE_TYPE& handle, const char* funcName){
     return func;
 }
 
-int run(TCPClient& client, HANDLE_TYPE& handle){
-    using T = std::string (*)(std::string);
-    using T2 = std::string (*)(void);
-    using T3 = void (*)(std::string);
-
-    T decideHand = dynamicLink<T>(handle, "decideHand");
-    T2 decideRed = dynamicLink<T2>(handle, "decideRed");
-    T3 finalize = dynamicLink<T3>(handle, "finalize");
-
+int run(TCPClient& client, std::shared_ptr<Player> player){
     client.connect(10);
     
     Geister game;
     int turn = 0;
+    player->initialize();
 
     std::string res;
     while(true){
@@ -58,7 +53,7 @@ int run(TCPClient& client, HANDLE_TYPE& handle){
         if(visibleResponse && output > 1)
             std::cout << res << std::endl;
         if(header == "SET"){
-            std::string red_ptn = decideRed();
+            std::string red_ptn = player->decideRed();
             if(output > 1)
                 std::cout << red_ptn << std::endl;
             client.send("SET:" + red_ptn + "\r\n");
@@ -71,7 +66,7 @@ int run(TCPClient& client, HANDLE_TYPE& handle){
             turn += 1;
             if(output > 2)
                 game.printBoard();
-            Hand hand = Hand(decideHand(game));
+            Hand hand = Hand(player->decideHand(game));
             std::string name{hand.unit.name()};
             std::string direct{hand.direct.toChar()};
             if(output > 1)
@@ -81,7 +76,7 @@ int run(TCPClient& client, HANDLE_TYPE& handle){
     }
     std::string result = res.substr(0, 3);
     game.setState(res.substr(4));
-    finalize(game);
+    player->finalize(game);
     std::map<std::string, double> score = {{"WON", 1}, {"LST", 0}, {"DRW", 0.1}};
     if(output > 1)
         game.printBoard();
@@ -158,12 +153,19 @@ int main(int argc, char** argv){
         std::cerr << "cant open lib file" << std::endl;
         exit(1);
     }
-    TCPClient client(host, port);
 
-    for (size_t i = 0; i < playCount; ++i)
     {
-        run(client, handle);
-        // std::this_thread::sleep_for(std::chrono::microseconds(100000));
+        using T= Player* (*)();
+        T createPlayer = dynamicLink<T>(handle, "createPlayer");
+        std::shared_ptr<Player> player(createPlayer());
+
+        TCPClient client(host, port);
+
+        for (size_t i = 0; i < playCount; ++i)
+        {
+            run(client, player);
+            // std::this_thread::sleep_for(std::chrono::microseconds(100000));
+        }
     }
 
 #ifdef _WIN32
