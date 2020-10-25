@@ -3,6 +3,7 @@
 #include "geister.hpp"
 #include "hand.hpp"
 #include <iostream>
+#include <memory>
 
 #include <string>
 #include <vector>
@@ -48,29 +49,13 @@ template<class T> std::vector<std::string> split(const std::string& s, const T& 
 #endif
 
 using PlayerClass = PLAYER_CLASS;
-PlayerClass player;
 
 extern "C"{
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-std::string decideHand(std::string res){
-    return player.decideHand(res);
-}
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-std::string decideRed(){
-    player.initialize();
-    return player.decideRed();
-}
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void finalize(std::string res){
-    player.finalize(res);
+PlayerClass* createPlayer(){
+    return new PlayerClass();
 }
 }
 
@@ -81,6 +66,7 @@ int main(int argc, char *argv[]){
     for(int i = 1; i < argc; ++i){
         std::cout << argv[i] << std::endl;
     }
+    std::shared_ptr<PlayerClass> player(createPlayer());
     while(std::cin.good()){
         std::getline(std::cin, recv);
         if(recv.size() == 0) continue;
@@ -90,21 +76,21 @@ int main(int argc, char *argv[]){
             break;
         }
         else if(cmdList[0] == "name"){
-          std::cout << "ENTRY " << player.name() << std::endl;
+          std::cout << "ENTRY " << player->name() << std::endl;
         }
         else if(cmdList[0] == "hand"){
-            Hand hand = player.decideHand(cmdList[1]);
+            Hand hand = player->decideHand(cmdList[1]);
             std::cout << hand << std::endl;
             // std::cerr << hand << std::endl;
         }
         else if(cmdList[0] == "red"){
-            std::string red = player.decideRed();
+            std::string red = player->decideRed();
             std::cout << red << std::endl;
             // std::cerr << red << std::endl;
         }
         else if(cmdList[0] == "print"){
             if(cmdList.size() == 1){
-                player.getState().printAll();
+                player->getState().printAll();
             }
             else{
                 Geister geister = Geister(cmdList[1]);

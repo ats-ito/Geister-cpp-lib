@@ -8,6 +8,7 @@
 #include "random.hpp"
 #include "hand.hpp"
 #include "result.hpp"
+#include "player.hpp"
 #if __has_include(<filesystem>)
 #define FS_ENABLE
 #include <filesystem>
@@ -74,18 +75,7 @@ T dynamicLink(HANDLE_TYPE& handle, const char* funcName){
     return func;
 }
 
-int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
-    using T = std::string (*)(std::string);
-    using T2 = std::string (*)();
-    using T3 = void (*)(std::string);
-
-    T decideHand1 = dynamicLink<T>(dll1, "decideHand");
-    T2 decideRed1 = dynamicLink<T2>(dll1, "decideRed");
-    T3 finalize1 = dynamicLink<T3>(dll1, "finalize");
-    T decideHand2 = dynamicLink<T>(dll2, "decideHand");
-    T2 decideRed2 = dynamicLink<T2>(dll2, "decideRed");
-    T3 finalize2 = dynamicLink<T3>(dll2, "finalize");
-    
+int run(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2){
 #if defined(FS_ENABLE) || defined(FS_EXPERIMENTAL_ENABLE)
     std::ofstream logFile;
     if(logEnable){
@@ -109,34 +99,10 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         logFile.open(filepath, std::ios::out);
     }
 #endif
-    cpprefjp::random_device rd;
-    std::mt19937 mt(rd());
-
-    const std::vector<std::string> pattern = {
-        "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
-        "ABDG", "ABDH", "ABEF", "ABEG", "ABEH", "ABFG", "ABFH",
-        "ABGH", "ACDE", "ACDF", "ACDG", "ACDH", "ACEF", "ACEG",
-        "ACEH", "ACFG", "ACFH", "ACGH", "ADEF", "ADEG", "ADEH",
-        "ADFG", "ADFH", "ADGH", "AEFG", "AEFH", "AEGH", "AFGH",
-        "BCDE", "BCDF", "BCDG", "BCDH", "BCEF", "BCEG", "BCEH",
-        "BCFG", "BCFH", "BCGH", "BDEF", "BDEG", "BDEH", "BDFG",
-        "BDFH", "BDGH", "BEFG", "BEFH", "BEGH", "BFGH", "CDEF",
-        "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
-        "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
-    };
-
-    std::uniform_int_distribution<int> serector(0, pattern.size() - 1);
-    std::string red_ptn1;
-    std::string red_ptn2;
-    
-    if(!decideRed1 || !decideRed2){
-        red_ptn1 = pattern[serector(mt)];
-        red_ptn2 = pattern[serector(mt)];
-    }
-    else{
-        red_ptn1 = decideRed1();
-        red_ptn2 = decideRed2();
-    }
+    player1->initialize();
+    player2->initialize();
+    std::string red_ptn1 = player1->decideRed();
+    std::string red_ptn2 = player2->decideRed();
     
     Geister game(red_ptn1, red_ptn2);
     if(outputLevel > 1){
@@ -176,7 +142,7 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
     Result result = Result::OnPlay;
 
     while(!game.isEnd()){
-        Hand hand = Hand(decideHand1(game.mask()));
+        Hand hand = Hand(player1->decideHand(game.mask()));
         if(outputLevel > 1){
             std::cout << "1stPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
         }
@@ -211,7 +177,7 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         if(game.isEnd())
             break;
         game.changeSide();
-        hand = Hand(decideHand2(game.mask()));
+        hand = Hand(player2->decideHand(game.mask()));
         game.changeSide();
         if(outputLevel > 1){
             std::cout << "2ndPlayer: " << hand.unit.name() << " " << hand.direct.toChar() << '\t' << game << std::endl;
@@ -247,8 +213,8 @@ int run(HANDLE_TYPE& dll1, HANDLE_TYPE& dll2){
         }
         result = game.result();
     }
-    finalize1(game);
-    finalize2(game);
+    player1->finalize(game);
+    player2->finalize(game);
     // game.turn++;
     if(outputLevel > 0){
         std::cout << result << ": " << game.turn() << '\t' << game << std::endl;
@@ -355,32 +321,40 @@ int main(int argc, char** argv){
         digestFile.open(logDir + "/" + dllName1 + "-" + dllName2 + "_digest.txt", std::ios::out);
     }
 #endif
+
     std::array<int, 6> winreason({0,0,0,0,0,0});
 
     int win1st = 0;
     int win2nd = 0;
     int draw = 0;
-    for(size_t i = 0; i < match; ++i){
-        if(outputLevel > 0){
-            std::cout << dllName1 << " vs " << dllName2 << std::endl;
-            std::cout << "Match: " << i << std::endl;
-        }
-        int res = run(handle1, handle2);
-        if(res > 0) win1st++;
-        else if(res < 0) win2nd++;
-        else draw++;
+    {
+        using T= Player* (*)();
+        T createPlayer1 = dynamicLink<T>(handle1, "createPlayer");
+        T createPlayer2 = dynamicLink<T>(handle2, "createPlayer");
+        std::shared_ptr<Player> player1(createPlayer1());
+        std::shared_ptr<Player> player2(createPlayer2());
+        for(size_t i = 0; i < match; ++i){
+            if(outputLevel > 0){
+                std::cout << dllName1 << " vs " << dllName2 << std::endl;
+                std::cout << "Match: " << i << std::endl;
+            }
+            int res = run(player1, player2);
+            if(res > 0) win1st++;
+            else if(res < 0) win2nd++;
+            else draw++;
 
-        if(res == 1) winreason[0]++;
-        if(res == 2) winreason[1]++;
-        if(res == 3) winreason[2]++;
-        if(res == -1) winreason[3]++;
-        if(res == -2) winreason[4]++;
-        if(res == -3) winreason[5]++;
-        if(outputLevel > 0){
-            std::cout << win1st << ":" << win2nd << ":" << draw << " - ";
-            for(const int x: winreason)
-                std::cout << x << ",";
-            std::cout << std::endl;
+            if(res == 1) winreason[0]++;
+            if(res == 2) winreason[1]++;
+            if(res == 3) winreason[2]++;
+            if(res == -1) winreason[3]++;
+            if(res == -2) winreason[4]++;
+            if(res == -3) winreason[5]++;
+            if(outputLevel > 0){
+                std::cout << win1st << ":" << win2nd << ":" << draw << " - ";
+                for(const int x: winreason)
+                    std::cout << x << ",";
+                std::cout << std::endl;
+            }
         }
     }
     if(outputLevel > 0){
