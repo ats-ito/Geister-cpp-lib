@@ -105,6 +105,24 @@ inline void Unit::reverseSide(){
 	mColor = mColor.reverseSide();
 }
 
+inline bool Unit::operator==(const Unit& u) const
+{
+	return (mX << 24 | mY << 16 | mColor.toChar() << 8 | mID) == (u.mX << 24 | u.mY << 16 | u.mColor.toChar() << 8 | u.mID);
+	if (mX != u.mX){
+		return false;
+	}
+	if (mY != u.mY){
+		return false;
+	}
+	if (mColor != u.mColor){
+		return false;
+	}
+	if (mID != u.mID){
+		return false;
+	}
+	return true;
+}
+
 
 
 inline constexpr UnitColor::UnitColor() : color(NotDefine) {}

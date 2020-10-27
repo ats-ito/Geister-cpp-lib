@@ -66,6 +66,15 @@ inline Unit* Geister::getUnitByPos(const int x, const int y){
 	return nullptr;
 }
 
+inline const Unit* Geister::getUnitByPos(const int x, const int y)const{
+	for(int i = 0; i < 16; ++i){
+		if(units[i].x() == x && units[i].y() == y){
+			return &units[i];
+		}
+	}
+	return nullptr;
+}
+
 inline void Geister::countTaken(){
 	if((takenBlue1st = std::count_if(units.begin(), units.begin()+8,
 		[&](Unit& u){ return u.isTaken() && u.isBlue(); })) == 4)
