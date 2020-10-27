@@ -69,6 +69,7 @@ public:
     bool isEnd() const noexcept;
 
     Unit* getUnitByPos(const int x, const int y);
+    const Unit* getUnitByPos(const int x, const int y)const;
 
     bool exist1st(const int x, const int y)const;
     bool exist2nd(const int x, const int y)const;
