@@ -214,7 +214,9 @@ int run(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2){
         result = game.result();
     }
     player1->finalize(game);
+    game.changeSide();
     player2->finalize(game);
+    game.changeSide();
     // game.turn++;
     if(outputLevel > 0){
         std::cout << result << ": " << game.turn() << '\t' << game << std::endl;
