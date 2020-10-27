@@ -70,6 +70,8 @@ public:
     bool isRed() const;
 
     void reverseSide();
+
+    bool operator==(const Unit& u)const;
 };
 
 
