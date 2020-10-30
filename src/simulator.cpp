@@ -113,20 +113,23 @@ void Simulator::setColorRandom(){
     
 double Simulator::playout(){
     static std::uniform_int_distribution<> selector;
+    std::array<Hand, 32> lm;
     while(true){
         if(current.isEnd())
             break;
         // 相手の手番
-        std::vector<Hand>& lm2 = current.getLegalMove2nd();
-        selector.param(std::uniform_int_distribution<>::param_type(0, lm2.size() - 1));
-        Hand& m2 = lm2[selector(mt)];
+        // std::vector<Hand> lm2 = current.getLegalMove2nd();
+        // selector.param(std::uniform_int_distribution<>::param_type(0, lm2.size() - 1));
+        selector.param(std::uniform_int_distribution<>::param_type(0, current.setLegalMove2nd(lm) - 1));
+        Hand& m2 = lm[selector(mt)];
         current.move(m2);
         if(current.isEnd())
             break;
         // 自分の手番
-        std::vector<Hand>& lm1 = current.getLegalMove1st();
-        selector.param(std::uniform_int_distribution<>::param_type(0, lm1.size() - 1));
-        Hand& m1 = lm1[selector(mt)];
+        // std::vector<Hand> lm1 = current.getLegalMove1st();
+        // selector.param(std::uniform_int_distribution<>::param_type(0, lm1.size() - 1));
+        selector.param(std::uniform_int_distribution<>::param_type(0, current.setLegalMove1st(lm) - 1));
+        Hand& m1 = lm[selector(mt)];
         current.move(m1);
     }
     return evaluate();

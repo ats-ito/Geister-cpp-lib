@@ -86,6 +86,9 @@ struct Hand{
     Unit unit;
     Direction direct;
 
+    Hand(): unit{-1, -1, UnitColor::Unknown, 255}, direct{}
+    {}
+
     Hand(Unit u, Direction d): unit(u), direct(d)
     {
     }
