@@ -284,10 +284,9 @@ bool Geister::canMove1st(const Unit& unit, const char direct) const
     return true;
 }
 
-std::vector<Hand>& Geister::getLegalMove1st() const
+std::vector<Hand> Geister::getLegalMove1st() const
 {
-    static std::vector<Hand> legalMoves;
-    legalMoves.clear();
+    std::vector<Hand> legalMoves;
     for(int i = 0; i < 8; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
@@ -361,10 +360,9 @@ bool Geister::canMove2nd(const Unit& unit, const char direct) const{
     return true;
 }
 
-std::vector<Hand>& Geister::getLegalMove2nd() const
+std::vector<Hand> Geister::getLegalMove2nd() const
 {
-    static std::vector<Hand> legalMoves;
-    legalMoves.clear();
+    std::vector<Hand> legalMoves;
     for(int i = 8; i < 16; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
