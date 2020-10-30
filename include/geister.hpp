@@ -52,10 +52,12 @@ public:
     bool canMove1st(const Unit& unit, const char direct) const;
 
     std::vector<Hand>& getLegalMove1st() const;
+    int setLegalMove1st(std::array<Hand, 32>& legalMoves) const;
 
     bool canMove2nd(const Unit& unit, const char direct) const;
 
     std::vector<Hand>& getLegalMove2nd() const;
+    int setLegalMove2nd(std::array<Hand, 32>& legalMoves) const;
 
     std::string& toString() const;
     operator std::string() const;

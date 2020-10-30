@@ -310,6 +310,31 @@ std::vector<Hand>& Geister::getLegalMove1st() const
     return legalMoves;
 }
 
+int Geister::setLegalMove1st(std::array<Hand, 32>& legalMoves) const
+{
+    int count = 0;
+    for(int i = 0; i < 8; ++i){
+        const Unit& unit = units[i];
+        if(unit.onBoard()){
+            const int x = unit.x();
+            const int y = unit.y();
+            if(y > 0 && !exist1st(x, y-1)){
+                legalMoves[count++] = Hand(unit, Direction::North);
+            }
+            if(y < 5 && !exist1st(x, y+1)){
+                legalMoves[count++] = Hand(unit, Direction::South);
+            }
+            if(!exist1st(x-1, y) && (x > 0 || (y == 0 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::West);
+            }
+            if(!exist1st(x+1, y) && (x < 5 || (y == 0 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::East);
+            }
+        }
+    }
+    return count;
+}
+
 bool Geister::canMove2nd(const Unit& unit, const char direct) const{
     int x = unit.x();
     int y = unit.y();
@@ -360,6 +385,31 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
         }
     }
     return legalMoves;
+}
+
+int Geister::setLegalMove2nd(std::array<Hand, 32>& legalMoves) const
+{
+    int count = 0;
+    for(int i = 8; i < 16; ++i){
+        const Unit& unit = units[i];
+        if(unit.onBoard()){
+            const int x = unit.x();
+            const int y = unit.y();
+            if(y > 0 && !exist2nd(x, y-1)){
+                legalMoves[count++] = Hand(unit, Direction::North);
+            }
+            if(y < 5 && !exist2nd(x, y+1)){
+                legalMoves[count++] = Hand(unit, Direction::South);
+            }
+            if(!exist2nd(x-1, y) && (x > 0 || (y == 5 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::West);
+            }
+            if(!exist2nd(x+1, y) && (x < 5 || (y == 5 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::East);
+            }
+        }
+    }
+    return count;
 }
 
 void Geister::move(const Hand& hand){
