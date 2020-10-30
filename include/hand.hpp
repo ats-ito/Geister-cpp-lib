@@ -2,6 +2,7 @@
 #define HAND_HPP
 
 #include <string>
+#include <string_view>
 #include "unit.hpp"
 
 struct Direction{
@@ -93,7 +94,7 @@ struct Hand{
     {
     }
 
-    Hand(const std::string& src):
+    Hand(std::string_view src):
     unit{static_cast<int8_t>(src[2]-'0'), static_cast<int8_t>(src[3]-'0'), src[1], name2id(src[0])},
     direct{src[5]}
     {

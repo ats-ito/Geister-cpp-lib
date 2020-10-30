@@ -17,7 +17,7 @@ Simulator::Simulator(const Geister& g): root(g), depth(0)
 {
 }
 
-Simulator::Simulator(const Geister& g, const std::string& ptn): root(g, "", ptn), depth(0)
+Simulator::Simulator(const Geister& g, std::string_view ptn): root(g, "", ptn), depth(0)
 {
 }
 
@@ -75,7 +75,7 @@ std::string Simulator::getRandomPattern() const
 }
 
 // 未判明の相手駒色を適当に仮定
-void Simulator::setColor(const std::string& ptn){
+void Simulator::setColor(std::string_view ptn){
     current.setColor("", ptn);
 }
     
@@ -148,7 +148,7 @@ double Simulator::run(const size_t count){
     return result;
 }
 
-double Simulator::run(const std::string& ptn, const size_t count){
+double Simulator::run(std::string_view ptn, const size_t count){
     double result = 0.0;
     for(size_t i = 0; i < count; ++i){
         current = root;

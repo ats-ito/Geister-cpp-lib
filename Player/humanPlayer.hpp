@@ -13,7 +13,7 @@ public:
         return res;
     }
 
-    virtual std::string decideHand(std::string res){
+    virtual std::string decideHand(std::string_view res){
         game.setState(res);
         game.printBoard();
         std::string ret;

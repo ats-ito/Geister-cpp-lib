@@ -18,7 +18,7 @@ public:
         return pattern[serector(mt)];
     }
 
-    virtual std::string decideHand(std::string res){
+    virtual std::string decideHand(std::string_view res){
         game.setState(res);
 
         auto legalMoves = candidateHand();
