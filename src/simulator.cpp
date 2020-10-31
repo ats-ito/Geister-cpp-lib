@@ -38,8 +38,8 @@ std::vector<std::string> Simulator::getLegalPattern() const
     };
     
     std::vector<std::string> res(70);
-    std::vector<char> blue;
-    std::vector<char> red;
+    std::vector<char> blue(4);
+    std::vector<char> red(4);
 
     size_t bsize = std::distance(blue.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, blue.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isBlue();}));
     blue.resize(bsize);
