@@ -47,7 +47,7 @@ std::vector<std::string> Simulator::getLegalPattern() const
     red.resize(rsize);
 
     size_t resSize = std::distance(res.begin(), std::copy_if(pattern.begin(), pattern.end(), res.begin(), [&](const char* p){ return 
-        std::all_of(blue.begin(), blue.end(), [&](const char b){ return p[0] != b && p[1] != b && p[2] != b && p[3] != b; }) // 青と分かっている駒を含まないパターンである
+        std::none_of(blue.begin(), blue.end(), [&](const char b){ return p[0] == b || p[1] == b || p[2] == b || p[3] == b; }) // 青と分かっている駒を含まないパターンである
         && std::all_of(red.begin(), red.end(), [&](const char r){ return p[0] == r || p[1] == r || p[2] == r || p[3] == r; }) // 赤と分かっている駒を含むパターンである
         ; }
     ));
