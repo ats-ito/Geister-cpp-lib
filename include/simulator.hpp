@@ -22,7 +22,7 @@ public:
     Simulator(const Geister& geister);
     Simulator(const Geister& geister, std::string_view ptn);
     
-    virtual std::vector<std::string>& getLegalPattern() const;
+    virtual std::vector<std::string> getLegalPattern() const;
     // 未判明の相手駒色を適当に仮定
     virtual std::string getRandomPattern() const;
 

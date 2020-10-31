@@ -22,7 +22,7 @@ Simulator::Simulator(const Geister& g, std::string_view ptn): root(g, "", ptn), 
 }
 
 // 可能性のあるすべての相手駒パターンを列挙
-std::vector<std::string>& Simulator::getLegalPattern() const
+std::vector<std::string> Simulator::getLegalPattern() const
 {
     constexpr static std::array<const char*, 70> pattern = {
         "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
@@ -36,8 +36,8 @@ std::vector<std::string>& Simulator::getLegalPattern() const
         "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
-    static std::vector<std::string> res;
-    res.clear();
+    
+    std::vector<std::string> res;
     std::vector<char> blue;
     std::vector<char> red;
     // 判明している色ごとにリスト化
@@ -69,7 +69,7 @@ std::vector<std::string>& Simulator::getLegalPattern() const
 // 未判明の相手駒色を適当に仮定
 std::string Simulator::getRandomPattern() const
 {
-    std::vector<std::string>& legalPattern = getLegalPattern();
+    std::vector<std::string> legalPattern = getLegalPattern();
     std::uniform_int_distribution<int> selector(0, legalPattern.size() - 1);
     return legalPattern[selector(mt)];
 }
