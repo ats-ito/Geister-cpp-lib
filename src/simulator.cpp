@@ -37,32 +37,21 @@ std::vector<std::string> Simulator::getLegalPattern() const
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
     
-    std::vector<std::string> res;
+    std::vector<std::string> res(70);
     std::vector<char> blue;
     std::vector<char> red;
-    // 判明している色ごとにリスト化
-    for(int u = 8; u < 16; ++u){
-        if(current.allUnit()[u].color() == UnitColor::blue)
-            blue.emplace_back(u - 8 + 'A');
-        else if(current.allUnit()[u].color() == UnitColor::red)
-            red.emplace_back(u - 8 + 'A');
-    }
-    // 判明している情報と矛盾するパターンを除外
-    for(const char* p: pattern){
-        // 青と分かっている駒を含むパターンを除外
-        if(std::find_if(blue.begin(), blue.end(),
-            [&](char b){ return std::string(p).find(b) != std::string::npos; }) != blue.end())
-        {
-            continue;
-        }
-        // 赤と分かっている駒を含まないパターンを除外
-        if(std::find_if(red.begin(), red.end(),
-            [&](char r){ return std::string(p).find(r) == std::string::npos; }) != red.end())
-        {
-            continue;
-        }
-        res.emplace_back(p);
-    }
+
+    size_t bsize = std::distance(blue.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, blue.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isBlue();}));
+    blue.resize(bsize);
+    size_t rsize = std::distance(red.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, red.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isRed();}));
+    red.resize(rsize);
+
+    size_t resSize = std::distance(res.begin(), std::copy_if(pattern.begin(), pattern.end(), res.begin(), [&](const auto& p){ return (
+        std::find_if(blue.begin(), blue.end(), [&](char b){ return p[0] == b || p[1] == b || p[2] == b || p[3] == b; }) == blue.end()) // 青と分かっている駒を含まないパターンである
+        && (std::find_if(red.begin(), red.end(), [&](char r){ return p[0] != r && p[1] != r && p[2] != r && p[3] != r; }) == red.end()) // 赤と分かっている駒を含むパターンである
+        ; }
+    ));
+    res.resize(resSize);
     return res;
 }
     
