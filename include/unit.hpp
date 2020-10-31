@@ -7,13 +7,13 @@
 struct UnitColor{
     enum Color: unsigned char{
         NotDefine = 0b000,
-        Blue = 0b010,
-        blue = 0b011,
-        Red = 0b100,
-        red = 0b101,
+        Blue = 0b001,
+        blue = 0b101,
+        Red = 0b010,
+        red = 0b110,
         Unknown = 0b000,
-        unknown = 0b001,
-        Purple = 0b110,
+        unknown = 0b100,
+        Purple = 0b011,
         purple = 0b111,
     } color;
 
