@@ -29,7 +29,7 @@ units{
 {
 }
 
-Geister::Geister(const std::string& info):
+Geister::Geister(std::string_view info):
 mResult(Result::OnPlay),
 mTurn(0),
 units{
@@ -59,7 +59,7 @@ units{
     countTaken();
 }
 
-Geister::Geister(const std::string& red1, const std::string& red2):
+Geister::Geister(std::string_view red1, std::string_view red2):
 mResult(Result::OnPlay),
 takenBlue1st(0),
 takenBlue2nd(0),
@@ -93,7 +93,7 @@ units{
     }
 }
 
-Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
+Geister::Geister(const Geister& game, std::string_view red1, std::string_view red2):
 mResult(game.mResult),
 mTurn(game.mTurn),
 units(game.units)
@@ -101,7 +101,7 @@ units(game.units)
     setColor(red1, red2);
 }
 
-void Geister::setState(const std::string& state){
+void Geister::setState(std::string_view state){
     for(int i = 0; i < 16; ++i){
         units[i].setPos(state[i * 3] - '0', state[i * 3 + 1] - '0');
         units[i].setColor(UnitColor(state[i * 3 + 2]));
@@ -117,7 +117,7 @@ void Geister::setState(const std::string& state){
     countTaken();
 }
 
-void Geister::setColor(const std::string& first, const std::string& second){
+void Geister::setColor(std::string_view first, std::string_view second){
     if(!first.empty()){
         for(char c = 'A'; c <= 'H'; ++c){
             if(first.find(c) != std::string::npos)

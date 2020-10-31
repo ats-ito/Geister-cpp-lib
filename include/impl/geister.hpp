@@ -40,6 +40,7 @@ inline std::string& Geister::toString() const
 	return res;
 }
 inline Geister::operator std::string() const { return toString(); }
+inline Geister::operator std::string_view() const { return toString(); }
 
 
 inline void Geister::escape(Unit& unit){

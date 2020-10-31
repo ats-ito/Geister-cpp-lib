@@ -2,6 +2,7 @@
 #include "geister.hpp"
 #include "tcpClient.hpp"
 #include <string>
+#include <string_view>
 #include <vector>
 #include <iostream>
 #include <map>
@@ -49,7 +50,7 @@ int run(TCPClient& client, std::shared_ptr<Player> player){
     while(true){
         res = client.recv();
         res.erase(res.size()-2);
-        std::string header = res.substr(0,3);
+        std::string_view header(res.data(), 3);
         if(visibleResponse && output > 1)
             std::cout << res << std::endl;
         if(header == "SET"){
@@ -74,16 +75,16 @@ int run(TCPClient& client, std::shared_ptr<Player> player){
             client.move(name, direct);
         }
     }
-    std::string result = res.substr(0, 3);
-    game.setState(res.substr(4));
+    std::string_view result(res.data(), 3);
+    game.setState(std::string_view(&(res[4])));
     player->finalize(game);
-    std::map<std::string, double> score = {{"WON", 1}, {"LST", 0}, {"DRW", 0.1}};
+    std::map<char, double> score = {{'W', 1}, {'L', 0}, {'D', 0.1}};
     if(output > 1)
         game.printBoard();
     if(output)
         std::cout << result << ": " << turn << std::endl;
     // client.close();
-    return score[result];
+    return score[result[0]];
 }
 
 int main(int argc, char** argv){

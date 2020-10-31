@@ -4,6 +4,7 @@
 #include "hand.hpp"
 #include "geister.hpp"
 #include <string>
+#include <string_view>
 #include <array>
 
 #ifndef PLAYER_NAME
@@ -42,10 +43,10 @@ public:
         return STRING(PLAYER_NAME);
     }
 
-    virtual std::string decideHand(std::string res) = 0;
+    virtual std::string decideHand(std::string_view res) = 0;
     virtual std::string decideRed() = 0;
 
-    virtual void finalize(const std::string& endState){
+    virtual void finalize(std::string_view endState){
         game.setState(endState);
     }
 };

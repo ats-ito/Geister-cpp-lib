@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
           std::cout << "ENTRY " << player->name() << std::endl;
         }
         else if(cmdList[0] == "hand"){
-            Hand hand = player->decideHand(cmdList[1]);
+            Hand hand(player->decideHand(cmdList[1]));
             std::cout << hand << std::endl;
             // std::cerr << hand << std::endl;
         }
