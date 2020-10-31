@@ -17,12 +17,12 @@ Simulator::Simulator(const Geister& g): root(g), depth(0)
 {
 }
 
-Simulator::Simulator(const Geister& g, const std::string& ptn): root(g, "", ptn), depth(0)
+Simulator::Simulator(const Geister& g, std::string_view ptn): root(g, "", ptn), depth(0)
 {
 }
 
 // 可能性のあるすべての相手駒パターンを列挙
-std::vector<std::string>& Simulator::getLegalPattern() const
+std::vector<std::string> Simulator::getLegalPattern() const
 {
     constexpr static std::array<const char*, 70> pattern = {
         "ABCD", "ABCE", "ABCF", "ABCG", "ABCH", "ABDE", "ABDF",
@@ -36,46 +36,35 @@ std::vector<std::string>& Simulator::getLegalPattern() const
         "CDEG", "CDEH", "CDFG", "CDFH", "CDGH", "CEFG", "CEFH",
         "CEGH", "CFGH", "DEFG", "DEFH", "DEGH", "DFGH", "EFGH"
     };
-    static std::vector<std::string> res;
-    res.clear();
-    std::vector<char> blue;
-    std::vector<char> red;
-    // 判明している色ごとにリスト化
-    for(int u = 8; u < 16; ++u){
-        if(current.allUnit()[u].color() == UnitColor::blue)
-            blue.emplace_back(u - 8 + 'A');
-        else if(current.allUnit()[u].color() == UnitColor::red)
-            red.emplace_back(u - 8 + 'A');
-    }
-    // 判明している情報と矛盾するパターンを除外
-    for(const char* p: pattern){
-        // 青と分かっている駒を含むパターンを除外
-        if(std::find_if(blue.begin(), blue.end(),
-            [&](char b){ return std::string(p).find(b) != std::string::npos; }) != blue.end())
-        {
-            continue;
-        }
-        // 赤と分かっている駒を含まないパターンを除外
-        if(std::find_if(red.begin(), red.end(),
-            [&](char r){ return std::string(p).find(r) == std::string::npos; }) != red.end())
-        {
-            continue;
-        }
-        res.emplace_back(p);
-    }
+    
+    std::vector<std::string> res(70);
+    std::vector<char> blue(4);
+    std::vector<char> red(4);
+
+    size_t bsize = std::distance(blue.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, blue.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isBlue();}));
+    blue.resize(bsize);
+    size_t rsize = std::distance(red.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, red.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isRed();}));
+    red.resize(rsize);
+
+    size_t resSize = std::distance(res.begin(), std::copy_if(pattern.begin(), pattern.end(), res.begin(), [&](const char* p){ return 
+        std::none_of(blue.begin(), blue.end(), [&](const char b){ return p[0] == b || p[1] == b || p[2] == b || p[3] == b; }) // 青と分かっている駒を含まないパターンである
+        && std::all_of(red.begin(), red.end(), [&](const char r){ return p[0] == r || p[1] == r || p[2] == r || p[3] == r; }) // 赤と分かっている駒を含むパターンである
+        ; }
+    ));
+    res.resize(resSize);
     return res;
 }
     
 // 未判明の相手駒色を適当に仮定
 std::string Simulator::getRandomPattern() const
 {
-    std::vector<std::string>& legalPattern = getLegalPattern();
+    std::vector<std::string> legalPattern = getLegalPattern();
     std::uniform_int_distribution<int> selector(0, legalPattern.size() - 1);
     return legalPattern[selector(mt)];
 }
 
 // 未判明の相手駒色を適当に仮定
-void Simulator::setColor(const std::string& ptn){
+void Simulator::setColor(std::string_view ptn){
     current.setColor("", ptn);
 }
     
@@ -113,20 +102,23 @@ void Simulator::setColorRandom(){
     
 double Simulator::playout(){
     static std::uniform_int_distribution<> selector;
+    std::array<Hand, 32> lm;
     while(true){
         if(current.isEnd())
             break;
         // 相手の手番
-        std::vector<Hand>& lm2 = current.getLegalMove2nd();
-        selector.param(std::uniform_int_distribution<>::param_type(0, lm2.size() - 1));
-        Hand& m2 = lm2[selector(mt)];
+        // std::vector<Hand> lm2 = current.getLegalMove2nd();
+        // selector.param(std::uniform_int_distribution<>::param_type(0, lm2.size() - 1));
+        selector.param(std::uniform_int_distribution<>::param_type(0, current.setLegalMove2nd(lm) - 1));
+        Hand& m2 = lm[selector(mt)];
         current.move(m2);
         if(current.isEnd())
             break;
         // 自分の手番
-        std::vector<Hand>& lm1 = current.getLegalMove1st();
-        selector.param(std::uniform_int_distribution<>::param_type(0, lm1.size() - 1));
-        Hand& m1 = lm1[selector(mt)];
+        // std::vector<Hand> lm1 = current.getLegalMove1st();
+        // selector.param(std::uniform_int_distribution<>::param_type(0, lm1.size() - 1));
+        selector.param(std::uniform_int_distribution<>::param_type(0, current.setLegalMove1st(lm) - 1));
+        Hand& m1 = lm[selector(mt)];
         current.move(m1);
     }
     return evaluate();
@@ -145,7 +137,7 @@ double Simulator::run(const size_t count){
     return result;
 }
 
-double Simulator::run(const std::string& ptn, const size_t count){
+double Simulator::run(std::string_view ptn, const size_t count){
     double result = 0.0;
     for(size_t i = 0; i < count; ++i){
         current = root;

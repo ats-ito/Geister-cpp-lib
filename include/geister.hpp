@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <string_view>
 #include "unit.hpp"
 #include "hand.hpp"
 #include "result.hpp"
@@ -31,13 +32,14 @@ public:
     constexpr static uint16_t maxTurn = 200;
 
     Geister();
-    Geister(const std::string& info);
-    Geister(const std::string& red1st, const std::string& red2nd);
-    Geister(const Geister& game, const std::string& red1, const std::string& red2);
+    Geister(std::string_view info);
+    Geister(std::string_view red1st, std::string_view red2nd);
+    Geister(const Geister& game, std::string_view red1, std::string_view red2);
 
-    void setState(const std::string& state);
-    void setColor(const std::string& first, const std::string& second);
-    void setColor(const char unit, const UnitColor color);
+    void setState(std::string_view state);
+    void setColor(std::string_view first, std::string_view second);
+    void setColor(const Unit& unit, const UnitColor color);
+    void setColor(const uint8_t id, const UnitColor color);
 
     void initialize();
 
@@ -51,14 +53,17 @@ public:
 
     bool canMove1st(const Unit& unit, const char direct) const;
 
-    std::vector<Hand>& getLegalMove1st() const;
+    std::vector<Hand> getLegalMove1st() const;
+    int setLegalMove1st(std::array<Hand, 32>& legalMoves) const;
 
     bool canMove2nd(const Unit& unit, const char direct) const;
 
-    std::vector<Hand>& getLegalMove2nd() const;
+    std::vector<Hand> getLegalMove2nd() const;
+    int setLegalMove2nd(std::array<Hand, 32>& legalMoves) const;
 
     std::string& toString() const;
     operator std::string() const;
+    operator std::string_view() const;
 
     void move(const Hand& hand);
 

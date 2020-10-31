@@ -19,7 +19,7 @@ public:
         return std::string("BCFG");
     }
 
-    virtual std::string decideHand(std::string res){
+    virtual std::string decideHand(std::string_view res){
         game.setState(res);
 
         const std::array<Unit, 16>& units = game.allUnit();

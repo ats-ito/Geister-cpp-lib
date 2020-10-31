@@ -165,19 +165,19 @@ inline bool UnitColor::operator!=(const UnitColor& c) const { return color != c.
 
 inline bool UnitColor::isBlue() const
 {
-	return static_cast<unsigned char>(color) & 0b010;
+	return static_cast<unsigned char>(color) & 0b001;
 }
 inline bool UnitColor::isRed() const
 {
-	return static_cast<unsigned char>(color) & 0b100;
+	return static_cast<unsigned char>(color) & 0b010;
 }
 inline bool UnitColor::is1st() const
 {
-	return !(static_cast<unsigned char>(color) & 0b1);
+	return !(static_cast<unsigned char>(color) & 0b100);
 }
 inline bool UnitColor::is2nd() const
 {
-	return static_cast<unsigned char>(color) & 0b1;
+	return static_cast<unsigned char>(color) & 0b100;
 }
 
 inline char UnitColor::toChar() const

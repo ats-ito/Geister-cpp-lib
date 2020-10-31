@@ -29,7 +29,7 @@ units{
 {
 }
 
-Geister::Geister(const std::string& info):
+Geister::Geister(std::string_view info):
 mResult(Result::OnPlay),
 mTurn(0),
 units{
@@ -59,7 +59,7 @@ units{
     countTaken();
 }
 
-Geister::Geister(const std::string& red1, const std::string& red2):
+Geister::Geister(std::string_view red1, std::string_view red2):
 mResult(Result::OnPlay),
 takenBlue1st(0),
 takenBlue2nd(0),
@@ -93,7 +93,7 @@ units{
     }
 }
 
-Geister::Geister(const Geister& game, const std::string& red1, const std::string& red2):
+Geister::Geister(const Geister& game, std::string_view red1, std::string_view red2):
 mResult(game.mResult),
 mTurn(game.mTurn),
 units(game.units)
@@ -101,7 +101,7 @@ units(game.units)
     setColor(red1, red2);
 }
 
-void Geister::setState(const std::string& state){
+void Geister::setState(std::string_view state){
     for(int i = 0; i < 16; ++i){
         units[i].setPos(state[i * 3] - '0', state[i * 3 + 1] - '0');
         units[i].setColor(UnitColor(state[i * 3 + 2]));
@@ -117,7 +117,7 @@ void Geister::setState(const std::string& state){
     countTaken();
 }
 
-void Geister::setColor(const std::string& first, const std::string& second){
+void Geister::setColor(std::string_view first, std::string_view second){
     if(!first.empty()){
         for(char c = 'A'; c <= 'H'; ++c){
             if(first.find(c) != std::string::npos)
@@ -284,10 +284,9 @@ bool Geister::canMove1st(const Unit& unit, const char direct) const
     return true;
 }
 
-std::vector<Hand>& Geister::getLegalMove1st() const
+std::vector<Hand> Geister::getLegalMove1st() const
 {
-    static std::vector<Hand> legalMoves;
-    legalMoves.clear();
+    std::vector<Hand> legalMoves;
     for(int i = 0; i < 8; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
@@ -308,6 +307,31 @@ std::vector<Hand>& Geister::getLegalMove1st() const
         }
     }
     return legalMoves;
+}
+
+int Geister::setLegalMove1st(std::array<Hand, 32>& legalMoves) const
+{
+    int count = 0;
+    for(int i = 0; i < 8; ++i){
+        const Unit& unit = units[i];
+        if(unit.onBoard()){
+            const int x = unit.x();
+            const int y = unit.y();
+            if(y > 0 && !exist1st(x, y-1)){
+                legalMoves[count++] = Hand(unit, Direction::North);
+            }
+            if(y < 5 && !exist1st(x, y+1)){
+                legalMoves[count++] = Hand(unit, Direction::South);
+            }
+            if(!exist1st(x-1, y) && (x > 0 || (y == 0 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::West);
+            }
+            if(!exist1st(x+1, y) && (x < 5 || (y == 0 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::East);
+            }
+        }
+    }
+    return count;
 }
 
 bool Geister::canMove2nd(const Unit& unit, const char direct) const{
@@ -336,10 +360,9 @@ bool Geister::canMove2nd(const Unit& unit, const char direct) const{
     return true;
 }
 
-std::vector<Hand>& Geister::getLegalMove2nd() const
+std::vector<Hand> Geister::getLegalMove2nd() const
 {
-    static std::vector<Hand> legalMoves;
-    legalMoves.clear();
+    std::vector<Hand> legalMoves;
     for(int i = 8; i < 16; ++i){
         const Unit& unit = units[i];
         if(unit.onBoard()){
@@ -360,6 +383,31 @@ std::vector<Hand>& Geister::getLegalMove2nd() const
         }
     }
     return legalMoves;
+}
+
+int Geister::setLegalMove2nd(std::array<Hand, 32>& legalMoves) const
+{
+    int count = 0;
+    for(int i = 8; i < 16; ++i){
+        const Unit& unit = units[i];
+        if(unit.onBoard()){
+            const int x = unit.x();
+            const int y = unit.y();
+            if(y > 0 && !exist2nd(x, y-1)){
+                legalMoves[count++] = Hand(unit, Direction::North);
+            }
+            if(y < 5 && !exist2nd(x, y+1)){
+                legalMoves[count++] = Hand(unit, Direction::South);
+            }
+            if(!exist2nd(x-1, y) && (x > 0 || (y == 5 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::West);
+            }
+            if(!exist2nd(x+1, y) && (x < 5 || (y == 5 && unit.isBlue()))){
+                legalMoves[count++] = Hand(unit, Direction::East);
+            }
+        }
+    }
+    return count;
 }
 
 void Geister::move(const Hand& hand){
