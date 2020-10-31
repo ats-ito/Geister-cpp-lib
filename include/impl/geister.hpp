@@ -1,13 +1,12 @@
 #ifndef GEISTER_HPP
 #include "geister.hpp"
 #endif
-inline void Geister::setColor(const char unit, const UnitColor color){
-	if('A' <= unit && unit <= 'H'){
-		units[unit-'A'].setColor(color);
-	}
-	else if('a' <= unit && unit <= 'h'){
-		units[unit-'a'+8].setColor(color);
-	}
+inline void Geister::setColor(const Unit& unit, const UnitColor color){
+	units[unit.id()].setColor(color);
+	countTaken();
+}
+inline void Geister::setColor(const uint8_t id, const UnitColor color){
+	units[id].setColor(color);
 	countTaken();
 }
 

@@ -38,7 +38,8 @@ public:
 
     void setState(std::string_view state);
     void setColor(std::string_view first, std::string_view second);
-    void setColor(const char unit, const UnitColor color);
+    void setColor(const Unit& unit, const UnitColor color);
+    void setColor(const uint8_t id, const UnitColor color);
 
     void initialize();
 
