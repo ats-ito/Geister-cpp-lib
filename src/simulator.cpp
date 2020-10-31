@@ -46,9 +46,9 @@ std::vector<std::string> Simulator::getLegalPattern() const
     size_t rsize = std::distance(red.begin(), std::copy_if(Unit::nameList.begin(), Unit::nameList.begin()+8, red.begin(), [&](const auto u){ return current.allUnit()[u-'A'+8].color().isRed();}));
     red.resize(rsize);
 
-    size_t resSize = std::distance(res.begin(), std::copy_if(pattern.begin(), pattern.end(), res.begin(), [&](const auto& p){ return (
-        std::find_if(blue.begin(), blue.end(), [&](char b){ return p[0] == b || p[1] == b || p[2] == b || p[3] == b; }) == blue.end()) // 青と分かっている駒を含まないパターンである
-        && (std::find_if(red.begin(), red.end(), [&](char r){ return p[0] != r && p[1] != r && p[2] != r && p[3] != r; }) == red.end()) // 赤と分かっている駒を含むパターンである
+    size_t resSize = std::distance(res.begin(), std::copy_if(pattern.begin(), pattern.end(), res.begin(), [&](const char* p){ return 
+        std::all_of(blue.begin(), blue.end(), [&](const char b){ return p[0] != b && p[1] != b && p[2] != b && p[3] != b; }) // 青と分かっている駒を含まないパターンである
+        && std::all_of(red.begin(), red.end(), [&](const char r){ return p[0] == r || p[1] == r || p[2] == r || p[3] == r; }) // 赤と分かっている駒を含むパターンである
         ; }
     ));
     res.resize(resSize);
